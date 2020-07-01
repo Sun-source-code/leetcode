@@ -1,0 +1,97 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个二叉搜索树和一个目标结果，如果 BST 中存在两个元素且它们的和等于给定的目标结果，则返回 true。
+示例：输入: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+输出: True
+
+解法一：使用HashSet
+=================
+
+最简单的方法，遍历整棵树，在树的每个节点遍历他的左子树和右子树，寻找与当前数匹配的数是否存在，遍历过程中，将每个节点
+的值放入一个set中，对于每个节点p，寻找是否存在k-p，存在则返回true。
+其实与第一题的方法三是一样的，只是将map改为set。
+
+```java
+public boolean findTarget(TreeNode root,int k){
+  Set<Integer> set = new HashSet<>();
+  return find(root,k,set);}
+public boolean find(TreeNode root,int k,Set<Integer> set){
+  if(root == null) return false;
+  if(set.contains(k - root.val)) return true;
+  set.add(root.val);
+  return find(root.left,k,set) || find(root.right,k,set);}
+```
+时间复杂度 O(n)
+
+解法二：使用HashSet和BFS（广度优先遍历）
+==================================
+
+将根节点存入queue，从队列首部删除一个元素p，检查set中是否存在k-p，存在则返回true，否则就将p存入set，
+重复操作，直到queue清空，返回false
+
+```java
+public boolean findTarget(TreeNode root,int k){
+  Set<Integer> set = new HashSet<>();
+  Queue<TreeNode> queue = new LinkedList<>();
+  queue.add(root);
+  while(!queue.isEmpty()){
+    if(queue.peek() != null){
+      TreeNode node = queue.remove();
+      if(set.contains(k - node.val)){
+        return true;}
+      set.add(root.val);
+      queue.add(root.left);
+      queue.add(root.right);}
+    else{
+      queue.remove();}}
+  return false;}
+```
+时间复杂度 O(n)，但是显示超过时间限制
+
+解法三：BST（二叉搜索树）
+====================
+
+利用二叉搜索树的中序遍历，因为遍历的结果的升序的，因此中序遍历得到的BST，将遍历结果存储到list中
+遍历完成后，使用l和r两个指针对list的头部和尾部进行遍历，进行以下操作
+1、检查l和r两个元素之和是否为k，如果是，则返回true
+2、如果当前两元素之和小于k，l指向下一个元素
+3、如果当前两元素之和大于k，r指向前一个元素
+4、重复前三个步骤，知道l大于等于r，如果l大于r，返回false
+
+```java
+public boolean findTarget(TreeNode root,int k){
+  List<Integer> list = new ArrayList<>();
+  inorder(root,list);
+  int l = 0,r = list.size() - 1;
+  while(l < r){
+    int sum = list.get(l) + list.get(r);
+    if(sum == k) return true;
+    else if(sum < k) l++;
+    else r--; }
+  return false;}
+public void inorder(TreeNode root,List<Integer> list){
+  if(root == null) return;
+  inorder(root.left,list);
+  list.add(root.val);
+  inorder(root.right,list);}
+```
+时间复杂度 O(n)
+
+总结：
+====
+
+这里很容易想到方法一，边遍历边查询是否存在对应的数值，与第一题中的map是一样的，后面两种方法很好理解，
+方法二就是将节点存入到queue，依次输出首节点的值，也是边遍历边查询，不同之处只是将其存入队列，因此导致
+时间复杂度的提高，方法三就是将树转换为排序好的链表，再使用双指针遍历。
+
