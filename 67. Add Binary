@@ -1,0 +1,46 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给你两个二进制字符串，返回它们的和（用二进制表示）。
+输入为 非空 字符串且只包含数字 1 和 0。
+
+示例：输入: a = "11", b = "1"
+输出: "100"
+
+解法一：直接调用函数
+=================
+
+直接使用二进制转十进制和十进制转二进制的函数求解
+
+```java
+public String addBinary(String a,String b){
+  return Integer.toBinaryString(Integer.parseInt(a,2)+Integer.parseInt(b,2));}
+```
+
+解法二：模拟
+==========
+
+借鉴竖式计算的思路，逢二进一，使用一个遍历carry来表示进位pub
+
+```java
+public String addBinary(String a,String b){
+  StringBuffer buffer = new StringBuffer();
+  int n = Math.max(a.length(),b.length()),carry = 0;
+  for(int i = 0;i < n;i++){
+    carry += i<a.length()?(a.charAt(a.length()-1-i)-'0'):0;
+    carry += i<b.length()?(b.charAt(b.length()-1-i)-'0'):0;
+    buffer.append((char)carry % 2 + '0');
+    carry /= 2;}
+  if(carry > 0) buffer.append('1');
+  buffer.reverse();
+  return buffer.toString();}
+```
+时间复杂度：O(n)
+
+总结：
+====
+
+这题思路还是很简单的，直接调用函数或者使用进位的操作，需要注意进位操作的顺序。
+时间复杂度：O(n)
