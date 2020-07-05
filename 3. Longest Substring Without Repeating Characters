@@ -1,0 +1,70 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个字符串，请你找出其中不含有重复字符的‘最长子串’的长度。
+示例：输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+解法一：滑动窗口
+==============
+
+我们使用左右两个指针表示子串的首尾位置，每操作一次，左指针向右移动一格，表示我们枚举下一个字符为起始位置，
+然后我们不断右移右指针的位置，但要保证两个指针对应的字符串中没有重复的字符，移动结束后，这个子串就对应从
+左指针开始，不包含长度字符的最长子串。
+```java
+public int lengthOfLongestSubstring(String s){
+  Set<Character> set = new HashSet<>();
+  int n = s.length();
+  int ans = 0,i = 0,j = 0;
+  while(i < n && j < n){
+    if(!set.contains(s.charAt(j))){
+      set.add(s.charAt(j++));
+      ans = Math.max(ans,j - i);}
+    else{
+      set.remove(s.charAt(i++));}}
+  return ans;}
+```
+
+解法二：使用哈希表
+===============
+
+在外面遇到相同字符时，外面需要往后移动，但是这里外面可以不用一位一位的移动，可以直接移动到重复字符的下一位，这样就
+需要使用哈希表存储每个字符的下标位置
+
+```java
+public int lengthOfLongestSubstring(String s){
+  Map<Character,Integer> map = new HashMap<>();
+  int ans = 0,n = s.length();
+  for(int i = 0,j = 0;j < n;j++){
+    if(map.containsKey(s.charAt(j))){
+      i = Math.max(i,map.get(s.charAt(j)));}
+    ans = Math.max(j-i+1,ans);
+    map.put(s.charAt(j),j+1);}
+  return ans;}
+```
+
+解法三：将哈希表改成数组
+====================
+
+直接使用数组，字符的ASCII码作为数组的下标，数组存储该字符所处字符串的位置
+
+```java
+public int lengthOfLongestSubstring(String s){
+  int ans = 0,n = s.length();
+  int [] index = new int[128];
+  for(int i = 0,j = 0;j < n;j++){
+    i = Math.max(i,index[s.charAt(j)]);
+    ans = Math.max(j-i+1,ans);
+    index[s.charAt(j)] = j+1;}
+  return ans;}
+```
+
+总结：
+====
+
+这里的主要思路就是保证两个指针对应的字符串中没有重复的字符，使用set集合存储子串，每移动一次，检查需要存入的
+字符是否存在于集合中，最后得出子串长度。我只想到了这一个思路，但是仔细分析会发现，其实还是有考研优化的地方，
+解法二和解法三都是优化的过程，使用map存储字符位置，可以跳过某些字符，使用数组可以减少if操作，很巧妙。
