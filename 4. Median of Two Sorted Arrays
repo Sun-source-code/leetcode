@@ -1,0 +1,101 @@
+# leetcode
+
+题目描述（困难）
+============
+
+给定两个大小为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。
+请你找出这两个正序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
+你可以假设 nums1 和 nums2 不会同时为空。
+
+示例：nums1 = [1, 2]nums2 = [3, 4]
+则中位数是 (2 + 3)/2 = 2.5
+
+解法一：二分查找
+=============
+
+直观的思路有两个：
+1、使用归并的方法，合并两个有序数组，得到一个更大的数组，找到中间位置的元素，时间复杂度为O(m+n)
+2、不合并有序数组，直接找中位数，因为两个数组的长度已知，维护两个指针分别指向两个有序数组下标为0的位置，每次将指
+向较小值的指针后移一位，直到到达中位数的位置，时间复杂度为O(m+n)
+
+题目要求时间复杂度为O(log(m+n))，所以这两种方法都不符合要求。对于时间复杂度O(log(m+n))，我们可以想到二分查找。
+
+根据中位数的定义，当m+n为偶数时，结果为两个有序数组中第(m+n)/2和第(m+n)/2+1个元素的平均数，当m+n为奇数时，结
+过为第(m+n)/2个元素，因此我们可以将这道题转变为第k个元素，k为(m+n)/2或(m+n)/2+1。
+
+假设两个有序数组为A和B，要找到第k个元素，先对比A[k/2-1]和B[k/2-1]，分三种情况：
+1、如果A[k/2-1]<B[k/2-1]，排除A[0] ~ A[k/2-1]
+2、如果A[k/2-1]>B[k/2-1]，排除B[0] ~ B[k/2-1]
+3、如果A[k/2-1]=B[k/2-1]，归并第一种情况
+在比较了A[k/2-1]和B[k/2-1]之后，我们可以排除k/2个不可能为第k个的数，查找范围缩小了一半，同时，我们在排除后的
+新数组上继续进行二分查找，并且根据我们排除数的个数更新k的值，直到找到k=0
+
+```java
+public double findMedianSortedArrays(int [] nums1,int [] nums2){
+  int length1 = nums1.length,length2 = nums2.length;
+  int totallength = length1 + length2;
+  if(totallength % 2 == 0){
+    int midIndex = totallength / 2;
+    double median = getKthElement(nums1,nums2,midIndex+1);
+    return median;}
+  else {
+    int midIndex1 = totallength / 2 - 1,midIndex2 = totallength / 2;
+    double median1 = (getKthElement(nums1,nums2,midIndex1+1)+getKthElement(nums1,nums2,midIndex2+1))/2.0;
+    return median1;}}
+public int getKthElement(int [] nums1,int [] nums2,int k){
+  int length1 = nums1.length,length2 = nums2.length;
+  int index1 = 0,index2 = 0;
+  int kthElement = 0;
+  while(true){
+    if(index1 == length1) return nums2[index2+k-1];
+    if(index2 == length2) return nums1[index1+k-1];
+    if(k == 1){
+      return Math.min(nums1[index1],nums2[index2]);}
+    int half = k / 2;
+    int newIndex1 = Math.min(index1 + half, length1) - 1;
+    int newIndex2 = Math.min(index2 + half, length2) - 1;
+    int pivot1 = nums1[newIndex1], pivot2 = nums2[newIndex2];
+    if (pivot1 <= pivot2) {
+      k -= (newIndex1 - index1 + 1);
+      index1 = newIndex1 + 1;
+    } else {
+      k -= (newIndex2 - index2 + 1);
+      index2 = newIndex2 + 1;}}
+```
+
+解法二：划分数组
+==============
+
+中位数作用：将一个集合分为两个长度相等的子集，其中一个子集的元素都大于另一个子集的元素。
+1、我们设i为nums1的分隔线，j为nums2的分隔线，那么i+j=m-i+j-n，m,n表示数组的长度，可以得到i+j=(m+n+1)/2
+2、我们规定，A的长度一定小于等于B的长度，即m<=n，那么对于任意i，都有j=(m+n+1)/2-i
+
+```java
+public double findMedianSortedArrays(int [] nums1,int [] nums2){
+  if(nums1.length > nums2.length){
+    return findMedianSortedArrays(nums2,nums1);}
+  int m = nums1.length,n = nums2.length;
+  int left = 0,right = m,ans = -1;
+  int median1 = 0,medians2 = 0;
+  while(left < right){
+    int i = (left + right) / 2;
+    int j = (m + n + 1)/2-i;
+    int num_im1 = (i == 0 ? Integer.MAX_VALUE : nums[i-1]);
+    int num_i = (i == m ? Integer.MAX_VALUE : nums[i]);
+    int num_jm1 = (j == 0 ? Integer.MAX_VALUE : nums[j-1]);
+    int num_j = (j == n ? Integer.MAX_VALUE : nums[j]);
+    if(num_im1 <= num_j)
+      ansi = i;
+      median1 = Math.max(nums_im1, nums_jm1);
+      median2 = Math.min(nums_i, nums_j);
+      left = i + 1;}
+    else{
+      right = i - 1;}}
+    return (m+n) % 2 == 0 ? (median1+median2)/2.0 : median1;}
+```
+
+总结：
+====
+这题如果使用暴力匹配并不难做，但是这里有时间复杂度的要求，看到log(m+n)，我们可以想到二分查找，这里使用的是
+通过二分查找逐步缩小搜索范围，直到k=0，注意这里二分查找并不是将数组二分，而是将k二分，这个思路很巧妙，另外
+解法二利用中位数的含义，将其分为两个集合，包含双指针的思想，比方法一还完美。
