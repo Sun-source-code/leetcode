@@ -1,0 +1,74 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为“Finish”）。
+问总共有多少条不同的路径？
+示例：输入: m = 3, n = 2
+输出: 3
+解释:从左上角开始，总共有 3 条路径可以到达右下角。
+1. 向右 -> 向右 -> 向下
+2. 向右 -> 向下 -> 向右
+3. 向下 -> 向右 -> 向右
+
+解法一：动态规划
+
+这里的状态转移方程为dp[i][j] = dp[i-1][j] + dp[i][j-1]，类似于斐波那契数列的计算方式，因此可以得到第一种代码
+
+```java
+public int uniquePaths(int m,int n){
+  int[][] dp = new int[m][n];
+  for (int i = 0; i < n; i++) dp[0][i] = 1;
+  for (int i = 0; i < m; i++) dp[i][0] = 1;
+  for (int i = 1; i < m; i++) {
+    for (int j = 1; j < n; j++) {
+      dp[i][j] = dp[i - 1][j] + dp[i][j - 1];}}
+  return dp[m - 1][n - 1];}
+```
+
+所有动态规划的二维数组，均可以转化为一维数组来计算，第一层循环并不需要实际的数据来显示，
+只需要达到遍历次数即可，可以得到下面的代码
+
+```java
+public int uniquePaths(int m,int n){
+  int [] dp = new int[m];
+  for(int i = 0;i < m;i++){
+    dp[i] = 1;}
+  for(int i = n - 2;i >= 0;i--){
+    for(int j = m - 2;j >= 2;j--){
+      dp[j] = dp[j] + dp[i+1];}}
+  return dp[0];}
+```
+
+这是从后往前计算的方式，同理我们可以从前往后的方式遍历
+
+```java
+public int uniquePaths(int m,int n){
+  int [] dp = new int[m];
+  for(int i = 0;i < m;i++){
+    dp[i] = 1;}
+  for(int i = 1;i < n;i++){
+    for(int j = 1;j < m;j++){
+      dp[j] = dp[j] + dp[i-1];}}
+  return dp[m-1];}
+```
+
+解法二：排列组合
+=============
+
+```java
+public int uniquePaths(int m,int n){
+  int N = n + m - 2; 
+  int k = m - 1;  
+  long res = 1; 
+  for (int i = 1; i <= k; i++)
+    res = res * (N - k + i) / i;
+  return (int) res;}
+```
+
+总结：
+====
+
+这题很容易想到动态规划，却不容易联系到斐波那契数列，动态规划思考到了状态转移方程也就很容易计算了。
