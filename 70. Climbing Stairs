@@ -1,0 +1,71 @@
+# leetcode
+
+题目描述（简单）
+============
+
+假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+注意：给定 n 是一个正整数。
+示例：输入： 3
+输出： 3
+解释： 有三种方法可以爬到楼顶。
+1.  1 阶 + 1 阶 + 1 阶
+2.  1 阶 + 2 阶
+3.  2 阶 + 1 阶
+
+解法一：动态规划
+=============
+
+经过分析我们可以发现，爬n级楼梯的步数是n-1级楼梯步数和n-2级楼梯步数之和，也就是斐波那契数列，得到以下代码
+
+```java
+public int climbStairs(int n){
+  if(n == 1) return 1;
+  if(n == 2) return 2;
+  int [] dp = new int[n];
+  dp[0] = 1;
+  dp[1] = 2;
+  for(int i = 2;i < n;i++){
+    dp[i] = dp[i-1] + dp[i-2];}
+  return dp[n-1];}
+```
+
+我们可以不使用数组，直接使用变量来代替
+
+```java
+public int climbStairs(int n){
+  int p = 0,q = 0,r = 0;
+  for(int i = 1; <= n;i++){
+    p = q;
+    q = r;
+    r = p + q;}
+  return r;}
+```
+
+解法二：矩形快速幂
+
+获取通项公式的矩阵形式，再找规律
+
+```java
+public int climbStairs(int n){
+  int [][] q = {{1,1},{1,0}};
+  int [][] res = power(q,n);
+  return res[0][0];}
+public int [][] power(int [][] a,int n){
+  int [][] ret = {{1,0},{0,1}};
+  while(n > 0){
+    if((n & 1) == 1){
+      ret = multiply(ret,a);}
+    n >>= 1;
+    a = multiply(a,a);}
+  return ret;}
+public int [][] multiply(int [][] a,int [][] b){
+  int [][] c = new int[2][2];
+  for(int i = 0;i < 2;i++){
+    for(int j = 0;j < 2;j++){
+      c[i][j] = a[i][0]*b[0][j] + a[i][1]*b[1][j];}}
+  return c;}
+```
+
+总结：这题动态规划是很容易想到的，反而是解法二实在厉害，通项公式的矩阵形式可以这样使用，也实在让我惊呆了，
+线性代数还是要学好的。
