@@ -1,0 +1,72 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+示例：输入: s = "anagram", t = "nagaram"
+输出: true
+
+解法一：排序
+==========
+
+直接对字符串进行排序
+
+```java
+public boolean isAnagrem(String s,String t){
+  char [] sArray = s.toCharArray();
+  char [] tArray = t.toCharArray();
+  Arrays.sort(sArray);
+  s = String.valueOf(sArray);
+  Arrays.sort(tArray);
+  t = String.valueOf(tArray);
+  return s.equals(t);}
+```
+
+解法二：哈希表
+============
+
+使用哈希表存储每个字符的个数
+
+```java
+public boolean isAnagram(String s, String t) {
+  if (s.length() != t.length()) {
+    return false;}
+  HashMap<Character, Integer> map = new HashMap<>();
+  char[] sArray = s.toCharArray();
+  for (int i = 0; i < sArray.length; i++) {
+    int count = map.getOrDefault(sArray[i], 0);
+    map.put(sArray[i], count + 1);}
+  char[] tArray = t.toCharArray();
+  for (int i = 0; i < tArray.length; i++) {
+    int count = map.getOrDefault(tArray[i], 0);
+      if (count == 0) {
+        return false;}
+      map.put(tArray[i], count - 1);}
+  return true;}
+  
+解法三：素数相乘
+==============
+
+参考第49题
+
+```java
+import java.math.BigInteger;
+public boolean isAnagram(String s, String t) {
+  int[] prime = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,101 };
+  char[] sArray = s.toCharArray();
+  BigInteger sKey = BigInteger.valueOf(1);
+  for (int i = 0; i < sArray.length; i++) {
+    BigInteger temp = BigInteger.valueOf(prime[sArray[i] - 'a']);
+    sKey = sKey.multiply(temp);}
+    char[] tArray = t.toCharArray();
+      BigInteger tKey = BigInteger.valueOf(1);
+      for (int i = 0; i < tArray.length; i++) {
+        BigInteger temp = BigInteger.valueOf(prime[tArray[i] - 'a']);
+        tKey = tKey.multiply(temp);}
+  return sKey.equals(tKey);}
+  
+总结：
+====
+
+这题和49题思路一模一样，且更简单，注意方法三整型无法存储，需要改类型。
