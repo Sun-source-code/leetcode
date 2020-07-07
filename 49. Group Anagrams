@@ -1,0 +1,84 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+示例：输入: ["eat", "tea", "tan", "ate", "nat", "bat"]
+输出:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+
+解法一：排序数组分类
+
+直接对每个字符串进行排序，排序后的字符串相等，则是字母异位词
+
+```java
+public List<List<String>> groupAnagrams(String [] strs){
+  if(strs == null) return new ArrayList<>();
+  Map<String,List> ans = new HashMap<String,List>();
+  for(String s : strs){
+    char [] ch = s.toCharArray();
+    Arrays.sort(ch);
+    String key = String.valueOf(ch);
+    if(!ans.containsKey(key)) ans.put(key,new ArrayList<>());
+    ans.get(key).add(s);}
+  return new ArrayList(ans.values());}
+```
+
+解法二：按计数分类
+
+计算每个字符的个数，个数相同的就是字母异位词
+
+```java
+public List<List<String>> groupAnagrams(String [] strs){
+  if(strs == null) return new ArrayList();
+  Map<String,List> ans = new HashMap<>();
+  int [] count = new int[26];
+  for(String s : strs){
+    Arrays.fill(count,0);
+    for(char ch : s.toCharArray()) count[ch - 'a']++;
+    StringBuilder sb = new StringBuilder("");
+    for(int i = 0;i < 26;i++){
+      sb.append("#");
+      sb.append(count[i]);}
+    String key = sb.toString();
+    if(!ans.containsKey(key)) ans.put(key,new ArrayList());
+    ans.get(key).add(s);}
+  return new ArrayList(ans.values());}
+```
+
+解法三：算术基本定理
+
+算术基本定理，又称为正整数的唯一分解定理，即：每个大于1的自然数，要么本身就是质数，要么可以写为2个以上的质数的积，
+而且这些质因子按大小排列之后，写法仅有一种方式。
+用一个数组存储质数 prime = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 41,
+43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103}。
+然后每个字符串的字符减去 ' a ' ，然后取到 prime 中对应的质数。把它们累乘。
+例如 abc ，就对应 'a' - 'a'， 'b' - 'a'， 'c' - 'a'，即 0, 1, 2，也就是对应素数 2 3 5，然后相乘 2 3 5 = 30，就把 "abc" 映射到了 30。
+
+```java
+public List<List<String>> groupAnagrams(String [] strs){
+  HashMap<Integer,List<String>> ans = new HashMap<>();
+  int [] prime = {2,3,5,7,11,13,17,19,23,29,31,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103};
+  for(int i = 0;i < strs.length;i++){
+    int key = 1;
+    for(int j = 0;j < strs[i].length();j++){
+      key *= prime[strs[i].charAt(j)-'a'];}
+    if(res.containsKey(key)){
+      res.get(key).add(strs[i]);}
+    else{
+      List<String> temp = new ArrayList<>();
+      temp.add(strs[i]);
+      res.put(key,temp);}}
+  return new ArrayList(res.values());}
+```
+
+总结：
+====
+
+这里前两种方法都比较容易想到，只是需要注意这些方法的调用，方法三更不好思考，不过使用数组来存储字符也不是第一次，这里
+特别的地方是这个基本原理，使用到了26个质数，值得学习。
