@@ -1,0 +1,94 @@
+# leetcode
+
+题目描述（困难）
+============
+
+给你两个单词 word1 和 word2，请你计算出将 word1 转换成 word2 所使用的最少操作数 。
+你可以对一个单词进行如下三种操作：
+1、插入一个字符
+2、删除一个字符
+3、替换一个字符
+
+示例：输入：word1 = "horse", word2 = "ros"
+输出：3
+解释：
+horse -> rorse (将 'h' 替换为 'r')
+rorse -> rose (删除 'r')
+rose -> ros (删除 'e')
+
+解法一：动态规划
+=============
+
+对于单词A和单词B，A删除一个字符和B插入一个字符是等价的，对B删除一个字符和A插入一个字符是等价的，
+对A替换一个字符对B替换一个字符是等价的
+因此，我们可以执行三种操作，在A中插入，在B中插入，在A中替换
+注意特殊情况，如果有一个字符串为空，那么最少操作数为另一个字符串的长度
+D[i][j-1] 为 A 的前 i 个字符和 B 的前 j - 1 个字符编辑距离的子问题。
+即对于 B 的第 j 个字符，我们在 A 的末尾添加了一个相同的字符，那么 D[i][j] 最小可以为 D[i][j-1] + 1；
+
+D[i-1][j] 为 A 的前 i - 1 个字符和 B 的前 j 个字符编辑距离的子问题。
+即对于 A 的第 i 个字符，我们在 B 的末尾添加了一个相同的字符，那么 D[i][j] 最小可以为 D[i-1][j] + 1；
+
+D[i-1][j-1] 为 A 前 i - 1 个字符和 B 的前 j - 1 个字符编辑距离的子问题。
+即对于 B 的第 j 个字符，我们修改 A 的第 i 个字符使它们相同，那么 D[i][j] 最小可以为 D[i-1][j-1] + 1。
+特别地，如果 A 的第 i 个字符和 B 的第 j 个字符原本就相同，
+那么我们实际上不需要进行修改操作。在这种情况下，D[i][j] 最小可以为 D[i-1][j-1]。
+
+因此我们可以列出状态转移方程：
+当A和B的最后一个字符不同时，p[i][j] = 1 + Math.min(p[i][j-1] + p[i-1][j] + p[i-1][j-1])
+当A和B的最后一个字符相同时，p[i][j] = 1 + Math.min(p[i][j-1] + p[i-1][j] + p[i-1][j-1] - 1)
+
+```java
+public int minDistance(String word1,String word2){
+  int n = word1.length();
+  int m = word2.length();
+  if(n * m == 0){
+    return n + m;}
+  int [][] dp = new int[n+1][m+1];
+  for(int i = 0;i < n+1;i++){
+    dp[i][0] = i;}
+  for(int i = 0;i < m+1;i++){
+    dp[0][i] = i;}
+  for(int i = 1;i < n+1;i++){
+    for(int j = 1;j < m+1;j++){
+      int left = dp[i][j-1]+1;
+      int right = dp[i-1][j]+1;
+      int left_down = dp[i-1][j-1];
+      if(word1.charAt(i - 1) != word2.charAt(j - 1)){
+        left_down += 1;}
+      dp[i][j] = Math.min(left,Math.min(right,left_down));}}
+  return dp[n][m];}
+```
+
+空间优化：
+=======
+
+将二维数组转化为一维数组
+
+```java
+public int minDistance(String word1,String word2){
+  int n = word1.length();
+  int m = word2.length();
+  if(n * m == 0){
+    return n + m;}
+  int [] ans = new int[m+1];
+  for(int i = 0;i <= m;i++){
+    ans[i] = i;}
+  for(int i = 1;i <= n;i++){
+    int temp = ans[0];
+    ans[0] = ans[0] + 1;
+    for(int j = 1;j <= m;j++){
+      int min_delete = Math.min(ans[j],ans[j-1])+1;
+      int replace = temp;
+      if(word1.charAt(i-1) != word2.charAt(j-1)){
+        replace += 1;}
+      temp = ans[j];
+      ans[j] = Math.min(min_delete,replace);}}
+  return ans[m];}
+```
+
+总结：
+====
+
+这题是比较难的，我被带入了具体的字符，其实这题只是要求求操作次数，与具体字符无关，状态转移方程不太好思考，
+不过如果想到了动态规划也就不难了。
