@@ -1,0 +1,90 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定两个单词 word1 和 word2，找到使得 word1 和 word2 相同所需的最小步数，每步可以删除任意一个字符串中的一个字符。
+示例：输入: "sea", "eat"
+输出: 2
+解释: 第一步将"sea"变为"ea"，第二步将"eat"变为"ea"
+
+解法一：使用最长公共子序列
+======================
+
+思路还是很简单，求出最长公共子序列的长度lc，则最小步数为m+n-2*lc
+
+```java
+public int lcs(String s1,String s2,int m,int n){
+  if(m == 0 || n == 0) return 0;
+  if(s1.charAt(m-1) == s2.charAt(n-1))
+    return lcs(s1,s2,m-1,n-1);
+  else
+    return Math.max(lcs(s1,s2,m-1,n),lcs(s1,s2,m,n-1));}
+public int minDistance(String s1,String s2){
+  return s1.length()+s2.length()-2*lcs(s1,s2,s1.length(),s2.length());}
+```
+超出时间限制
+
+解法二：带记忆化的最长公共子序列
+===========================
+
+解法一超过时间限制，原因是lcs方法有太多的冗余，我们可以使用一个数组来存储lcs的结果，避免过多的冗余
+
+```java
+public int lcs(String s1,String s2,int m,int n,int [][] memo){
+  if(m == 0 || n == 0){
+    return 0;}
+  if(memo[m][n] > 0){
+    return memo[m][n];}
+  if(s1.charAt(m-1) == s2.charAt(n-1))
+    memo[m][n] = 1 + lcs(s1,s2,m-1,n-1,memo);
+  else
+    memo[m][n] = Math.max(lcs(s1,s2,m-1,n,memo),lcs(s1,s2,m,n-1,memo));
+  return memo[m][n];}
+public int minDistance(String s1,String s2){
+  int [][] memo = new int[s1.length()+1][s2.length()+1];
+  return s1.length()+s2.length()-2*lcs(s1,s2,s1.length(),s2.length(),memo);}
+```
+
+解法三：动态规划
+==============
+
+对于dp[i][j]，我们有两种情况，要么s1[i-1]和s2[j-1]相等，那么dp[i][j] = dp[i-1][j-1] + 1，
+要么s1[i-1]和s2[j-1]不相等，那么更新最长子序列的长度
+
+```java
+public int minDistance(String s1,String s2){
+  int [][] dp = new int[s1.length()+1][s2.length()+1];
+  for(int i = 0;i <= s1.length();i++){
+    for(int j = 0;j <= s2.length();j++){
+      if(i == 0 || j == 0) continue;
+      if(s1.charAt(i-1) == s2.charAt(j-1)){
+        dp[i][j] = dp[i-1][j-1] +  1;}
+      else
+        dp[i][j] = Math.max(dp[i-1][j],dp[i][j-1]);}}
+  return s1.length()+s2.length()-2*dp[s1.length()][s2.length()];}
+```
+
+解法四：一维动态规划
+=================
+
+```java
+public int minDistance(String s1,String s2){
+  int [] dp = new int[s2.length()+1];
+  for(int i = 0;i <= s1.length();i++){
+    int [] temp = new int[s2.length()+1];
+    for(int j = 0;j <= s2.length();j++){
+      if(i == 0 || j == 0)
+        temp[j] = i+j;
+      else if(s1.charAt(i-1) == s2.charAt(j-1))
+        temp[j] = dp[i-1];
+      else
+        temp[j] = Math.max(dp[j],temp[j-1])+1;}
+    dp = temp;}
+  return dp[s2.length()];}
+
+总结：
+====
+
+题目思路还是很简单，直接求出最长公共子序列，然后做减法即可，但是如果像方法一一样，多次调用lcs，会产生大量的冗余，
+方法二的思路以后可以借鉴，这里最合适的就是动态规划，与第72题对比，只有减字符的操作，状态转移方程相对简单。
