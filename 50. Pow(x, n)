@@ -1,0 +1,50 @@
+# leetcode
+
+题目描述（简单）
+============
+
+实现 pow(x, n) ，即计算 x 的 n 次幂函数。
+示例：输入: 2.00000, 10
+输出: 1024.00000
+
+输入: 2.00000, -2
+输出: 0.25000
+解释: 2-2 = 1/22 = 1/4 = 0.25
+
+解法一：快速幂+递归
+================
+
+```java
+public double quickMul(double x,long N){
+  if(N == 0) return 1.0;
+  double y = quickMul(x,N/2);
+  return n % 2 == 0 ? y*y : y*y*x;}
+public double myPow(double x,int n){
+  long N = n;
+  return n >= 0 ? quickMul(x,N) : 1.0 / quickMul(x,-N);}
+```
+说明：这里也可以不改为long类型
+  
+解法二：快速幂+迭代
+================
+
+```java
+public double myPow(double x,int n){
+  long N = n;
+  return N >= 0 ? quickMul(x,N) : 1.0 / quickMul(x,-N);}
+public double quickMul(double x,long N){
+  double ans = 1.0;
+  double x_contribute = x;
+  while(N >= 0){
+    if(N % 2 == 1){
+      ans *= x_contribute;}
+    x_contribute *= x_contribute;
+    N /= 2;}
+  return ans;}
+```
+
+总结：
+====
+
+思路还是很简单的，不过如果直接进行递归或迭代，时间复杂度相对长一些，将N减半分析会快很多。注意-2^31的相反数依旧是-2^31
+
