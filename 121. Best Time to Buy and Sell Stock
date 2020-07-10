@@ -1,0 +1,91 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+如果你最多只允许完成一笔交易（即买入和卖出一支股票一次），设计一个算法来计算你所能获取的最大利润。
+注意：你不能在买入股票前卖出股票。
+
+示例：输入: [7,1,5,3,6,4]
+输出: 5
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。
+
+解法一：暴力匹配
+=============
+
+双重循环查找两个元素之差最大的值
+
+```java
+public int maxProfit(int [] prices){
+  int ans = 0;
+  for(int i = 0;i < prices.length;i++){
+    for(int j = i;j >= i;j++){
+        if(prices[j] - prices[i] > ans){
+          ans = prices[j] - prices[i];}}}
+  return ans;}
+```
+
+解法二：一次遍历
+=============
+
+这个方法是暴力匹配的优化版
+
+```java
+public int maxProfit(int [] prices){
+  int min = Integer.MAX_VALUE;
+  int max = 0;
+  for(int i = 0;i < prices.length;i++){
+    if(prices[i] < min){
+      min = prices[i];}
+    else if(prices[i] - min > max){
+      max = prices[i] - min;}}
+  return max;
+```
+
+解法三：动态规划
+=============
+
+状态转移方程为dp[i][k][0] = Math.max([dp[i-1][k][0],dp[i-1][k][1]+prices[i]);
+dp[i][k][1] = Math.max(dp[i-1][k][1],dp[i-1][k][0]-prices[i]);
+首先第一个方程表示如果当前没有买入股票，那么可能的情况有两种，一种是前一天也没有买入股票，价值不变，
+另一种是前一天买入了，但是卖掉了，那么有可能前一天的价值加上今天的价值会更大
+第二个方程表示，如果当前买入了股票，也有两种情况，第一种是前一天也买入了股票，价值与前一天保持不变，
+另一种是前一天没有买入，今天刚买入，那么有可能前一天的价值减去今天股票的价格会更大
+最后一定是要卖出股票的，返回最后一天没有买入股票的情况即可
+
+在这一题中，k不变，状态转移方程可以写成
+dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i])
+dp[i][1] = max(dp[i-1][1], -prices[i])
+
+```java
+public int maxProfit(int [] prices){
+  int n = prices.length;
+  int [][] dp = new int[n][2];
+  for(int i = 0;i < n;i++){
+    if(i-1 == -1){
+      dp[i][0] = 0;
+      dp[i][1] = -prices[i];
+      continue;}
+    dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1]+prices[i]);
+    dp[i][1] = Math.max(dp[i-1][1],-prices[i]);}
+  return dp[n-1][0];}
+```
+
+可以发现这里变化时候，仅仅是两个数在发生变化，因此我们可以直接使用变量来代替数组
+
+```java
+public int maxProfit(int [] prices){
+  int n = prices.length;
+  int dp0 = 0,dp1 = Integer.MIN_VALUE;
+  for(int i = 0;i < n;i++){
+    dp0 = Math.max(dp0,dp1+prices[i]);
+    dp1 = Math.max(dp1,-prices[i]);}
+  return dp0;}
+```
+
+总结：
+====
+
+感谢大佬给出的状态转移方程和详解，这个转移方程可以使用于几乎所有的股票问题，思路清晰，值得学习。
