@@ -1,0 +1,64 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+峰值元素是指其值大于左右相邻值的元素。
+给定一个输入数组 nums，其中 nums[i] ≠ nums[i+1]，找到峰值元素并返回其索引。
+数组可能包含多个峰值，在这种情况下，返回任何一个峰值所在位置即可。
+你可以假设 nums[-1] = nums[n] = -∞。
+
+示例：输入: nums = [1,2,3,1]
+输出: 2
+解释: 3 是峰值元素，你的函数应该返回其索引 2。
+
+解法一：线性扫描
+=============
+
+分析数组，我们会发现三种情况：
+1、数组整体是降序的，第一个元素就是峰值
+2、数组整体是升序的，最后一个元素就是峰值
+3、数组有升有降，那么中转的位置nums[i] > nums[i + 1]，与情况二相同
+
+```java
+public int findPeakElement(int [] nums){
+  for(int i = 0;i < nums.length;i++){
+    if(nums[i] > nums[i+1]){
+      return i;}}
+  return nums.length-1;}
+```
+
+解法二：递归二分查找
+================
+
+```java
+public int search(int [] nums,int l,int r);
+  if(l == r) return l;
+  int mid = l + (r - l) / 2;
+  if(nums[mid] > nums[mid+1]){
+    return search(nums,l,mid);}
+  else{
+    return search(nums,mid+1,r);}
+public int findPeakElement(int [] nums){
+  return search(nums,0,nums.lenght-1);}
+```
+
+解法三：迭代二分查找
+================
+
+```java
+public int findPeakElement(int [] nums){
+  int l = 0,r = nums.length - 1;
+  while(l < r){
+    int mid = l + (r - l) / 2;
+    if(nums[mid] > nums[mid+1]){
+      r = mid;}
+    else{
+      l = mid+1;}}
+  return l;}
+```
+
+总结：
+====
+
+这题很关键的一点就是当数组整体都升序或降序时，应该输出什么，需要特别注意。
