@@ -1,0 +1,69 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+冬季已经来临。 你的任务是设计一个有固定加热半径的供暖器向所有房屋供暖。
+现在，给出位于一条水平线上的房屋和供暖器的位置，找到可以覆盖所有房屋的最小加热半径。
+所以，你的输入将会是房屋和供暖器的位置。你将输出供暖器的最小加热半径。
+说明:
+1、给出的房屋和供暖器的数目是非负数且不会超过 25000。
+2、给出的房屋和供暖器的位置均是非负数且不会超过10^9。
+3、只要房屋位于供暖器的半径内(包括在边缘上)，它就可以得到供暖。
+4、所有供暖器都遵循你的半径标准，加热的半径也一样。
+
+示例：输入: [1,2,3],[2]
+输出: 1
+解释: 仅在位置2上有一个供暖器。如果我们将加热半径设为1，那么所有房屋就都能得到供暖。
+
+解法一：双指针
+===========
+
+逐步遍历house数组，找到每一个元素对应于heaters最近的供暖器，并更新最大的距离
+Math.abs(heaters[i] - house) >= Math.abs(heaters[i + 1] - house)
+
+```java
+public int findRadius(int [] houses,int [] heaters){
+  Arrays.sort(houses);
+  Arrays.sort(heaters);
+  int i = 0, ans = 0;
+  for(int house : houses){
+    while(i < heaters.length-1 && Math.abs(heaters[i] - house) >= Math.abs(heaters[i + 1] - house)){
+      i++;}
+    ans = Math.max(ans,Math.abs(heaters[i] - house));}
+  return ans;}
+```
+
+解法二：二分查找
+=============
+
+```java
+public int findRadius(int [] houses,int [] heaters){
+  Arrays.sort(heaters);
+  int res = 0;
+  for(int house : houses){
+    index = Search(heaters,house);
+    if(index < 0){
+      int index = -(index+1);
+      int left = index - 1 >= 0 ? house-heaters[index-1] : Integer.MAX_VALUE;
+      int right = index < heaters.length ? heaters[index] - house : Integer.MAX_VALUE
+      ans = Math.max(ans,Math.min(left,right));}}
+  return ans;}
+private int Search(int [] heaters,int house){
+  int left = 0;
+  int right = heaters.length-1;
+  while(left <= right){
+    int mid = left + (right - left) / 2;
+    if(heaters[mid] > house){
+      right = mid - 1;}
+    else if(heaters[mid] < house){
+      left = mid + 1;}
+    else{
+      return mid;}}
+  return -(left+1);}
+```
+
+总结：
+====
+
+比较难的一点就是，距离的更新问题，对于houses的每一个元素对应一个距离最近的供暖器，求出这些距离的最大值。
