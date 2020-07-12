@@ -1,0 +1,67 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给定两个数组，编写一个函数来计算它们的交集。
+示例：输入: nums1 = [1,2,2,1], nums2 = [2,2]
+输出: [2,2]
+
+解法一：哈希表
+===========
+
+采用两个map集合，第一个存入nums1的值，第二个逐步减少其中的值，遇到相同的元素，则在新数组中添加该元素
+注意 Arrays.copyOfRange方法的使用，这也是我一直没有想到的地方
+
+```java
+public int [] intersect(int [] nums1,int [] nums2){
+  if(nums1.length > nums2.length){
+    return intersect(nums2,nums1);}
+  Map<Integer,Integer> map = new HashMap<>();
+  for(int num : nums1){
+    int count = map.getOrDefault(num,0) + 1;
+    map.put(num,count);}
+  int [] ans = new int[nums1.length];
+  int index = 0;
+  for(int num : nums2){
+    int count = map.getOrDefault(num,0);
+    if(count > 0){
+      ans[index++] = num;
+      count--;
+      if(count > 0){
+        map.put(num,count);}
+      else{
+        map.remove(num);}}}
+  return Arrays.copyOfRange(ans,0,index);}
+```
+
+解法二：排序
+==========
+
+将两个数组进行排序，使用双指针指向两个数组，同时判断大小
+
+```java
+public int intersect(int [] nums1,int [] nums2){
+  Arrays.sort(nums1);
+  Arrays.sort(nums2);
+  int len1 = nums1.length,len2 = nums2.length;
+  int [] ans = new int[Math.min(len1,len2)];
+  int i = 0,j = 0,index = 0;
+  while(i < len1 && j < len2){
+    if(nums1[i] < nums2[j]){
+      i++;}
+    else if(nums1[i] > nums2[j]){
+      j++;}
+    else{
+      ans[index] = nums1[i];
+      i++;
+      j++;
+      index++;}}
+  return Arrays.copyOfRange(ans, 0, index);}
+```
+
+总结：
+====
+
+我最先想到的是排序的方法，解法一里的思路其实和判断两个字符串是否为异位是一样的，
+这里Arrays.copyOfRange()方法很重要
