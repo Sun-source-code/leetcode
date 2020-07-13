@@ -1,0 +1,79 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给你一个由 n 个节点（下标从 0 开始）组成的无向加权图，该图由一个描述边的列表组成，
+其中 edges[i] = [a, b] 表示连接节点 a 和 b 的一条无向边，且该边遍历成功的概率为 succProb[i] 。
+
+指定两个节点分别作为起点 start 和终点 end ，请你找出从起点到终点成功概率最大的路径，并返回其成功概率。
+
+如果不存在从 start 到 end 的路径，请 返回 0 。只要答案与标准答案的误差不超过 1e-5 ，就会被视作正确答案。
+
+示例：输入：n = 3, edges = [[0,1],[1,2],[0,2]], succProb = [0.5,0.5,0.2], start = 0, end = 2
+输出：0.25000
+解释：从起点到终点有两条路径，其中一条的成功概率为 0.2 ，而另一条为 0.5 * 0.5 = 0.25
+
+解法一：遍历
+==================
+
+可以理解成对一小段路径双向遍历，找到相乘较大的方向，赋值给新数组，也可以理解成动态规划。
+
+```java
+public double maxProbability(int n,int[][] edges,double[] succProb,int start,int end){
+  double dp[] = new double[n];
+	dp[start] = 1;//起点
+	while(true){
+	  boolean k = false;
+		for(int j = 0; j < edges.length; j++) {
+		  if(dp[edges[j][0]] * succProb[j] > dp[edges[j][1]]) {
+			  dp[edges[j][1]] = dp[edges[j][0]] * succProb[j];
+				k = true;}
+      //因为是无向图,所以再反向遍历
+			if(dp[edges[j][1]] * succProb[j] > dp[edges[j][0]]) {
+			  dp[edges[j][0]] = dp[edges[j][1]] * succProb[j];
+				k = true;}}           
+	  if (!k) break;//一遍未修改则表示图已遍历完成
+  return dp[end];}
+```
+
+解法二：迪杰斯特拉算法
+==================
+
+```java
+class State {
+  int node;
+  double prob;
+  public State(int node, double prob) {
+    this.node = node;
+    this.prob = prob;}}
+
+public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+        Map<Integer, Set<double[]>> map = new HashMap<>();
+  for (int i = 0; i < edges.length; i++) {
+  int a = edges[i][0], b = edges[i][1];
+  if (!map.containsKey(a)) map.put(a, new HashSet<>());
+  map.get(a).add(new double[] {b, succProb[i]});
+  if (!map.containsKey(b)) map.put(b, new HashSet<>());
+  map.get(b).add(new double[] {a, succProb[i]});}
+
+  double[] probs = new double[n];
+  Queue<State> queue = new LinkedList<>();
+  queue.offer(new State(start, 1.0));
+
+  while (!queue.isEmpty()) {
+    State state = queue.poll();
+    int curr = state.node;
+    double prob = state.prob;
+
+    Set<double[]> neighbours = map.getOrDefault(curr, new HashSet<>());
+    for(double[] neighbour: neighbours) {
+       if(probs[(int) neighbour[0]] >= prob * neighbour[1]) continue;
+         queue.add(new State((int) neighbour[0], prob * neighbour[1]));
+         probs[(int) neighbour[0]] = prob * neighbour[1];}}
+    return probs[end];}
+  
+总结：
+====
+ 
+我还是对迪杰斯特拉算法不太熟悉，这一题使用解法一会比较方便。
