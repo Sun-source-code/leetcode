@@ -1,0 +1,55 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给定两个数组，编写一个函数来计算它们的交集。
+示例：输入：nums1 = [1,2,2,1], nums2 = [2,2]
+输出：[2]
+
+解法一：哈希表Set
+==============
+
+思路就是将其中长度最短的一个数组存入set集合中，对于第二个数组，逐步遍历每一个元素是否存在于set集合，
+如果存在，则将该数加入到新的数组中，并移除该元素。
+
+```java
+public int[] intersection(int[] nums1, int[] nums2) {
+  if(nums1.length > nums2.length){
+    return intersection(nums2,nums1);}
+  Set<Integer> set = new HashSet<>();
+    for(int num : nums1){
+      if(!set.contains(num)){
+        set.add(num);}}
+  int [] ans = new int[nums1.length];
+  int index = 0;
+  for(int num : nums2){
+    if(set.contains(num)){
+      ans[index++] = num;
+      set.remove(num);}}
+  return Arrays.copyOfRange(ans,0,index);}
+```
+
+解法二：内置函数
+=============
+
+直接调用retainAll
+
+```java
+public int[] intersection(int[] nums1, int[] nums2) {
+  HashSet<Integer> set1 = new HashSet<Integer>();
+  for (Integer n : nums1) set1.add(n);
+  HashSet<Integer> set2 = new HashSet<Integer>();
+  for (Integer n : nums2) set2.add(n);
+  set1.retainAll(set2);
+  int [] output = new int[set1.size()];
+  int idx = 0;
+  for (int s : set1) output[idx++] = s;
+  return output;}
+```
+
+总结：
+====
+
+这题很简单，直接使用set集合就可以了，当然使用Map也可以，不过这里键值对的值并没有使用，也就没有必要了，
+这也是与第350题不一样的地方。
