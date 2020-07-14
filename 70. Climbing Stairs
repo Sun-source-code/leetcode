@@ -42,7 +42,7 @@ public int climbStairs(int n){
   return r;}
 ```
 
-解法二：矩形快速幂
+解法二：矩阵快速幂
 
 获取通项公式的矩阵形式，再找规律
 
