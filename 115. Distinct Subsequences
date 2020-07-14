@@ -1,0 +1,108 @@
+# leetcode
+
+题目描述（困难）
+=============
+
+给定一个字符串 S 和一个字符串 T，计算在 S 的子序列中 T 出现的个数。
+一个字符串的一个子序列是指，通过删除一些（也可以不删除）字符且不干扰剩余字符相对位置所组成的新字符串。
+（例如，"ACE" 是 "ABCDE" 的一个子序列，而 "AEC" 不是）
+题目数据保证答案符合 32 位带符号整数范围。
+
+示例：输入：S = "rabbbit", T = "rabbit"
+输出：3
+解释：
+如下图所示, 有 3 种可以从 S 中得到 "rabbit" 的方案。
+(上箭头符号 ^ 表示选取的字母)
+
+rabbbit
+^^^^ ^^
+rabbbit
+^^ ^^^^
+rabbbit
+^^^ ^^^
+
+解法一：递归分治
+=============
+
+1、如果s[i] == t[i]，有两种情况
+①从s中选择当前字母，此时s跳过这个字母，t也跳过这个字母
+②s不选这个字母，此时s跳过这个字母，t不变
+2、如果s[i] != t[i],s不选当前字母，s跳过，t不变
+
+```java
+public int numDistinct(String s,String t){
+  HashMap<String,Integer> map = new HashMap<>():
+  return numDistinctHelper(s,0,t,0,map);}
+private int numDistinctHelper(String s,int s_start,String t,int t_start,HashMap<String,Integer> map){
+  if(t_start == t.length()) return 1;
+  if(s_start == s.length()) return 0;
+  String key = s_start + "@" + t_start;
+  if(map.containsKey(key)) {
+    return map.get(key);}
+  int count = 0;
+  if(s.charAt(s_start) == t.charAt(t_start)){
+    count = numDistinctHelper(s,s_start+1,t,t_start+1,map) + numDistinctHelper(s,s_start+1,t,t_start,map);}
+  else{
+    count = numDistinctHelper(s,s_start,t,t_start,map);}
+  map.put(key,count);
+  return count;}
+```
+
+解法二：递归回溯
+=============
+
+int count = 0;
+public int numDistinct(String s,String t){
+  HashMap<String,Integer> map = new HashMap<>();
+  numDistinctHelper(s,0,t,0,map);
+  return count;}
+public void numDistinctHelper(String s,int s_start,String t,int t_start,HashMap<String,Integer> map){
+  if(t_start == t.length()) return 1;
+  if(s_start == s.length()) return 0;
+  String key = s_start + "@" + t_start;
+  if(map.containsKey(key)) {
+    return map.get(key);
+    return;}
+  int count_pre = count;
+    //当前字母相等，s_start 后移一个，t_start 后移一个
+  if (s.charAt(s_start) == t.charAt(t_start)) {
+    numDistinctHelper(s, s_start + 1, t, t_start + 1, map);}
+    //出来以后，继续尝试不选择当前字母，s_start 后移一个，t_start 不后移
+  numDistinctHelper(s, s_start + 1, t, t_start, map);
+    //将增量存起来
+  int count_increment = count - count_pre;
+  map.put(key, count_increment);}
+```
+  
+解法三：动态规划
+=============
+
+```java
+public int numDistinct(String s,String t){
+  int [][] dp = new int[t.length()+1][s.length()+1];
+  for(int j = 0;i < s.length();j++) dp[0][j] = 1;
+  for(int i = 1;i < s.length();i++){
+    for(int j = 1;j < s.length();j++){
+      if(s.charAt(i-1) == t.charAt(j-1)) dp[i][j] = dp[i-1][j-1] + dp[i][j-1];
+      else dp[i][j] = dp[i][j-1];}}
+  return dp[t.length()][s.length()];}
+```
+
+空间优化
+=======
+
+```java
+public int numDistinct(String s, String t) { 
+  int[] dp = new int[t.length()+1];
+  dp[0] = 1;
+  for(int i=0; i < s.length(); i++) {
+    for(int j=t.length(); j > 0; j--) {
+      if(s.charAt(i) == t.charAt(j-1)) {
+        dp[j] += dp[j-1];}}}
+  return dp[t.length()];}
+```
+
+总结：
+====
+
+动态规划的思想还是可以考虑到的，但是状态转移方程不是很好理解，递归方法与动态规划差不多，都需要分情况考虑。
