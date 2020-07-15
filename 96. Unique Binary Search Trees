@@ -1,0 +1,74 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个整数 n，求以 1 ... n 为节点组成的二叉搜索树有多少种？
+示例：输入: 3
+输出: 5
+解释:
+给定 n = 3, 一共有 5 种不同结构的二叉搜索树:
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+
+解法一：动态规划
+=============
+
+先把每一个小于n的数作为根节点，得到其二叉搜索树，那么最后得出的二叉搜索树为每个二叉树数量之和
+状态转移方程为：G[n] += G[n-i] * G[i-1]
+其中n表示输入值，i表示每一个树作为根节点，可以是1~n
+
+```java
+public int numTrees(int n){
+  in [] G = new int[n+1];
+  G[0] = 1;
+  G[1] = 1;
+  for(int i = 2;i <= n;i++){
+    for(int j = 1;j <= i;j++){
+      G[i] += G[j-1] * G[i-j];}
+  return G[n];}
+```
+
+解法二：数学
+==========
+
+上面的式子表示为卡塔兰树，即C[n+1] = C[n] * (4n+4)/(n+2) 
+
+```java
+public int numTrees(int n){
+  long c = 1;
+  for(int i = 0;i < n;i++){
+    c = c*(4*i+2)/(i+2);}
+  return (int)c;}
+```
+
+解法三：递归
+==========
+
+```java
+public int numTrees(int n){
+  if(n == 0) return 0;
+  HashMap<Integer,Integer> memo = new HashMap<>();
+  return getAns(n,memo);}
+private int getAns(int n,HashMap<Integer,Integer> memo){
+  if(memo.containsKey(n)){
+    return memo.get(n);}
+  int ans = 0;
+  if(n == 0 || n == 1){
+    return 1;}
+  for(int i = 1;i <= n;i++){
+    int left = getAns(i-1,memo);
+    int right = getAns(n-i,memo);
+    ans += left * right;}
+  memo.put(n,ans);
+  return ans;}
+    
+总结：
+====
+
+二叉搜索树的个数与具体的节点的数值无关，只与大小有关，按照根节点数值分类，想到了这一点还是很好操作的，
+直接利用公式的方法很棒。
