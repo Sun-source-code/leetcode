@@ -49,6 +49,8 @@ public int numTrees(int n){
 解法三：递归
 ==========
 
+求当前根的数量，只需要左子树的数量乘上右子树。
+
 ```java
 public int numTrees(int n){
   if(n == 0) return 0;
