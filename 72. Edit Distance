@@ -35,8 +35,8 @@ D[i-1][j-1] 为 A 前 i - 1 个字符和 B 的前 j - 1 个字符编辑距离的
 那么我们实际上不需要进行修改操作。在这种情况下，D[i][j] 最小可以为 D[i-1][j-1]。
 
 因此我们可以列出状态转移方程：
-当A和B的最后一个字符不同时，p[i][j] = 1 + Math.min(p[i][j-1] + p[i-1][j] + p[i-1][j-1])
-当A和B的最后一个字符相同时，p[i][j] = 1 + Math.min(p[i][j-1] + p[i-1][j] + p[i-1][j-1] - 1)
+当A和B的最后一个字符不同时，p[i][j] = 1 + Math.min(p[i][j-1],p[i-1][j],p[i-1][j-1])
+当A和B的最后一个字符相同时，p[i][j] = 1 + Math.min(p[i][j-1],p[i-1][j],p[i-1][j-1] - 1)
 
 ```java
 public int minDistance(String word1,String word2){
