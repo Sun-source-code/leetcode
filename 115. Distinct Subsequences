@@ -43,7 +43,7 @@ private int numDistinctHelper(String s,int s_start,String t,int t_start,HashMap<
   if(s.charAt(s_start) == t.charAt(t_start)){
     count = numDistinctHelper(s,s_start+1,t,t_start+1,map) + numDistinctHelper(s,s_start+1,t,t_start,map);}
   else{
-    count = numDistinctHelper(s,s_start,t,t_start,map);}
+    count = numDistinctHelper(s,s_start+1,t,t_start,map);}
   map.put(key,count);
   return count;}
 ```
