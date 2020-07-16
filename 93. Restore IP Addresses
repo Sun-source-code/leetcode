@@ -1,0 +1,49 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个只包含数字的字符串，复原它并返回所有可能的 IP 地址格式。
+有效的 IP 地址正好由四个整数（每个整数位于 0 到 255 之间组成），整数之间用 '.' 分隔。
+示例：输入: "25525511135"
+输出: ["255.255.11.135", "255.255.111.35"]
+
+解法一：回溯
+==========
+
+```java
+int n;
+String s;
+LinkedList<String> segment = new LinkedList<String>();
+List<String> output = new ArrayList<>();
+public List<String> restoreIpAddress(String s){
+  n = s.lenght();
+  this.s = s;
+  backtrack(-1,3);
+  return output;}
+public void backtrack(int prev,int docs){
+  int max_pos = Math.min(n-1,prev+4);
+  for(int cur = prev;cur < max_pos;cur++){
+    String str = s.substring(pre+1,cur+1);
+    if(valid(str)){
+      segment.add(str);
+      if(dots-1 == 0){
+        update(cur);}
+      else{
+        backtrack(cur,dots-1);}}}
+public void update(int curr){
+  String str = s.substring(cur+1,n);
+  if(valid(str)){
+    segment.add(str);
+    output.add(String.join(".",segment);
+    segent.removeLast();}
+public boolean valid(String str){
+  int m = segment.length();
+  if (m > 3) return false;
+  return (segment.charAt(0) != '0') ? (Integer.valueOf(segment) <= 255) : (m == 1);}
+``` 
+
+总结：
+====
+
+这题是很经典的回溯问题了，直接套用模板判断即可。
