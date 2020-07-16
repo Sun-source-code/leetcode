@@ -1,0 +1,74 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+示例：输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[1,2,3,6,9,8,7,4,5]
+
+解法一：直接模拟
+=============
+
+1. 初始位置是矩阵的左上角，初始方向是向右，当路径超出界限或者进入之前访问的位置时，则顺时针旋转，进入下一个方向
+2. 判断路径是否加入之前访问的位置需要使用一个与输入矩阵大小相同的辅助矩阵visited，其中的每个元素代表该位置是否被访问过
+3. 判断路径是否结束，路径长度即为矩阵中元素数量
+
+```java
+public int [] spiralOrder(int[][] matrix){
+  if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
+    return new int[0];}
+  int l = matrix.length,r = matrix[0].length;
+  boolean[][] visited = new boolean[l][r];
+  int total = l*r;
+  int [] order = new int[total];
+  int ls = 0,rs = 0;
+  int [][] directions = {{0,1},{1,0},{0,-1},{-1,0}};
+  int directionIndex = 0;
+  for(int i = 0;i < total;i ++){
+    order[i] = matrix[ls][rs];
+    visited[ls][rs] = true;
+    int nextl = ls + directions[directionIndex][0];
+    int nextr = rs +directions[directionIndex][1];
+    if(nextl < 0 || nextl >= l || nextr < 0 || nextr >= r || visited[nextl][nextr] ){
+      directionIndex = (directionIndex+1) % 4;}
+    ls += directions[directionIndex][0];
+    rs += directions[directionIndex][1];}
+  return order;}
+```
+
+解法二：按层模拟
+==============
+
+public int [] spiralOrder(int[][] matrix){
+  if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
+    return new int[0];}
+  int rows = matrix.length,columns = matrix[0].length;
+  int [] order = new int[rows*columns];
+  int index = 0;
+  int left = 0,right = columns-1,top = 0,bottom = rows-1;
+  while(left <= right && top <= bottom){
+    for(int column = left;column <= right;column++){
+      order[index++] = matrix[top][column];}
+    for(int row = top + 1;row <= bottom;row++){
+      order[index++] = matrix[row][right];}
+      if(left < right && top < bottom){
+        for(int column = right - 1;column > left;column—-){
+          order[index++] = matrix[bottom][column];}
+        for(int row = bottom;row > top;row—-){
+          order[index++] = matrix[row][left];}}
+    left++;
+    right—-;
+    top++;
+    bottom—-;}
+  return order;}
+```
+
+总结：
+====
+
+这一题思路还是不难的，但是有很多细节方面的问题需要注意，各种情况也都需要考虑到，解法一的除余操作很棒。
+
+总结：=
+总结：=
+总结：
