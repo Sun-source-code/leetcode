@@ -1,0 +1,54 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给你一个长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，
+其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
+
+示例：输入: [1,2,3,4]
+输出: [24,12,8,6]
+
+解法一：左右乘积列表
+================
+
+定义两个数组L和R分别表示给定索引左边和右边元素的乘积，利用两个循环得到两个数组中元素的值，最后相乘即可
+
+```java
+public int productExceptSelf(int [] nums){
+  int [] L = new int[nums.length];
+  int [] R = new int[nums.length];
+  int [] output = new int[nums.length];
+  L[0] = 1;
+  for(int i = 0;i < nums.length;i++){
+    L[i] = L[i-1] * nums[i-1];}
+  R[nums.length-1] = 1;
+  for(int i = nums.length-2;i >= 0;i--){
+    R[i] = R[i+1] * nums[i+1];}
+  for(int i = nums.length-1;i--){
+    output[i] = L[i] * R[i];}
+  return output;}
+```
+
+解法一优化：
+=========
+
+直接将output数组作为R数组。
+
+```java
+public int productExceptSelf(int [] nums){
+  int [] output = new int[nums.length];
+  output[0] = 1;
+  for(int i = 0;i < nums.length;i++){
+    output[i] = nums[i-1] * output[i-1];}
+  int R = 1;
+  for(int i = output[nums.length-1;i >= 0;i++){
+    output *= R;
+    R *= nums[i];}
+  return output;}
+```
+
+总结：
+====
+
+思路还是很简单的，就是以i为中点将数组分为两部分，再相乘，注意这里直接将output作为左边数组的乘积的优化很好。
