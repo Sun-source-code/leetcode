@@ -1,0 +1,74 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
+在选修某些课程之前需要一些先修课程。 
+例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：[0,1]
+给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？
+示例：输入: 2, [[1,0]] 
+输出: true
+解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
+
+解法一：广度优先遍历
+=================
+
+1、统计每个节点的入度，生成入度表indegress
+2、用一个队列将入度为0的节点入队
+3、队列非空时，首节点出队，将该节点对应的邻接节点的入度-1，当-1后入度为0，说明此节点的前驱节点已经被删除
+
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+  int [] indegrees = new int[numCourses];
+  List<List<Integer>> adjacency = new ArrayList<>();
+  Queue<Integer> queue = new LinkedList<>();
+  for(int i = 0;i < numCourses;i++)
+    adjacency.add(new ArrayList<>());
+    for(int[] cp: prerequisites){
+      indegrees[cp[0]]++;
+      adjacency.get(cp[1]).add(cp[0]);}
+    for(int i = 0;i < numCourses;i++)
+      if(indegrees[i] == 0) queue.add(i);
+    while(!queue.isEmpty()){
+      int pre = queue.poll();
+      numCourses--;
+      for(int cur:adjacency.get(pre)){
+        if(--indegrees[cur] == 0) queue.add(cur);}}
+  return numCourses == 0;}
+```
+
+解法二：深度优先遍历
+=================
+
+1. 借助一个标志列表flags，用于判断每个节点i的状态，未被访问 i==0 ,已经被其他节点启动 i==-1, 已经被当前节点启动 i==1
+2. 对numCourses个节点一次执行访问，判断每个节点是否存在环，若存在环直接返回false，
+终止条件：当flag[i] == -1，说明当前分节点以及被其他节点启动的DFS访问，无序重复搜索，直接返回true，
+当flag[i] == 1，说明在本轮DFS搜索中节点i被第二次访问，即课程安排图有环，直接返回false
+3. 若整个图DFS结束并未发现环，返回true
+
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites){
+  List<List<Integer>> ans = new ArrayList<>();
+  for(int i = 0;i < numCourses;i++){
+    ans.add(new ArrayList<>());}
+  int [] flags = new int[numCourses];
+  for(int [] cp : prerequisites){
+    ans.get(cp[1]).add(cp[0]);}
+  for(int i = 0;i < numCourses;i++)
+    if(!dfs(ans,flags,i)) return false;
+  return true;}
+private boolean bfs(List<List<Integer> ans,int [] flags,int i){
+  if(flags[i] == 1) return false;
+  if(flags[i] == 0) return true;
+  flags[i] = 1;
+  for(Integer j : ans.get(i)){
+    if(!dfs(ans,flags,j)) return false;}
+  flags[i] = -1;
+  return true;}
+```
+
+总结：
+====
+
+图的遍历问题，一种是拓扑排序，一种是检测是否有环，也是图的经典思考方向，这题需要作为经典例题。
