@@ -1,0 +1,76 @@
+# leetcode
+
+题目描述（困难）
+=============
+
+给定三个字符串 s1, s2, s3, 验证 s3 是否是由 s1 和 s2 交错组成的。
+示例：输入: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+输出: true
+
+解法一：动态规划
+=============
+
+首先如果s1和s2的长度和与s3长度不同，一定返回false
+要求s1的前i个字符和s2的前j个字符与s3的前i+j是否相等：
+如果s1的第i个字符和s3的第i+j个字符相同，那么原问题可以转变为s1的前i-1个字符和s2的前j个字符与s3的前i+j-1个字符相等
+同理如果s2的第j个字符和s3的第i+j个字符相同，那么原问题可以转变为s1的前i个字符和s2的前j-1个字符与s3的前i+j-1个字符相等
+
+```java
+public boolean isInterleave(String s1, String s2, String s3) {
+  int n = s1.length(), m = s2.length(), t = s3.length();
+  if (n + m != t) {
+    return false;}
+  boolean[][] f = new boolean[n + 1][m + 1];
+  f[0][0] = true;
+  for (int i = 0; i <= n; ++i) {
+    for (int j = 0; j <= m; ++j) {
+      int p = i + j - 1;
+      if (i > 0) {
+        f[i][j] = f[i][j] || (f[i - 1][j] && s1.charAt(i - 1) == s3.charAt(p));}
+      if (j > 0) {
+        f[i][j] = f[i][j] || (f[i][j - 1] && s2.charAt(j - 1) == s3.charAt(p));}}}
+  return f[n][m];}
+```
+
+解法二：记忆化递归
+===============
+
+自始至终更新三个指针，递归调用判断函数，如果三个指针的值满足cur1+cur2=cur3则返回true
+
+```java
+int cur1=0, cur2=0, cur3=0;
+public boolean isInterleave(String s1, String s2, String s3) {
+  if (s1==null && s2==null && s3==null) {
+    return true;
+  }else if (s1.length() + s2.length() != s3.length()) {
+    return false;}
+  boolean[][] memo = new boolean[s1.length()+1][s2.length()+1];
+  return memoryRecursion(s1, s2, s3, memo);}
+public boolean memoryRecursion(String s1, String s2, String s3, boolean[][] memo) {
+  if (cur3 >= s3.length()) {
+    return true;}
+  if (memo[cur1][cur2]) {
+    return false;}
+  if (cur1 < s1.length() && s3.charAt(cur3) == s1.charAt(cur1)) {
+    cur1 += 1;
+    cur3 += 1;
+    if (memoryRecursion(s1, s2, s3, memo)) {
+      return true;}
+    cur1 -= 1;
+    cur3 -= 1;}
+  if (cur2 < s2.length() && s3.charAt(cur3) == s2.charAt(cur2)) {
+    cur2 += 1;
+    cur3 += 1;
+    if (memoryRecursion(s1, s2, s3, memo)) {
+      return true;}
+    cur2 -= 1;
+    cur3 -= 1;}
+  memo[cur1][cur2] = true;
+  return false;}
+```
+
+总结：
+====
+
+字符串核对的问题最经典的就是动态规划了，找到核对时某一字符的对应关系，对应其他字符串的关系，即可求解，这里
+使用递归记忆化是最佳方法，虽然递归调用次数多，但是减少了双重循环。
