@@ -1,0 +1,77 @@
+# leetcode
+
+题目描述（困难）
+=============
+
+有 n 个气球，编号为0 到 n-1，每个气球上都标有一个数字，这些数字存在数组 nums 中。
+现在要求你戳破所有的气球。如果你戳破气球 i ，就可以获得 nums[left] * nums[i] * nums[right] 个硬币。 
+这里的 left 和 right 代表和 i 相邻的两个气球的序号。注意当你戳破了气球 i 后，气球 left 和气球 right 就变成了相邻的气球。
+求所能获得硬币的最大数量。
+说明：你可以假设 nums[-1] = nums[n] = 1，但注意它们不是真实存在的所以并不能被戳破。
+0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
+
+示例：输入: [3,1,5,8]
+输出: 167 
+解释: nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
+     coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+
+解法一：递归+记忆化
+================
+
+对于开区间（i，j）中，如果i>=j-1，那么区间内不存在气球，slove对应为0
+如果i<j-1，我们枚举开区间(i,j)内全部位置mid，令mid为当前区间第一个添加的气球，得到的硬币数为val[i]*val[mid]*val[j]
+同时我们递归地分割出两区间对slove(i,j)的贡献，这三项之和就是slove(i,j)的最大值。
+
+```java
+public int[][] rec;
+  public int[] val;
+  public int maxCoins(int[] nums) {
+    int n = nums.length;
+    val = new int[n + 2];
+    for (int i = 1; i <= n; i++) {
+      val[i] = nums[i - 1];}
+    val[0] = val[n + 1] = 1;
+    rec = new int[n + 2][n + 2];
+    for (int i = 0; i <= n + 1; i++) {
+      Arrays.fill(rec[i], -1);}
+    return solve(0, n + 1);}
+  public int solve(int left, int right) {
+    if (left >= right - 1) {
+      return 0;}
+    if (rec[left][right] != -1) {
+      return rec[left][right];}
+    for (int i = left + 1; i < right; i++) {
+      int sum = val[left] * val[i] * val[right];
+      sum += solve(left, i) + solve(i, right);
+      rec[left][right] = Math.max(rec[left][right], sum);}
+    return rec[left][right];}
+```
+
+解法二：动态规划
+==============
+
+与解法一思路一样，只是将递归调用的过程改成直接循环遍历，状态转移方程为：
+dp[i][j] = Math.max(val[i] * val[mid] * val[j] + dp[i][k] + dp[k][j],dp[i][j]);
+
+```java
+public int maxCoins(int[] nums) {
+  int n = nums.length;
+  int[][] rec = new int[n + 2][n + 2];
+  int[] val = new int[n + 2];
+  val[0] = val[n + 1] = 1;
+  for (int i = 1; i <= n; i++) {
+    val[i] = nums[i - 1];}
+  for (int i = n - 1; i >= 0; i--) {
+    for (int j = i + 2; j <= n + 1; j++) {
+      for (int k = i + 1; k < j; k++) {
+        int sum = val[i] * val[k] * val[j];
+        sum += rec[i][k] + rec[k][j];
+        rec[i][j] = Math.max(rec[i][j], sum);}}}
+  return rec[0][n + 1];}
+```
+
+总结：
+====
+
+这题理解了题目意思就很容易了，大概就是在一个氛围内，将首尾和其中一个元素相乘得到的值之和的最大值，
+得到了状态转移方程也就不难想到后面的步骤。
