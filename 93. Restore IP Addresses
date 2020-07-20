@@ -38,9 +38,9 @@ public void update(int curr){
     output.add(String.join(".",segment);
     segent.removeLast();}
 public boolean valid(String str){
-  int m = segment.length();
+  int m = str.length();
   if (m > 3) return false;
-  return (segment.charAt(0) != '0') ? (Integer.valueOf(segment) <= 255) : (m == 1);}
+  return (str.charAt(0) != '0') ? (Integer.valueOf(str) <= 255) : (m == 1);}
 ``` 
 
 总结：
