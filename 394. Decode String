@@ -1,0 +1,105 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个经过编码的字符串，返回它解码后的字符串。
+编码规则为: k[encoded_string]，表示其中方括号内部的 encoded_string 正好重复 k 次。注意 k 保证为正整数。
+你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 k ，例如不会出现像 3a 或 2[4] 的输入。
+
+示例：输入：s = "3[a]2[bc]"
+输出："aaabcbc"
+
+解法一：栈操作
+============
+
+1、如果当前字符为数位，解析出一个数字并入栈
+2、如果当前字符为字母或者左括号，入栈
+3、如果当前字符为右括号，开始出栈
+
+```java
+int ans;
+public String getDigits(String s){
+  StringBuffer sb = new StringBuffer();
+  while(Character.isDigit(s.charAt(ans))){
+    sb.append(s.charAt(ans++));}
+  return sb.toString();}
+public String getString(LinkedList<String> v){
+  StringBuffer sb = new StringBuffer();
+  for(String s : v){
+    sb.append(s);}
+  return sb.toString();}
+public String decodeString(String s){
+  LinkedList<String> stack = new LinkedList<>();
+  ans = 0;
+  while(ans < s.length()){
+    char cur = s.charAt(ans);
+    if(Character.isDigit(cur)){
+      String digits = getDigits(s);
+      stack.addLast(digits);}
+    else if(Character.isLetter(ans) || cur == '['){
+      stack.addLast(String.valueOf(s.charAt(ans++)));}
+    else{
+      ans++;
+      LinkedList<String> sub = new LinkedList<>();
+      while(!"[".equals(stack.peekLast())){
+        sub.addLast(stack.removeLast());}
+      Collections.reverse(sub);
+      stack.removeLast();
+      int repTime = Integer.parseInt(stack.removeLast());
+      StringBuffer t = new StringBuffer();
+      String str = getString(sub);
+      while(repTime > 0){
+        t.append(str);
+        repTime--;}
+      stack.addLast(t.toString());}}
+  return getString(stack);}
+```
+
+解法二：递归
+==========
+
+```java
+String src;
+int ptr;
+public String decodeString(String s) {
+  src = s;
+  ptr = 0;
+  return getString();}
+public String getString() {
+  if (ptr == src.length() || src.charAt(ptr) == ']') {
+    // String -> EPS
+    return "";}
+    char cur = src.charAt(ptr);
+    int repTime = 1;
+    String ret = "";
+    if (Character.isDigit(cur)) {
+      // String -> Digits [ String ] String
+      // 解析 Digits
+      repTime = getDigits(); 
+      // 过滤左括号
+      ++ptr;
+      // 解析 String
+      String str = getString(); 
+      // 过滤右括号
+      ++ptr;
+      // 构造字符串
+      while (repTime-- > 0) {
+        ret += str;}} 
+      else if (Character.isLetter(cur)) {
+        // String -> Char String
+        // 解析 Char
+        ret = String.valueOf(src.charAt(ptr++));}
+  return ret + getString();}
+public int getDigits() {
+  int ret = 0;
+  while (ptr < src.length() && Character.isDigit(src.charAt(ptr))) {
+    ret = ret * 10 + src.charAt(ptr++) - '0';}
+  return ret;}
+```
+
+总结：
+====
+
+栈方法还是很好理解的，但是操作起来很复杂，也很容易出错，递归方法我还没理解透，暂时只能用栈来做这一题。
