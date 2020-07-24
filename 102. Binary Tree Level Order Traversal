@@ -1,0 +1,90 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+示例：二叉树：[3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+
+解法一：广度优先遍历+递归
+=====================
+
+```java
+public List<List<Integer>> levelOrder(TreeNode root) {
+  List<List<Integer>> ans = new ArrayList<>(); 
+  DFS(root, 0, ans);
+  return ans;}
+public void DFS(TreeNode root,int level,List<List<Integer>> res){
+  if(root == null) return;
+  if(res.size() <= level){
+    res.add(new ArrayList<>());}
+  res.get(level).add(root.val);
+  DFS(root.left,level+1,res);
+  DFS(root.right,level+1,res);}
+```
+
+解法二：广度优先遍历
+=================
+
+```java
+public List<List<Integer>> levelOrder(TreeNode root){
+  List<List<Integer>> ans = new ArrayList<>();
+  if(root == null) return ans;
+  Queue<TreeNode> queNode = new LinkedList<>();
+  Queue<Integer> queVal = new LinkedList<>();
+  queNode.offer(root);
+  int level = 0;
+  queVal.offer(level);
+  while(!queNode.isEmpty()){
+    TreeNode currNode = queNode.poll();
+    int curr = queVal.poll();
+    if(currNode != null){
+      if(ans.size() <= curr){
+        ans.add(new ArrayList<>());}
+      res.get(curr).add(currNode.val);
+      level = curr + 1;
+      queNode.offer(currNode.left);
+      queVal.offer(level);
+      queNode.offer(currNode.right);
+      queVal.offer(level);}}
+  return ans;}
+```
+
+解法三：广度优先遍历
+=================
+
+```java
+public List<List<Integer>> levelOrder(TreeNode root){
+  List<List<Integer>> ans = new ArrayList<>();
+  if(root == null) return ans;
+  Queue<TreeNode> queue = new LinkedList<>();
+  queue.offer(root);
+  while(!queue.isEmpty()){
+    int level = queue.size();
+    List<Integer> submit = new ArrayList<>();
+    for(int i = 0;i < level;i++){
+      TreeNode currNode = queue.poll();
+      if(currNode != null) {
+        submit.add(currNode.val);
+        queue.offer(currNode.left);
+        queue.offer(currNode.right);}}
+    if(submit.size() > 0){
+      ans.add(submit);}}
+  return ans;}
+```
+
+总结：
+====
+
+广度优先遍历思路，需要记住这几个思路。
