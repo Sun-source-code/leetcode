@@ -1,0 +1,57 @@
+# leetcode
+
+题目描述（困难）
+=============
+
+给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
+
+'.' 匹配任意单个字符
+'*' 匹配零个或多个前面的那一个元素
+所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+
+说明：1、s 可能为空，且只包含从 a-z 的小写字母。
+2、p 可能为空，且只包含从 a-z 的小写字母，以及字符 . 和 *。
+
+示例：s = "aa"
+p = "a*"
+输出: true
+解释: 因为 '*' 代表可以匹配零个或多个前面的那一个元素, 在这里前面的元素就是 'a'。因此，字符串 "aa" 可被视为 'a' 重复了一次。
+
+解法一：动态规划
+=============
+
+f[i][j]表示s的前i个字符和p的前j个字符能够匹配。
+如果p的第j个字符是个小写字母，那么必须在s匹配一个相同的小写字母
+f[i][j] = f[i-1][j-1] (s[i] = p[j])
+          false (s[i] != p[j])
+如果p的第j个字符是个*，那么我们可以对p的第j-1个字符任意更改，f[i][j] = f[i][j-2]
+
+因此f[i][j] = f[i-1][j] or f[i][j-1] (s[i] = p[j-1])
+             f[i][j-2]  (s[i] != p[j-1])
+
+```java
+public boolean isMatch(String s, String p) {
+  int m = s.length();
+  int n = p.length();
+  boolean [][] f = new boolean[m+1][n+1];
+  f[0][0] = true;
+  for(int i = 0;i <= m;i++){
+    for(int j = 1;j <= n;j++){
+      if(p.charAt(j) == '*'){
+        f[i][j] = f[i][j-2];
+        if(match(s,p,i,j-1){
+          f[i][j] = f[i][j] || f[i-1][j];}}
+      else{
+        if(match(s,p,i,j){
+          f[i][j] = f[i-1][j-1];}}}}
+  return f[m][n];}
+public boolean match(String s,String p,int i,int j){
+  if(i == 0) return false;
+  if(p.charAt(j-1)) return true;
+  return s.charAt(i-1) == p.charAt(j-1);}
+```
+
+总结：
+====
+
+动态规划就是归纳的过程比较麻烦，这题也是这样，分类需要注意。
