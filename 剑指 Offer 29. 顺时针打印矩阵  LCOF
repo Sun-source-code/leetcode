@@ -52,11 +52,11 @@ public int [] spiralOrder(int[][] matrix){
       order[index++] = matrix[top][column];}
     for(int row = top + 1;row <= bottom;row++){
       order[index++] = matrix[row][right];}
-      if(left < right && top < bottom){
-        for(int column = right - 1;column > left;column—-){
-          order[index++] = matrix[bottom][column];}
-        for(int row = bottom;row > top;row—-){
-          order[index++] = matrix[row][left];}}
+    if(left < right && top < bottom){
+      for(int column = right - 1;column > left;column—-){
+        order[index++] = matrix[bottom][column];}
+      for(int row = bottom;row > top;row—-){
+        order[index++] = matrix[row][left];}}
     left++;
     right—-;
     top++;
