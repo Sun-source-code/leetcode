@@ -34,7 +34,7 @@
 public double findMedianSortedArrays(int [] nums1,int [] nums2){
   int length1 = nums1.length,length2 = nums2.length;
   int totallength = length1 + length2;
-  if(totallength % 2 == 0){
+  if(totallength % 2 == 1){
     int midIndex = totallength / 2;
     double median = getKthElement(nums1,nums2,midIndex+1);
     return median;}
