@@ -59,11 +59,11 @@ public boolean isAnagram(String s, String t) {
   for (int i = 0; i < sArray.length; i++) {
     BigInteger temp = BigInteger.valueOf(prime[sArray[i] - 'a']);
     sKey = sKey.multiply(temp);}
-    char[] tArray = t.toCharArray();
-      BigInteger tKey = BigInteger.valueOf(1);
-      for (int i = 0; i < tArray.length; i++) {
-        BigInteger temp = BigInteger.valueOf(prime[tArray[i] - 'a']);
-        tKey = tKey.multiply(temp);}
+  char[] tArray = t.toCharArray();
+  BigInteger tKey = BigInteger.valueOf(1);
+  for (int i = 0; i < tArray.length; i++) {
+    BigInteger temp = BigInteger.valueOf(prime[tArray[i] - 'a']);
+      tKey = tKey.multiply(temp);}
   return sKey.equals(tKey);}
   
 总结：
