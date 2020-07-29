@@ -13,7 +13,7 @@
 
 sell之后会空出一天，将i-1改成i-2，状态转移方程为：
 dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1] + prices[i];
-dp[i][1] = Math.max(dp[i-1][1],dp[i-2][i] - prices[i];
+dp[i][1] = Math.max(dp[i-1][1],dp[i-2][1] - prices[i];
 
 ```java
 public int maxProfit(int [] prices){
