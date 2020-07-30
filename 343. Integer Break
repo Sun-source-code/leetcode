@@ -1,0 +1,65 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
+示例：输入: 10
+输出: 36
+解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36。
+
+解法一：动态规划
+=============
+
+i>=2时，假设对正整数i拆分出来的第一个数为j，则有以下两种情况
+1、将i拆成j和i-j的和，i-j不再拆分，此时乘积为j*(i-j)
+2、将i拆成j和i-j的和，i-j继续拆分成多个整数，此时乘积为j*dp[i-j]
+
+```java
+public int integerBreak(int n) {
+  int[] dp = new int[n + 1];
+  for (int i = 2; i <= n; i++) {
+    int curMax = 0;
+    for (int j = 1; j < i; j++) {
+      curMax = Math.max(curMax, Math.max(j * (i - j), j * dp[i - j]));}
+    dp[i] = curMax;}
+  return dp[n];}
+```
+
+解法二：动态规划优化
+================
+
+dp[i] >= j * (i-j)
+将状态转移方程优化为
+dp[i] = max(2*(i-2),2*dp[i-2],3*(i-3),3*dp[i-3])
+
+```java
+public int integerBreak(int n) {
+  if (n < 4) {
+    return n - 1;}
+  int[] dp = new int[n + 1];
+  dp[2] = 1;
+  for (int i = 3; i <= n; i++) {
+    dp[i] = Math.max(Math.max(2 * (i - 2), 2 * dp[i - 2]), Math.max(3 * (i - 3), 3 * dp[i - 3]));}
+  return dp[n];}
+```
+
+解法三：数学方法
+=============
+
+最佳拆分数字为3，尽可能将n以因子3拆分，得到的乘积最大。
+```java
+public int integerBreak(int n) {
+  if(n <= 3) return n - 1;
+  int a = n / 3, b = n % 3;
+  if(b == 0) return (int)Math.pow(3, a);
+  if(b == 1) return (int)Math.pow(3, a - 1) * 4;
+  return (int)Math.pow(3, a) * 2;}
+```
+
+总结：
+====
+
+动态规划还是比较容易想到的，但是我的误区在于我是从前往后寻找，这里是从后往前，导致我的代码出错，解法二
+根据规律将两重循环简化，是个很好的办法，数学方法就更厉害了，我似乎知道会有一个数作为最佳拆分数字，但是
+没办法证明，这里使用函数极值证明是开启了新操作。
