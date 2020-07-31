@@ -41,7 +41,7 @@ public int maxProfit(int[] prices, int fee) {
 public int maxProfit(int [] prices,int fee){
   if(prices.length < 2) return 0;
   int ans = 0;
-  int on_hand = prices[0];
+  int in_hand = prices[0];
   for(int i = 0;i < prices.length;i++){
     if(prices[i] < in_hand){
       in_hand = prices[i];}
@@ -56,5 +56,3 @@ public int maxProfit(int [] prices,int fee){
 ====
 
 还是一样的改一下状态转移方程即可，注意解法二里in_hand的更新。
-```
-```
