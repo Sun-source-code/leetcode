@@ -61,7 +61,7 @@ public void numDistinctHelper(String s,int s_start,String t,int t_start,HashMap<
   if(s_start == s.length()) return 0;
   String key = s_start + "@" + t_start;
   if(map.containsKey(key)) {
-    return map.get(key);
+    count += map.get(key);
     return;}
   int count_pre = count;
     //当前字母相等，s_start 后移一个，t_start 后移一个
