@@ -31,7 +31,7 @@ public String addBinary(String a,String b){
   for(int i = 0;i < n;i++){
     carry += i<a.length()?(a.charAt(a.length()-1-i)-'0'):0;
     carry += i<b.length()?(b.charAt(b.length()-1-i)-'0'):0;
-    buffer.append((char)carry % 2 + '0');
+    buffer.append((char)carry % 2);
     carry /= 2;}
   if(carry > 0) buffer.append('1');
   buffer.reverse();
@@ -39,8 +39,28 @@ public String addBinary(String a,String b){
 ```
 时间复杂度：O(n)
 
+解法三：使用数组存储
+=================
+
+```java
+public String addBinary(String a,String b){
+  char [] A = a.toCharArray();
+  char [] B = b.toCharArray();
+  char [] sum = new Char[Math.max(A.length,B.length)+1];
+  int carry = 0,index = sum.length-1;
+  for (int i = charsA.length - 1, j = charsB.length - 1; i >= 0 || j >= 0; i--, j--){
+    int aNum = i < 0 ? 0 : A[i]-'0';
+    int bNum = j < 0 ? 0 : B[j]-'0';
+    int s = aNum + bNum + carry;
+    sum[index++] = (char)(s % 2 +'0');
+    carry = s / 2;}
+  sum[index] = (char) ('0' + carry);
+  return carry == 0 ? new String(sum, 1, sum.length - 1) : new String(sum);}
+```
+时间复杂度：O(n)
+
 总结：
 ====
 
-这题思路还是很简单的，直接调用函数或者使用进位的操作，需要注意进位操作的顺序。
-时间复杂度：O(n)
+这题思路还是很简单的，直接调用函数或者使用进位的操作，需要注意进位操作的顺序。使用insert方法会很消耗时间，
+对比之下使用append会好一些，因为它直接开辟了新的空间，同样的，使用数组直接开辟空间也更快。
