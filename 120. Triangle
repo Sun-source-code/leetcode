@@ -85,7 +85,7 @@ public int mininumTotal(List<List<Integer>> triangle){
 我们将任一点到底边的最小路径和，转化成了与该点相邻两点到底边的最小路径和中的较小值，再加上该点本身的值
 
 ```java
-Integer [][] ans;
+Integer [][] memo;
 public int minimumTotal(List<List<Integer>> triangle){
   int len = triangle.size();
   ans = new Integer[len][len];
@@ -93,8 +93,8 @@ public int minimumTotal(List<List<Integer>> triangle){
 public int dfs(List<List<Integer>> triangle,int i,int j){
   if(i == triangle.size()){
     return 0;}
-  if(ans[i][j] != null){
-    return ans[i][j];}
+  if(memo[i][j] != null){
+    return memo[i][j];}
   return memo[i][j] = Math.min(dfs(triangle, i + 1, j), 
     dfs(triangle, i + 1, j + 1)) + triangle.get(i).get(j);}
 
