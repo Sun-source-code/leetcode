@@ -1,0 +1,52 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给你一个 n x n 的二进制网格 grid，每一次操作中，你可以选择网格的 相邻两行 进行交换。
+一个符合要求的网格需要满足主对角线以上的格子全部都是 0 。
+请你返回使网格满足要求的最少操作次数，如果无法使网格符合要求，请你返回 -1 。
+主对角线指的是从 (1, 1) 到 (n, n) 的这些格子。
+
+示例：输入：grid = [[0,0,1],[1,1,0],[1,0,0]]
+输出：3
+
+解法一：降维排序
+=============
+
+先将每一个一维数组后面有几个0记录在一个链表中，然后针对这个链表进行交换，使行数递减
+
+```java
+public int minSwaps(int[][] grid) {
+  int n = grid.length;
+  List<integer> ans = new ArrayList<>();
+  for(int [] g : grid){
+    int count = 0;
+    for(int i = n - 1;i >= 0;i--){
+      if(g[i] == 0){
+        count++;}
+      else
+        break;
+      if(count == n){
+        count = n - 1;}
+      while(ans.contains(count)){
+        count--;}
+      ans.add(count);}
+  int res = 0;
+  for(int i = 0;i < n;i++){
+    if(ans.get(i) != n-1-i){
+      int index = n-1-i;
+      if(index == -1){
+        return -1;}
+      for(int j = index;j >0;j--){
+        int temp = ans.get(i);
+        ans.set(j,ans.get(j-1));
+        ans.set(j-1,temp);
+        res++;}}}
+  return res;}
+```
+
+总结：
+====
+
+这题我的思路是对的，也写对了前半部分，但是我一直没有想到怎么调换这两个值，这个知识点挺有用的
