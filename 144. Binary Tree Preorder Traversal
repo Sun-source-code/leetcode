@@ -53,7 +53,7 @@ public List<Integer> preorderTraversal(TreeNode root) {
             if(pre.right == null){
                 ans.add(node.val);
                 pre.right = node;
-                node = node.right;}
+                node = node.left;}
             else{
                 pre.right = null;
                 node = node.right;}}}
