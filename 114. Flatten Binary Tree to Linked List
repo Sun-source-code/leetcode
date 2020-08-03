@@ -1,0 +1,113 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个二叉树，原地将它展开为一个单链表。
+
+例如，给定二叉树
+
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+将其展开为：
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+
+解法一：前序遍历
+=============
+
+递归前序遍历
+
+```java
+public void flatten(TreeNode root) {
+    List<TreeNode> ans = new ArrayList<>();
+    helper(root,ans);
+    int size = list.size();
+    for(int i = 1;i < size;i++){
+        TreeNode pre = ans.get(i-1),cur = ans.get(i);
+        pre.left = null;
+        pre.right = cur;}}}
+private int helper(TreeNode root,List<TreeNode> ans){
+    if(root != null){
+        ans.add(root);
+        helper(root.left,ans);
+        helper(root.right,ans);}}
+```
+
+迭代前序遍历
+
+```java
+public void flatten(TreeNode root) {
+    List<TreeNode> list = new ArrayList<();
+    Deque<TreeNode> stack = new LinkedList<>();
+    TreeNode node = root;
+    while(node != null || !stack.isEmpty()){
+        while(node != null){
+            list.add(node);
+            stack.push(node);
+            node = node.left();}
+        node = stack.pop();
+        node = node.right;}
+    int size = list.size();
+    for(int i = 1;i < size;i++){
+        TreeNode pre = ans.get(i-1),cur = ans.get(i);
+        pre.left = null;
+        pre.right = cur;}}
+```
+
+解法二：前序遍历和展开同时进行
+=========================
+
+```java
+public void flatten(TreeNode root) {
+    if(root == null) return;
+    Deque<TreeNode> stack = new LinkedList<>();
+    stack.push(root);
+    TreeNode pre = null;
+    while(!stack.isEmpty()){
+        TreeNode curr = stack.pop();
+        if(curr != null){
+            pre.left = null;
+            pre.right = cur;}
+        if(curr.right != null){
+            stack.push(curr.right);}
+        if(curr.left != null){
+            stack.push(curr.left);}
+        pre = curr;}}}
+```
+
+解法三：寻找前驱节点
+=================
+
+```java
+public void flatten(TreeNode root) {
+    TreeNode curr = root;
+    while(curr != null){
+        if(curr.left != null){
+            TreeNode next = curr.left;
+            TreeNode pre = next;
+            while(pre.right != null){
+                pre = pre.right;}
+            pre.right = curr.right;
+            curr.left = null;
+            curr.left = next;}
+        curr = cuurr.left;}}
+```
+
+总结：
+====
+
+题目是二叉树的遍历问题，必须清楚二叉树前序，中序，后序遍历的方法以及作用。
