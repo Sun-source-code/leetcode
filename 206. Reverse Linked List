@@ -29,7 +29,7 @@ public ListNode reverseList(ListNode head){
 public ListNode reverseList(ListNode head){
   if(head == null || head.next == null) return head;
   ListNode newhead;
-  newhead = reserveList(head.next);
+  newhead = reverseList(head.next);
   head.next.next = head;
   head.next = null;
   return newhead;}
