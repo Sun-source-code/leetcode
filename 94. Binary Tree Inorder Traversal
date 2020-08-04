@@ -69,7 +69,7 @@ public List<Integer> inorderTraversal(TreeNode root){
   TreeNode curr = root;
   TreeNode pre;
   while(curr != null){
-    if(curr.left != null){
+    if(curr.left == null){
       res.add(curr.val);
       curr = curr.right;}
     else{
@@ -88,4 +88,3 @@ public List<Integer> inorderTraversal(TreeNode root){
 
 最经典的递归方法外，还有使用栈遍历，注意栈的存储后进先出，另外使用线索二叉树是最好的方法，效率比一般二叉树遍历要快，
 是一个很好的遍历方法
-
