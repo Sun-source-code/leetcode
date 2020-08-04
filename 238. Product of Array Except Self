@@ -44,7 +44,7 @@ public int productExceptSelf(int [] nums){
   int R = 1;
   for(int i = nums.length-1;i >= 0;i--){
     output *= R;
-    R[i] *= nums[i];}
+    R *= nums[i];}
   return output;}
 ```
 
