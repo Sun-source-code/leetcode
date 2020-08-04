@@ -53,8 +53,7 @@ class Trie{
       if(curPos.next[t] == null){
         curPos.next[t] = new Trie();}
       curPos = curPos.next[t];}
-    curPos.isEnd = true;}
-    }
+    curPos.isEnd = true;}}
   
 public int replace(String [] dictionary,String sentence){
   int n = sentence.length();
