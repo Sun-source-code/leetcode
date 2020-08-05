@@ -71,12 +71,12 @@ public void getAns(String s,int start,StringBuilder temp,List<String> ans,int co
   if(start+1 < s.length()){
     temp = new StringBuilder(before);
     temp.append(s.substring(start,start + 2)+""+'.');
-    getAns(s.start+2,temp,ans,count+1);}
+    getAns(s,start+2,temp,ans,count+1);}
   
   //加入三位数
   if(start+2 < s.length()){
     temp = new StringBuilder(before);
-    int num = Integer.parseInt(start,start+3);
+    int num = Integer.parseInt(s.substring(start,start+3));
     if(num > = 0 && num <= 255){
       temp.append(s.substring(start,start+3)+""+'.');
       getAns(s,start+3,temp,ans,count+1);}}}
