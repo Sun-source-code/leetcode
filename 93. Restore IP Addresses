@@ -43,7 +43,46 @@ public boolean valid(String str){
   return (str.charAt(0) != '0') ? (Integer.valueOf(str) <= 255) : (m == 1);}
 ``` 
 
+解法二：递归
+==========
+
+```java
+public List<String> restoreIpAddresses(String s) {
+  List<String> ans = new ArrayList<>();
+  getAns(s,0,new StringBuilder(),ans,0);
+  return ans;}
+public void getAns(String s,int start,StringBuilder temp,List<String> ans,int count){
+  if(s.length()-start > 3*(4-count)) return;
+  if(start == s.length()){
+    if(count == 4){
+      ans.add(new String(temp.substring(0,temp.length()-1)));}
+    return;}
+  if(start > s.length() || count == 4){
+    return;}
+  StringBuilder before = new StringBuilder(temp);
+  
+  //加入一位数
+  temp.append(s.charAt(start)+""+'.');
+  getAns(s,start+1,temp,ans,count+1);
+  
+  if(s.charAt(start) == '0') return;
+  
+  //加入两位数
+  if(start+1 < s.length()){
+    temp = new StringBuilder(before);
+    temp.append(s.substring(start,start + 2)+""+'.');
+    getAns(s.start+2,temp,ans,count+1);}
+  
+  //加入三位数
+  if(start+2 < s.length()){
+    temp = new StringBuilder(before);
+    int num = Integer.parseInt(start,start+3);
+    if(num > = 0 && num <= 255){
+      temp.append(s.substring(start,start+3)+""+'.');
+      getAns(s,start+3,temp,ans,count+1);}}}
+```
+
 总结：
 ====
 
-这题是很经典的回溯问题了，直接套用模板判断即可。
+这题是很经典的回溯问题了，直接套用模板判断即可，使用方法二更好理解，就是一次查找添加一个数字，两个数字，三个数字是否满足条件。
