@@ -47,7 +47,7 @@ public boolean isMatch(String s, String p) {
   return f[m][n];}
 public boolean match(String s,String p,int i,int j){
   if(i == 0) return false;
-  if(p.charAt(j-1)) return true;
+  if(p.charAt(j-1) == '.') return true;
   return s.charAt(i-1) == p.charAt(j-1);}
 ```
 
