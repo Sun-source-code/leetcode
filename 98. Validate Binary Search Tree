@@ -25,6 +25,7 @@
 ```java
 public boolean helper(TreeNode node, Integer lower, Integer upper) {
   if(node == null) return true;
+  int val = node.val;
   if(low != null && val <= lower) return false;
   if(upper != null && val >= upper) return false;
   if(!helper(node.left,val,upper) return false;
