@@ -21,7 +21,7 @@ public int longestSubstring(String s, int k){
 public int count(char [] chars,int k,int p1,int p2){
   if(p2-p1+1 < k) return 0;
   int [] times = new int[26];
-  for(int i = p1;i <= p2;p1++){
+  for(int i = p1;i <= p2;i++){
     ++times[chars[i]-'a'];}
   while(p2 - p1 + 1 >= k && times[chars[p1] - 'a'] < k){
     p1++;}
