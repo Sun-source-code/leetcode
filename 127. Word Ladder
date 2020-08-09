@@ -67,6 +67,3 @@ public int ladderLength(String beginword,String endWord,List<String> wordList){
 ====
 
 广度优先遍历的应用，操作起来还是比较复杂的。
-====================
-
-====================
