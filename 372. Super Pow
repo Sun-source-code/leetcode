@@ -1,0 +1,48 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+你的任务是计算 ab 对 1337 取模，a 是一个正整数，b 是一个非常大的正整数且会以数组形式给出。
+
+示例 :
+输入: a = 2, b = [3]
+输出: 8
+
+解法一：欧拉公式+降幂
+==================
+
+```java
+public int superPow(int a, int[] b) {
+    int c=ol(1337);
+    int sum=0;
+    for(int i=0;i<b.length;i++)
+        sum=(sum*10+b[i])%c;
+        sum+=c;
+    return q((long)a,sum,1337);}
+
+private int q(long x,int y,int M) {
+    long res=1;
+    while(y>0) {
+        if(y%2>0) res=res%M*x%M;
+    	x=x%M*x%M;
+    	y/=2;}
+    return (int)res;}
+    
+private int ol(int x) {
+    int res=x;
+    for(int i=2;i*i<=x;i++) {
+    	if(x%i==0) {
+    		res=res-res/i;
+    		while(x%i==0)
+    			x/=i;}}
+    if(x>1) res=res-res/x;
+    return res;}
+```
+
+总结：
+====
+
+开始我使用的是第50题使用的方法，结果是超时，由于指数是一个超大整数，即使使用大整数乘法也不行，必须要降幂，
+所以可以说是一个数学题了。
+
