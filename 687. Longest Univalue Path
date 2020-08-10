@@ -1,0 +1,47 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
+注意：两个节点之间的路径长度由它们之间的边数表示。
+
+示例 :
+输入:
+
+              5
+             / \
+            4   5
+           / \   \
+          1   1   5
+输出:2
+
+解法一：递归
+==========
+
+```java
+int ans;
+public int longestUnivaluePath(TreeNode root) {
+    ans = 0;
+    longestPath(root);
+    return ans;}
+public int longestPath(TreeNode node) {
+    if (node == null) return 0;
+    int maxLorRres=0;
+    int left = longestPath(node.left); 
+    int right = longestPath(node.right);
+    if (node.left != null && node.left.val == node.val&&node.right != null && node.right.val == node.val) {
+        ans=Math.max(ans, left + right+2);}
+    if(node.left!=null&&node.left.val == node.val){
+        maxLorRres=left+1;}
+    if(node.right!=null&&node.right.val==node.val){
+        maxLorRres=Math.max(maxLorRres,right+1);}
+    ans=Math.max(ans,maxLorRres);
+    return maxLorRres; }
+```
+
+总结：
+====
+
+这题我陷入了中序遍历的固定思维，值相等未必在同一路径，要找到最长路径则不能使用中序遍历，而要使用递归，注意这里
+可以有两个方向，找到最长的一个方向即可，不能直接相加，否则会出现很多的重复。
