@@ -1,0 +1,97 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+岛屿总是被水包围，并且每座岛屿只能由水平方向或竖直方向上相邻的陆地连接形成。
+此外，你可以假设该网格的四条边均被水包围。
+
+示例:
+输入:
+[
+['1','1','1','1','0'],
+['1','1','0','1','0'],
+['1','1','0','0','0'],
+['0','0','0','0','0']
+]
+输出: 1
+
+解法一：深度优先遍历
+=================
+
+```java
+public int numIslands(char[][] grid) {
+    int count = 0;
+    int m = grid.length;
+    if(m == 0) return 0;
+    int n = grid[0].length;
+    for(int i = 0;i < m;i++){
+        for(int j = 0;j < n;j++){
+            if(grid[i][j] == '1'){
+                count++;
+                dfs(i,j,m,n,grid);}}}
+    return count;}
+public void dfs(int i,int j,int m,int n,char [][] grid){
+    if(i == 0 || j == 0 || i == m-1 || j == n-1 || grid[i][j] != '1'){
+        return;}
+    grid[i][j] = '1';
+    dfs(i+1,j,m,n,grid);
+    dfs(i,j+1,m,n,grid);
+    dfs(i-1,j,m,n,grid);
+    dfs(i,j-1,m,n,grid);}
+```
+
+解法二：并查集
+============
+
+```java
+class UnionFind{
+    int [] parent;
+    int nums;
+    public UnionFind(char [][] grid,int rows,int cols){
+        nums = 0;
+        for(int i = 0;i < rows;i++){
+            for(int j = 0;j < cols;j++){
+                if(grid[i][j] == '1'){
+                    nums += 1;}}}
+        int total = rows * cols;
+        parent = new int[total];
+        for(int i = 0;i < total;i++){
+            parent[i] = i;}}
+    void union(int node1,int node2){
+        int root1 = find(node1);
+        int root2 = find(node2);
+        if(root1 != root2){
+            parent[root1] = root2;
+            nums--;}}
+    int find(int node){
+        int x = node;
+        if(parent[x] != x){
+            x = parent[x];}
+        return x;}
+    int getNums(){
+        return nums;}}
+int rows;
+int cols;
+public int numIslands(char[][] grid) {
+    if(grid.length == 0) return 0;
+    rows = grid.length;
+    cols = grid[0].length;
+    UnionFind  uf = new UnionFind(grid,rows,cols);
+    for(int i = 0;i < rows;i++){
+        for(int j = 0;j < cols;j++){
+            if(grid[i][j] == '1'){
+                if(i != (rows-1) && grid[i+1][j] == '1'){
+                    uf.union(node(i,j),node(i+1,j));}
+                if(j != (cols-1) && grid[i][j+1] == '1'){
+                    uf.union(node(i,j),node(i,j+1));}}}}}
+    return uf.getNums(); 
+public int node(int i,int j){
+    return i * rows + j;}
+```
+
+总结：
+====
+
+和第130题的思路是一样的，在并查集方法中加入了一个nums，记录岛的个数，其他代码一致，是一个非常实用于相邻字符的通用算法。
