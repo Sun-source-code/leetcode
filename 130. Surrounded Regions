@@ -1,0 +1,114 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
+找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+
+示例:
+X X X X
+X O O X
+X X O X
+X O X X
+运行你的函数后，矩阵变为：
+X X X X
+X X X X
+X X X X
+X O X X
+解释:
+被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 
+任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。
+如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+
+解法一：递归，深度优先遍历
+======================
+
+```java
+public void solve(char [][] board){
+    int rows = board.length;
+    if(rows == 0) return;
+    int cols = board[0].length;
+    boolean [][] visited = new boolean[rows][cols];
+    for(int i = 0;i < cols;i++){
+        if(board[0][i]] == 'O'){
+            dfs(0,i,board,visited);}
+        if(board[rows-1][i] == 'O'){
+            dfs(rows-1,i,board,visited);}}
+    for(int i = 1;i < rows-1;i++){
+        if(board[i][0] == 'O'){
+            dfs(i,0,board,visited);}
+        if(board[i][cols-1] == 'O'){
+            dfs(i,cols-1,board,visited);}}
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++){
+            if(!visited[i][j]){
+                board[i][j] = 'X';}}}
+private void dfs(int i, int j, char[][] board, boolean[][] visited) {
+    if (i < 0 || j < 0 || i == board.length || j == board[0].length) {
+        return;}
+    if (visited[i][j]) {
+        return;}
+    if (board[i][j] == 'O') {
+        visited[i][j] = true;
+        dfs(i + 1, j, board, visited);
+        dfs(i, j + 1, board, visited);
+        dfs(i, j - 1, board, visited);
+        dfs(i - 1, j, board, visited);}
+```
+
+解法二：并查集
+============
+
+```java
+class UnionFind{
+    int [] parent;
+    public UnionFind(int total){
+        parent = new int[total];
+        for(int i = 0;i < total;i++){
+            parent[i] = i;}}
+    public int find(int node){
+        int x = node;
+        while(parent[x] != x){
+            x = parent[x];}
+        return x;}
+    public void union(int node1,int node2){
+        int root1 = find(node1);
+        int root2 = find(node2);
+        if(root1 != root2){
+            parent[root2] = root1;}}
+    public boolean isConnected(int node1,int node2){
+        return find(node1) == find(node2);}}
+class Solution{
+    int rows,cols;
+    public void solve(char [][] board){
+        if(board == null || board.length == 0) return;
+        rows = board.length;
+        cols = board[0].length;
+        UnionFind uf = new UnionFind(rows * cols + 1);
+        int dummyNode = rows * cols;
+        for(int i = 0;i < rows;i++){
+            for(int j = 0;j < cols;j++){
+                if(board[i][j] == 'O'){
+                    if(i == 0 || i == rows-1 || j == 0 || j == cols-1) {
+                        uf.union( dummyNode,node(i,j));}
+                    else{
+                        if(board[i-1][j] == 'O')  uf.union(node(i,j), node(i-1,j));
+                        if(board[i+1][j] == 'O')  uf.union(node(i,j), node(i+1,j));
+                        if(board[i][j-1] == 'O')  uf.union(node(i,j), node(i, j-1));
+                        if( board[i][j+1] == 'O')  uf.union(node(i,j), node(i, j+1));}}}}
+                
+        for(int i = 0;i < rows;i++){
+            for(int j = 0;j < cols;j++){
+                if(uf.isConnected(node(i,j),dummyNode)){
+                    board[i][j] = 'O';}
+                else{
+                    board[i][j] = 'X';}}}}
+    public int node(int i,int j){
+        return i * cols + j;}}
+```
+    
+总结：
+====
+
+并查集可以说是非常巧妙了，使用数组就可以解决图的问题，简单归纳就是将一个节点的相邻节点都标记起来，最后统一进行更改。
