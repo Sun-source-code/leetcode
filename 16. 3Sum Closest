@@ -1,0 +1,81 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个包括 n 个整数的数组 nums 和 一个目标值 target。
+找出 nums 中的三个整数，使得它们的和与 target 最接近。
+返回这三个数的和。假定每组输入只存在唯一答案。 
+
+示例：
+输入：nums = [-1,2,1,-4], target = 1
+输出：2
+解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。
+
+解法一：排序+双指针
+================
+
+参考第15题的思路，可以遍历一个start，后面两个数使用双指针
+
+```java
+public int threeSumClosest(int[] nums, int target) {
+    if(nums.length == 3) return nums[0]+nums[1]+nums[2];
+    int ans = 50000;
+    int n = nums.length;
+    Arrays.sort(nums);
+    for(int i = 0;i < nums.length;i++){
+        if(i > 0 && nums[i] == nums[i-1]){
+            continue;}
+        int j = i + 1,k = n - 1;
+        while(j < k){
+            int sum = nums[i]+nums[j]+nums[k];
+            if(sum == target){
+                return target;}
+            if(Math.abs(sum - target) <= Math.abs(ans - target)){
+                ans = sum;}
+            if(sum > target){
+                int k0 = k - 1;
+                while(j < k0 && nums[k0] == nums[k]){
+                    k0--;}
+                k = k0;}
+            else{
+                int j0 = j + 1;
+                while(j0 < k && nums[j0] == nums[j]){
+                    j0++;}
+                j = j0;}}}
+    return ans;}
+```
+
+通过调用别的方法来处理
+
+```java
+int minGap = Integer.MAX_VALUE;
+int res = Integer.MAX_VALUE;
+public int threeSumClosest(int [] nums,int target){
+    Arrays.sort(nums);
+    threeSumClosestHelper(nums,target,0,1,nums.length-1);
+    return res;}
+public void threeSumClosestHelper(int[] nums,int target,int index,int lo,int hi){
+    if(index >= nums.length-2){
+        return;}
+    int left = lo,right = hi;
+    while(left < right){
+        int sum = nums[index] + nums[left] + nums[right];
+        int temp = target - sum;
+        if(Math.abs(temp) < Math.abs(minGap)){
+            minGap = temp;
+            res = sum;}
+        if(temp == 0){
+            return;}
+        else if(temp > 0){
+            left++;}
+        else{
+            right--;}}
+    threeSumClosestHelper(nums,target,index+1,index+2,hi);}
+```
+
+总结：
+====
+
+有第15题的基础，这题还是不难的，但是通过两个方法的对比可以发现，将需要对比的数据封装为一个方法，效率会提高很多，
+相比之下，方法一在j和k的循环里有太多各种计算，效率降低。
