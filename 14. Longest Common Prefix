@@ -1,0 +1,111 @@
+# leetcode
+
+题目描述（简单）
+============
+
+编写一个函数来查找字符串数组中的最长公共前缀。
+如果不存在公共前缀，返回空字符串 ""。
+
+示例 1:
+输入: ["flower","flow","flight"]
+输出: "fl"
+
+解法一：横向扫描
+=============
+
+横向每两个单词计算最长公共前缀，输出最后的公共前缀
+
+```java
+public String longestCommonPrefix(String[] strs) {
+    int n = strs.length;
+    if(n == 0 || strs == null) return "";
+    String str = strs[0];
+    for(int i = 1;i < n;i++){
+        str = longest(str,strs[i]);
+        if(str.length() == 0) break;}
+    return str;}
+    
+public String longest(String s,String t){
+    int index = 0;
+    int n = Math.min(s.length(),t.length());
+    while(index < n && s.charAt(index) == t.charAt(index)){
+        index++;}
+    return s.substring(0,index);}
+```
+
+解法二：纵向扫描
+=============
+
+```java
+public String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0) {
+        return "";}
+    int length = strs[0].length();
+    int count = strs.length;
+    for (int i = 0; i < length; i++) {
+        char c = strs[0].charAt(i);
+        for (int j = 1; j < count; j++) {
+            if (i == strs[j].length() || strs[j].charAt(i) != c) {
+                return strs[0].substring(0, i);}}}
+    return strs[0];}
+```
+
+解法三：分治
+==========
+
+```java
+public String longestCommonPrefix(String[] strs) {
+    if(strs == null || strs.length == 0) return "";
+    else return longest(strs,0,strs.length-1);}
+
+public String longest(String [] strs,int start,int end){
+    if(start == end){
+        return strs[start];}
+    else{
+        int mid = (end - start)/2 + start;
+        String left = longest(strs,start,mid);
+        String right = longest(strs,mid+1,end);
+        return common(left,right);}}
+
+public String common(String left,String right){
+    int min = Math.min(left.length(),right.length());
+    for(int i = 0;i < min;i++){
+        if(left.charAt(i) != right.charAt(i)){
+            return left.substring(0,i);}」
+    return left.substring(0,min);}
+```
+
+解法四：二分查找
+=============
+
+解法二和解法三的结合，使用解法二的扫描过程以及解法三的二分
+
+```java
+public String longestCommonPrefix(String[] strs) {
+    if(strs == null || strs.length == 0) return "";
+    int ans = Integer.MAX_VALUE;
+    for(String str : strs){
+        ans = Math.min(str.length(),ans);}
+    int left = 0,right = ans;
+    while(left < right){
+        int mid = left + (right - left)/2;
+        if(isCommon(strs,mid){
+            left = mid;}
+        else{
+            right = mid - 1;}}
+    return strs[0].substring(0,left);}
+public boolean isCommon(String [] strs,int mid){
+    String str0 = strs[0].substring(0, length);
+    int count = strs.length;
+    for (int i = 1; i < count; i++) {
+        String str = strs[i];
+        for (int j = 0; j < length; j++) {
+            if (str0.charAt(j) != str.charAt(j)) {
+                return false;}}}
+    return true;}
+```
+
+总结：
+====
+
+思路还是比较清晰的，比较每个字符是否相同，相对比较简单的是前面三种方法，二分查找反而不容易想到，不过步骤都差不多。
