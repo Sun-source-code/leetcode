@@ -1,0 +1,45 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+示例：输入："23"
+输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+解法一：回溯
+==========
+
+如果没有更多的数字需要输入，那么组合已经产生好了
+如果还有数字需要输入，那么遍历下一个数字对应的字母combination = combination + letter
+
+```java
+Map<String,String> phone = new HashMap<>(){{
+    put("2","abc");
+    put("3","def");
+    put("4","ghi");
+    put("5","jkl");
+    put("6","mno");
+    put("7","pqrv");
+    put("8","tuv");
+    put("9","wxyz");}};
+List<Integer> ans = new ArrayList<>();
+public void backtrack(String combination,String next){
+    if(next.length() == 0) ans.add(combination);
+    else{
+        String digit = next.substring(0,1);
+        String letters = phone.get(digit);
+        for(int i = 0;i < letters.length();i++){
+            String letter = phone.get(digit).substring(i,i+1);
+            backtrack(combination+letter,next.substring(1));}}}
+public List<String> letterCombinations(String digits) {
+    if(digits.length() != 0) backtrack("",next);
+    return ans;}
+```
+
+总结：
+====
+
+排列组合问题，很明显的使用递归或者回溯，最精华的部分应该是backtrack(combination+letter,next.substring(1))
