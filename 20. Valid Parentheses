@@ -1,0 +1,46 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+1、左括号必须用相同类型的右括号闭合。
+2、左括号必须以正确的顺序闭合。
+3、注意空字符串可被认为是有效字符串。
+
+示例 :
+输入: "()"
+输出: true
+
+解法一：栈
+========
+
+HashMap<Character,Character> map;
+//相当于构造器
+public Solution() {
+    this.map = new HashMap<Character, Character>();
+    this.map.put(')', '(');
+    this.map.put('}', '{');
+    this.map.put(']', '[');}
+public boolean isValid(String s) {
+    Stack<Character> stack = new Stack<>();
+    for(int i = 0;i < s.length();i++){
+        char c = s.charAt(i);
+        if(map.containsKey(c)){
+            char topElement = stack.empty()?'#':stack.pop();
+            if(topElement != map.get(c)){
+                return false;}}
+        else{
+            stack.push(c);}}
+    return stack.isEmpty();}
+```
+
+总结：
+====
+
+括号匹配问题，只要将左括号入栈，再遍历到右括号时出栈，查看两个括号是否对应。
+
+```=
+```
