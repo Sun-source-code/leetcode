@@ -1,0 +1,52 @@
+# leetcode
+
+题目描述（简单）
+============
+
+实现 strStr() 函数。
+给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的
+第一个位置 (从0开始)。如果不存在，则返回  -1。
+
+示例 :
+输入: haystack = "hello", needle = "ll"
+输出: 2
+
+解法一：暴力
+==========
+
+```java
+public int strStr(String haystack, String needle) {
+    int m = haystack.length(),n = needle.length();
+    for(in i = 0;i < m-n+1;i++){
+        if(haystack.substring(i,i+n).equals(needle)){
+            return i;}}
+    return -1;}
+```
+
+解法二：滑动窗口
+=============
+
+```java
+public int strStr(String haystack, String needle) {
+    int m = haystack.length(),n = needle.length();
+    int index = 0;
+    while(index < m-n+1){
+        while(index < m-n+1 && haystack.charAt(index) != needle.charAt(0)) index++;
+        int curLen = 0,pl = 0;
+        while(pl < n && index < m && haystack.charAt(index) == needle.charAt(pl)){
+            pl++;
+            index++;
+            curLen++;}
+        if(curLen == n) return index - curLen;
+        index = index - curLen + 1;}
+    return -1;}
+```
+
+解法三：KMP算法
+=============
+
+
+总结：
+====
+
+第一想到的方法是滑动窗口，注意最后一个index = index - curLen + 1，后面一种方法还不太理解，以后更新吧。
