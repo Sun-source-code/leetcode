@@ -1,0 +1,56 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。
+返回被除数 dividend 除以除数 divisor 得到的商。
+整数除法的结果应当截去（truncate）其小数部分，例如：truncate(8.345) = 8 以及 truncate(-2.7335) = -2
+
+示例 1:
+输入: dividend = 10, divisor = 3
+输出: 3
+解释: 10/3 = truncate(3.33333..) = truncate(3) = 3
+
+解法一：使用减法
+=============
+
+题目值要求不能使用乘法除法，因此我们可以使用减法，逐个减去divisor并计数，但是这样一定会超时，需要递归地搜索。
+
+```java
+public int divide(int dividend, int divisor) {
+    int ans = -1;
+    int sign = 1;
+    if(dividend > 0){
+        sign = opposite(sign);
+        dividend = opposite(dividend);}
+    if(divisor > 0){
+        sign = opposite(sign);
+        divisor = opposite(divisor);}
+    int origin_dividend = dividend;
+    int origin_divisor = divisor;
+    if(dividend > divisor) return 0;
+    dividend -= divisor;
+    while(divisor >= dividend){
+        ans = ans + ans;
+        divisor += divisor;
+        dividend -= divisor;}
+    int a = ans + opposite(divide(origin_dividend - divisor,origin_divisor);
+    if(a == Integer.MIN_VALUE){
+        if(sign > 0){
+            return Integer.MAX_VALUE;}
+        else{
+            return Integer.MIN_VALUE;}}
+    else{
+        if(sign > 0){
+            return opposite(a);}
+        else{
+            return a;}}}
+public int opposite(int x){
+    return ~x + 1;}
+```
+
+总结：
+====
+
+这题思路还是容易考虑，使用减法，但是却不好优化，以及这里的边界判断也容易忽略。
