@@ -1,0 +1,71 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
+本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+
+示例:
+给定的有序链表： [-10, -3, 0, 5, 9],
+一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+
+解法一：分治
+==========
+
+快慢指针得到中间节点，并将其作为根节点，然后递归构造左右子树
+
+```java
+public TreeNode sortedListToBST(ListNode head) {
+    return buildTree(head,null);}
+public TreeNode buildTree(ListNode left,ListNode right){
+    if(left == right) return null;
+    ListNode mid = getMedian(left,right);
+    ListNode root = new ListNode(mid.val);
+    root.left = builder(left,mid);
+    root.right = builder(mid.next,right);
+    return root;}
+public TreeNode getMedian(ListNode left,ListNode right){
+    ListNode fast = left;
+    ListNode slow = left;
+    while(fast.next != null){
+        fast = fast.next;
+        fast = fast.next;
+        slow = slow.next;}
+    return slow;}
+```
+
+解法二：分治+中序遍历
+==================
+
+ListNode curr;
+public TreeNode sortedListToBST(ListNode head) {
+    cur = head;
+    int length = getLength(head);
+    return buildTree(0,length-1);}
+public int getLength(ListNode head){
+    int ret = 0;
+    while(head != null){
+        ret++;
+        head = head.next;}
+    return ret;}
+public ListNode buildTree(int left,int right){
+    int mid = left + (right - left)/2;
+    ListNode root = new ListNode();
+    root.left = buildTree(left,mid-1);
+    root.val = cur.val;
+    cur = cur.next;
+    root.right = builder(mid+1,right);
+    return root;}
+```
+
+总结：
+====
+
+这题比较关键的是寻找根节点的位置，快慢指针的方法很适用，其他就是分治策略了。
