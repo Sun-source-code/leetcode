@@ -1,0 +1,87 @@
+# leetcode
+
+题目描述（困难）
+============
+
+给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+
+示例 :
+输入: "(()"
+输出: 2
+解释: 最长有效括号子串为 "()"
+
+解法一：动态规划
+=============
+
+s[i]=')'且s[i-1]='('时，dp[i] = dp[i-2]+2;
+s[i]=')'且s[i-1]=')'时，dp[i]=dp[i-1]+dp[i-dp[i-1]-2]+2;
+
+```java
+public int longestValidParentheses(String s) {
+    int ans = 0;
+    int [] dp = new int[s.length()];
+    for(int i = 1;i < s.length();i++){
+        if(s.charAt(i) == ')'){
+            if(s.charAt(i-1) == '('){
+                dp[i] = (i >= 2 ? dp[i-2] : 0) + 2;}
+            else if(i-dp[i-1] > 0 && s.charAt(i-dp[i-1]-1) == '('){
+                dp[i] = dp[i - 1] + ((i - dp[i - 1]) >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2;}}
+        ans = Math.max(dp[i],ans);}
+    return ans;}
+```
+
+解法二：栈
+========
+
+```java
+public int longestValidParentheses(String s) {
+    int ans = 0;
+    Stack<Integer> stack = new Stack<>();
+    stack.push(-1);
+    for(int i = 0;i < s.length();i++){
+        if(s.charAt(i) == '('){
+            stack.push(i);}
+        else{
+            stack.pop();
+            if(stack.empty()){
+                stack.push(i);}
+            else{
+                ans = Math.max(ans,i-stack.peek());}}}
+    return ans;}
+```
+
+解法三：不需要额外空间
+==================
+
+使用双指针分别从前往后和从后往前遍历字符串，分别计算左括号和右括号的数目
+
+```java
+public int longestValidParentheses(String s) {
+    int left = 0, right = 0, maxlength = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (s.charAt(i) == '(') {
+            left++;
+        }else {
+            right++;}
+        if(left == right) {
+            maxlength = Math.max(maxlength, 2 * right);
+        }else if (right > left) {
+            left = right = 0;}}
+    left = right = 0;
+    for (int i = s.length() - 1; i >= 0; i--) {
+        if (s.charAt(i) == '(') {
+            left++;
+        }else {
+            right++;}
+        if(left == right) {
+            maxlength = Math.max(maxlength, 2 * left);
+        }else if (left > right) {
+            left = right = 0;}}
+    return maxlength;}
+```
+
+总结：
+====
+
+我最初想到的思路是解法三，但是我只考虑了从前往后，没有从后往前，所以肯定是不能通过的，后来想到了栈，栈里面存储下标
+可以说是很巧妙了，我其他都想到了，就差存储下标一点，动态规划就更厉害了，不知道怎么总结出来的。
