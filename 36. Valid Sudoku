@@ -1,0 +1,81 @@
+# leetcode
+
+题目描述（中等）
+============
+
+判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+
+1、数字 1-9 在每一行只能出现一次。
+2、数字 1-9 在每一列只能出现一次。
+3、数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+
+示例：输入
+[
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+]
+输出: true
+
+解法一：一次迭代
+=============
+
+使用三个哈希表存储每一行，每一列，以及每个3*3的方框内存储的数字，遍历数独，检查看到的每个单元格是否在当前行，当前列，
+或者当前方框内出现过，如果出现过，false，如果没有，保留这个值进一步追踪
+遍历数独的方法：index = (row / 3) * 3 + columns / 3
+
+```java
+public boolean isValidSudoku(char[][] board) {
+    HashMap<Integer, Integer> [] rows = new HashMap[9];
+    HashMap<Integer, Integer> [] columns = new HashMap[9];
+    HashMap<Integer, Integer> [] boxes = new HashMap[9];
+    for (int i = 0; i < 9; i++) {
+        rows[i] = new HashMap<Integer, Integer>();
+        columns[i] = new HashMap<Integer, Integer>();
+        boxes[i] = new HashMap<Integer, Integer>();}
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            char num = board[i][j];
+            if (num != '.') {
+                int n = (int)num;
+                int box_index = (i / 3 ) * 3 + j / 3;
+                rows[i].put(n, rows[i].getOrDefault(n, 0) + 1);
+                columns[j].put(n, columns[j].getOrDefault(n, 0) + 1);
+                boxes[box_index].put(n, boxes[box_index].getOrDefault(n, 0) + 1);
+                if (rows[i].get(n) > 1 || columns[j].get(n) > 1 || boxes[box_index].get(n) > 1)
+                    return false;}}}
+    return true;}
+```
+
+解法二：使用set
+=============
+
+使用set集合将每一行的行号以及数字放进set集合中，无法放入也就是返回false，那么结果返回false
+
+```java
+public boolean isValidSudoku(char[][] board) {
+    Set seen = new HashSet();
+    for (int i=0; i<9; ++i) {
+        for (int j=0; j<9; ++j) {
+            char number = board[i][j];
+            if (number != '.')
+                if (!seen.add(number + " in row " + i) ||
+                    !seen.add(number + " in column " + j) ||
+                    !seen.add(number + " in block " + i/3 + "-" + j/3))
+                    return false;
+        }
+    }
+    return true;}
+```
+
+总结：
+====
+
+第一个方法还比较好考虑，相当于直接把数字插入，检验是否有数字重复，方法二非常秒，缺点是时间复杂度太高
