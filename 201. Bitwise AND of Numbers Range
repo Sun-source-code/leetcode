@@ -1,0 +1,42 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定范围 [m, n]，其中 0 <= m <= n <= 2147483647，返回此范围内所有数字的按位与（包含 m, n 两端点）。
+
+示例 1: 
+输入: [5,7]
+输出: 4
+
+解法一：位运算
+============
+
+对比每个元素的二进制码，发现目标是找到公共前缀，将每一个数移位，直到找到公共前缀
+
+```java
+public int rangeBitwiseAnd(int m, int n) {
+    int ans = 0;
+    while(m < n){
+        m >>= 1;
+        n >>= 1;
+        ans++;}
+    return m << ans;}
+```
+
+解法二：Brain Kernighan算法
+=========================
+
+对number和number-1进行位运算，number右边的1会被抹去变成0
+
+```java
+public int rangeBitwiseAnd(int m, int n) {
+    while(m < n){
+        n = n & (n-1);}
+    return n;}
+```
+
+总结：
+====
+
+位运算最重要的就是找规律，布莱恩算法很实用。
