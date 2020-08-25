@@ -1,0 +1,100 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个正整数 n（1 ≤ n ≤ 30），输出外观数列的第 n 项。
+注意：整数序列中的每一项将表示为一个字符串。
+
+「外观数列」是一个整数序列，从数字 1 开始，序列中的每一项都是对前一项的描述。前五项如下：
+
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+第一项是数字 1
+
+描述前一项，这个数是 1 即 “一个 1 ”，记作 11
+
+描述前一项，这个数是 11 即 “两个 1 ” ，记作 21
+
+描述前一项，这个数是 21 即 “一个 2 一个 1 ” ，记作 1211
+
+描述前一项，这个数是 1211 即 “一个 1 一个 2 两个 1 ” ，记作 111221
+
+解法一：递归
+==========
+
+```java
+public String countAndSay(int n) {
+    if(n == 1) return "1";
+    String last = countAndSay(n-1);
+    return getNextString(last);}
+    
+public String getNextString(String last){
+    if(last.length() == 0) return "";
+    int num = getRepeatNum(last);
+    return num+""+last.charAt(0)+getNextString(last.substring(num));}
+    
+public int getRepeatNum(String last){
+    int count = 1;
+    char ch = last.charAt(0);
+    for(int i = 1;i < last.length();i++){
+        if(last.charAt(i) == ch){
+            count++;
+        }else{
+            break;}}
+    return count;}
+```
+
+解法二：迭代
+==========
+
+```java
+public String countAndSay(int n) {
+    String res = "1";
+    while(n > 1){
+        String temp = "";
+        for(int i = 0;i < res.length();i++){
+            int num = getRepeatNum(res.substring(i));
+            temp =  temp + num + "" + res.charAt(i);
+            i = i + num - 1;}
+        n--;
+        res = temp;}
+    return res;}
+
+public int getRepeatNum(String last){
+    int count = 1;
+    char ch = last.charAt(0);
+    for(int i = 1;i < last.length();i++){
+        if(last.charAt(i) == ch){
+            count++;
+        }else{
+            break;}}
+    return count;}
+```
+
+解法三：双指针
+============
+
+```java
+public String countAndSay(int n) {
+    if(n == 1) return "1";
+    StringBuffer res = new StringBuffer();
+    String str = countAndSay(n-1);
+    int length = str.length();
+    int start = 0;
+    for(int i = 1;i <= length;i++){
+        if(i == length){
+            res.append(i-start).append(str.charAt(start);}
+        else{
+            res.append(i-start).append(str.charAt(start);
+            start = i;}}
+    return res.toString();}
+```
+
+总结：
+====
+
+递归和迭代的方法还是比较容易想到的，不过是递归里面还有一层递归，最佳方法是双指针，利用start来指向每一段相同字符的结束，很妙
