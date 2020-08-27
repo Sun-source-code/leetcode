@@ -1,0 +1,81 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+
+candidates 中的数字可以无限制重复被选取。
+
+说明：
+
+所有数字（包括 target）都是正整数。
+解集不能包含重复的组合。 
+示例 1：
+
+输入：candidates = [2,3,6,7], target = 7,
+所求解集为：
+[
+  [7],
+  [2,2,3]
+]
+
+解法一：回溯+剪枝
+==============
+
+1. 输入candidates=[2,3,6,7]，target=7，候选数组有2，如果找到了7-2=5的所有组合，再在之前加上2，就是7的所有组合
+2. 同理考虑3，如果可以找到7-3=4的所有组合，再在之前加上3，就是7的所有组合
+3. 把候选数组排序，遇到一个较大的数，如果以这个数为起点都搜索不到结果，后面就更搜索不到结果，搜索问题的剪枝常用
+
+```java
+public List<List<Integer>> combinationSum(int[] candidates,int target){
+    List<List<Integer>> ans = new ArrayList<>();
+    int len = candidates.length;
+    Arrays.sort(candidates);
+    dfs(candidates,len,target,0,new Deque<Integer>,ans);
+    return ans;}
+public void dfs(int [] candidates,int len,int residue,int begin,Deque<Integer> path,List<List<Integer>> ans){
+    if(residue == 0) ans.add(new Deque<Integer>(path));
+    for(int i = begin;i < len;i++){
+        if(residue - candidates[i] < 0) break;
+        path.addLast(candidates[i]);
+        dfs(candidates,len,residue-candidates[i],i,path,ans);
+        path.removeLast();}}
+```
+
+解法二：回溯+剪枝
+==============
+
+1. 首先对数组排序，有利于剪枝，nums数组原来记录每个下标的元素用了多少个
+2. 剪枝操作：sum + candidates[i] > target，break，然后往上回溯
+
+```java
+public List<List<Integer>> combinationSum(int[] candidates,int target){
+    List<List<Integer>> ans = new ArrayList<>();
+    int len = candidates.length;
+    if(len == 0) return ans;
+    Arrays.sort(candidates);
+    itn [] num = new int[len];
+    dfs(ans,candidates,nums,0,target,0,len);
+    return ans;}
+public void dfs(List<List<Integer>> ans,int [] candidates,int [] nums,int index,int target,int sum,int len){
+    if(sum == target){
+        List<Integer> context = new ArrayList<>();
+        for(int i = 0;i < len;i++){
+            int temp = nums[i];
+            while(temp-- != 0){
+                context.add(candidates[i]);}
+        ans.add(context);
+        return;}
+    for(int i = index;i < len;i++){
+        if(sum + candidates[i] <= target){
+            nums[i]++;
+            dfs(ans,candidates,nums,i,target,sum + candidates[i],len);
+            nums[i]--;}
+        else break;}}
+```
+
+总结：
+====
+
+方法一使用容器来进行封装，而方法二使用一个数组来代表每个元素的个数，最后统一放进集合中，总体使用回溯来进行。
