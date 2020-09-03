@@ -1,0 +1,50 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个可包含重复数字的序列，返回所有不重复的全排列。
+
+示例:
+
+输入: [1,1,2]
+输出:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+
+解法一：回溯+剪枝
+==============
+
+```java
+public List<List<Integer>> permuteUnique(int[] nums) {
+    int n = nums.length;
+    List<List<Integer>> res = new ArrayList<>();
+    if(n == 0) return res;
+    Arrays.sort(nums);
+    boolean [] used = new boolean[n];
+    Deque<Integer> path = new ArrayDeque(n);
+    dfs(nums,n,0,used,path,res);
+    return res;}
+private void dfs(int [] nums,int n,int depth,boolean [] used,Deque<Integer> path,List<List<Integer>> res){
+    if(depth == len){
+        res.add(new ArrayList<>(path));
+        return;}
+    for(int i = 0;i < len;i++){
+        if(used[i]){
+            continue;}
+        if(i > 0 && nums[i] == nums[i-1] && !used[i-1]){
+            continue;}
+        path.addLast(nums[i]);
+        used[i] = true;
+        dfs(nums,n,depth+1,used,path,res);
+        used[i] = false;
+        path.removeLast(nums[i]);}}}
+```
+
+总结：
+====
+
+这题和第46题一样，只是需要加上一个判断是否使用过的数组，并加入到回溯中。
