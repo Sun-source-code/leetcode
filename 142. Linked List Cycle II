@@ -1,0 +1,65 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 
+如果 pos 是 -1，则在该链表中没有环。
+
+说明：不允许修改给定的链表。
+
+示例 ：
+输入：head = [3,2,0,-4], pos = 1
+输出：tail connects to node index 1
+解释：链表中有一个环，其尾部连接到第二个节点。
+
+解法一：使用哈希表
+===============
+
+```java
+public ListNode detectCycle(ListNode head) {
+    Set<ListNode> visited = new HashSet<ListNode>();
+    ListNode node = head;
+    while (node != null) {
+        if (visited.contains(node)) {
+            return node;}
+        visited.add(node);
+        node = node.next;}
+    return null;}
+```
+
+解法二：快慢指针
+=============
+
+分为两个过程，第一个过程找到两个指针的相遇点，将慢指针重新指向开始位置，并逐个移动，最后再次相遇的点即为入口
+
+```java
+private ListNode getIntersect(ListNode head) {
+    ListNode tortoise = head;
+    ListNode hare = head;
+    while (hare != null && hare.next != null) {
+        tortoise = tortoise.next;
+        hare = hare.next.next;
+        if (tortoise == hare) {
+            return tortoise;}}
+    return null;}
+
+public ListNode detectCycle(ListNode head) {
+    if (head == null) {
+        return null;}
+    ListNode intersect = getIntersect(head);
+    if (intersect == null) {
+        return null;}
+    ListNode ptr1 = head;
+    ListNode ptr2 = intersect;
+    while (ptr1 != ptr2) {
+        ptr1 = ptr1.next;
+        ptr2 = ptr2.next;}
+    return ptr1;}
+```
+
+总结：
+====
+
+快慢指针作为一个判断链表环是否存在以及判断入口的经典方法，必须要掌握
