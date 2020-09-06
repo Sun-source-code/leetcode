@@ -1,0 +1,52 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个整数，编写一个函数来判断它是否是 2 的幂次方。
+
+示例 :
+输入: 1
+输出: true
+解释: 20 = 1
+
+解法一：直接除
+============
+
+```java
+public boolean isPowerOfTwo(int n) {
+    if(n == 0) return false;
+    while(n % 2 == 0){
+        n /= 2;}
+    return n == 1;}
+```
+
+解法二：位运算：获取二进制中最右边的1
+===============================
+
+x & (-x)保留了最右边的1，如果x是2的幂，那么二进制中只有一个1，也就是最右边的1，如果不是，那么有其他位置上的1
+
+```java
+public boolean isPowerOfTwo(int n) {
+    if (n == 0) return false;
+    long x = (long) n;
+    return (x & (-x)) == x;}
+```
+
+解法三：位运算：去除二进制中最右边的1
+===============================
+
+x & (x-1)，可以将2的幂设置为0，如果全部幂被设置为0，最后结果为0，则返回true
+
+```java
+public boolean isPowerOfTwo(int n) {
+    if(n == 0) return false;
+    long x = (long) n;
+    return (x & (x - 1)) == 0;}
+```
+
+总结：
+====
+
+虽然直接计算也可以得到结果，但还是位运算比较方便快捷。
+    
