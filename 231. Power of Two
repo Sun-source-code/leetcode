@@ -36,7 +36,7 @@ public boolean isPowerOfTwo(int n) {
 解法三：位运算：去除二进制中最右边的1
 ===============================
 
-x & (x-1)，可以将2的幂设置为0，如果全部幂被设置为0，最后结果为0，则返回true
+x & (x-1)，可以将最低位的1设置为0，对于2的幂，如果全部幂被设置为0，最后结果为0，则返回true
 
 ```java
 public boolean isPowerOfTwo(int n) {
