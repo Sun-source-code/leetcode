@@ -1,0 +1,38 @@
+# leetcode
+
+题目描述（中等）
+============
+
+这里有 n 个航班，它们分别从 1 到 n 进行编号。
+我们这儿有一份航班预订表，表中第 i 条预订记录 bookings[i] = [i, j, k] 意味着我们在从 i 到 j 的每个航班上预订了 k 个座位。
+请你返回一个长度为 n 的数组 answer，按航班编号顺序返回每个航班上预订的座位数。
+
+示例：
+输入：bookings = [[1,2,10],[2,3,20],[2,5,25]], n = 5
+输出：[10,55,45,25,25]
+
+解法一：公交车算法
+===============
+
+可以理解成公交车是上下车，用一个数组来表示每一站的增加或减少的人数，i到j表示在第i站增加k个人，在j+1站减少k个人
+
+```java
+public int[] corpFlightBookings(int[][] bookings, int n) {
+    int len = bookings.length;
+    int [] ans = new int[n];
+    int l,r,seat;
+    for(int i = 0;i < len;i++){
+        l = bookings[i][0];
+        r = bookings[i][1];
+        seat = bookings[i][2];
+        ans[l] += seat;
+        if(r < n-1) ans[r+1] -= seat;}
+    for(int i = 1;i < n;i++){
+        ans[i] += ans[i-1];}
+    return ans;}
+```
+
+总结：
+====
+
+这一题想到了使用数组来表示每一站的增减人数也就不难了
