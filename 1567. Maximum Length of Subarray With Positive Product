@@ -1,0 +1,48 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个整数数组 nums ，请你求出乘积为正数的最长子数组的长度。
+一个数组的子数组是由原数组中零个或者更多个连续数字组成的数组。
+请你返回乘积为正数的最长子数组长度。
+
+示例  1：
+输入：nums = [1,-2,-3,4]
+输出：4
+解释：数组本身乘积就是正数，值为 24 。
+
+解法一：动态规划
+=============
+
+dp0[i],dp1[i]分别表示以i为结尾的乘积为正数和负数的子数组个数
+nums[i] > 0时，dp0[i] = dp0[i-1] + 1,dp1[i] = dp1[i-1] == 0 ? 0 : dp1[i-1]+1
+nums[i] < 0时，dp0[i] = dp1[i-1] == 0 ? 0 : dp1[i-1] + 1,dp1[i] = dp0[i-1] + 1
+nums[i] = 0时，dp0[i] = 0,dp1[i] = 0
+
+```java
+public int getMaxLen(int[] nums) {
+    int pre0 = nums[0] > 0 ? 1 : 0;
+    int pre1 = nums[0] < 0 ? 1 : 0;
+    int max = Math.max(0, pre0);
+    int dp0 = pre0, dp1 = pre1;
+    for(int i=1;i<nums.length;i++) {
+        if(nums[i] > 0) {
+            dp0 = pre0 + 1;
+            dp1 = pre1 == 0 ? 0 : pre1 + 1; //如果前一个状态为零，那么此时也应该为零, 因为负数还没有出现
+        } else if(nums[i] < 0) {
+            dp0 = pre1 == 0 ? 0 : pre1 + 1; //同上理
+            dp1 = pre0 + 1;
+        } else {
+            dp0 = 0;
+            dp1 = 0;}
+        pre0 = dp0;
+        pre1 = dp1;
+        max = Math.max(max, dp0);}
+    return max;}
+```
+
+总结：
+====
+
+这本应该是个一眼能看出的动态规划，可是我居然想错方向了，一直拘泥于单个元素以及他的前几个元素，双指针方法不可行。
