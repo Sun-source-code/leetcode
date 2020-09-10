@@ -21,8 +21,8 @@
   \
    2
    
-解法一：对数组进行排序
-===================
+解法一：对数组进行排序，显式中序遍历
+==============================
 
 ```java
 public void inorder(TreeNode root,List<Integer> ans){
@@ -36,7 +36,7 @@ public int [] findTwoSwapped(List<Integer> ans){
   for(int i = 0;i < n-1;i++){
     if(ans.get(i+1) < ans.get(i)){
       y = ans.get(i+1);
-      if(i == -1) x = ans.get(i);
+      if(x == -1) x = ans.get(i);
       else break;}}
   return new int[] {x,y};}
 public void recover(TreeNode root,int count,int x,int y){
