@@ -1,0 +1,71 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个非空二叉树, 返回一个由每层节点平均值组成的数组。
+
+示例 1：
+输入：
+    3
+   / \
+  9  20
+    /  \
+   15   7
+输出：[3, 14.5, 11]
+解释：
+第 0 层的平均值是 3 ,  第1层是 14.5 , 第2层是 11 。因此返回 [3, 14.5, 11] 。
+
+解法一：深度优先遍历
+================
+
+```java
+public List<Double> averageOfLevels(TreeNode root) {
+    List<Double> ans = new ArrayList<>();
+    List<Integer> temp = new ArrayList<>();
+    dfs(root,0,temp,ans);
+    List<Double> average = new ArrayList<>();
+    int size = ans.size();
+    for(int i = 0;i < size;i++){
+        average.add(ans.get(i) / temp.get(i));}
+    return average;}
+    
+public void dfs(TreeNode root,int level,List<Integer> temp,List<Double> ans){
+    if(root == null) return;
+    if(level < ans.size()){
+        ans.set(level,ans.get(level) + root.val);
+        temp.set(level,ans.get(level) + 1);}
+    else{
+        ans.add(1.0 * root.val);
+        temp.add(1);}
+    dfs(root.left,level+1,temp,ans);
+    dfs(root.right,level+1,temp,ans);}
+```
+
+解法二：广度优先遍历
+=================
+
+```java
+public List<Double> averageOfLevels(TreeNode root) {
+    List<Double> ans = new ArrayList<>();
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while(!queue.isEmpty()){
+        double sum = 0.0;
+        int size = queue.size();
+        for(int i = 0;i < size;i++){
+            TreeNode node = queue.poll();
+            sum += node.val;
+            TreeNode left = node.left,right = node.right;
+            if(left != null){
+                queue.offer(left);}
+            if(right != null){
+                queue.offer(right);}}
+        ans.add(sum / size);}
+    return ans;}
+```
+
+总结：
+====
+
+深度优先遍历和广度优先遍历，注意要记录每一层的个数。
