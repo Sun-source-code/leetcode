@@ -1,0 +1,63 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个二进制数组 nums ，你需要从中删掉一个元素。
+请你在删掉元素的结果数组中，返回最长的且只包含 1 的非空子数组的长度。
+如果不存在这样的子数组，请返回 0 。
+
+示例 ：
+
+输入：nums = [1,1,0,1]
+输出：3
+解释：删掉位置 2 的数后，[1,1,1] 包含 3 个 1 。
+
+解法一：递推
+==========
+
+维护两个数组，以第i位为结尾的最长连续子数组suf，以第i位为开头的最长连续子数组pre
+
+```java
+public int longestSubarray(int[] nums) {
+    int n = nums.length;
+    int[] pre = new int[n];
+    int[] suf = new int[n];
+    pre[0] = nums[0];
+    for (int i = 1; i < n; ++i) {
+        pre[i] = nums[i] != 0 ? pre[i - 1] + 1 : 0; }
+    suf[n - 1] = nums[n - 1];
+    for (int i = n - 2; i >= 0; --i) {
+        suf[i] = nums[i] != 0 ? suf[i + 1] + 1 : 0;}
+    int ans = 0;
+    for (int i = 0; i < n; ++i) {
+        int preSum = i == 0 ? 0 : pre[i - 1];
+        int sufSum = i == n - 1 ? 0 : suf[i + 1];
+        ans = Math.max(ans, preSum + sufSum);}
+    return ans;}
+```
+
+递推优化
+=======
+
+```java
+public int longestSubarray(int[] nums) {
+    int ans = 0;
+    int p0 = 0,p1 = 0;
+    for(int num : nums){
+        if(num == 0){
+            p1 = p0;
+            p0 = 0;}
+        else{
+            p1++;
+            p0++;}
+        ans = Math.max(p1,ans);}
+    if(ans = nums.length()){
+        ans--;}
+    return ans;}
+```
+
+总结：
+====
+
+这题需要注意的就是子数组分为两部分的情况，需要知道以其为开头的一部分长度和以其为结尾的长度，优化过程很巧妙
