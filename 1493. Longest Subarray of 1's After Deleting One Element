@@ -52,7 +52,7 @@ public int longestSubarray(int[] nums) {
             p1++;
             p0++;}
         ans = Math.max(p1,ans);}
-    if(ans = nums.length()){
+    if(ans == nums.length){
         ans--;}
     return ans;}
 ```
