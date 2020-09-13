@@ -1,0 +1,50 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false 。
+
+示例 1：
+
+输入：arr = [2,6,4,1]
+输出：false
+解释：不存在连续三个元素都是奇数的情况。
+
+解法一：枚举
+==========
+
+public boolean threeConsecutiveOdds(int[] arr) {
+    int count = 0;
+    int ans = Integer.MIN_VALUE;
+    for(int a : arr){
+        if(a % 2 == 1){
+            count++;
+        }else{
+            count = 0;}
+        ans = Math.max(count,ans);}
+    return ans >= 3;}
+```
+
+解法二：双指针
+===========
+
+i为起始指针，j为结束指针，方便表示连续奇数的起始和结束位置
+
+```java
+public boolean threeConsecutiveOdds(int[] arr) {
+    int i = 0,j = 0,N = arr.length;
+    for(;j < N;j++){
+        if(arr[j] % 2 == 0){
+            if(j - i >= 3){
+                return true;}
+            i = j + 1;}}
+    if(j - i >= 3){
+        return true;}
+    return false;}
+```
+
+总结：
+====
+
+注意保存连续奇数的个数
