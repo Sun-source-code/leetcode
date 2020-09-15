@@ -1,0 +1,57 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，判定 s 是否可以被空格拆分为一个或多个在字典中出现的单词。
+
+说明：
+
+拆分时可以重复使用字典中的单词。
+你可以假设字典中没有重复的单词。
+示例 1：
+
+输入: s = "leetcode", wordDict = ["leet", "code"]
+输出: true
+解释: 返回 true 因为 "leetcode" 可以被拆分成 "leet code"。
+
+解法一：动态规划
+=============
+
+dp[i] = dp[j] && check(s[i ... j-1])
+
+```java
+public boolean wordBreak(String s, List<String> wordDict) {
+    Set<String> set = new HashSet<>(wordDict);
+    Boolean [] dp = new int[s.length() + 1];
+    dp[0] = true;
+    for(int i = 1;i < s.length();i++){
+        for(int j = 0;j < i;j++){
+            if(dp[j] && set.contains(s.substring(j,i)){
+                dp[i] = true;
+                break;}}}
+    return dp[s.length()];}
+```
+
+不使用集合
+========
+
+```java
+public boolean wordBreak(String s, List<String> wordDict) {
+    int len = s.length();
+    boolean [] dp = new int[len+1];
+    dp[0] = true;
+    for(int i = 1;i < len;i++){
+        for(int j = 0;j < wordDict.size();j++){
+            String str = wordDict.get(j);
+            int length = str.length();
+            if(length <= i && dp[i-length] && str.equals(s.substring(i-length,i))){
+                dp[i] = true;
+                break;}}}
+    return dp[len];}
+```
+
+总结：
+====
+
+思路还是很简单的，相对方法二时间复杂度较低，因为不需要计算每一个字符为首字符的情况
