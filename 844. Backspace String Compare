@@ -1,0 +1,59 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+
+注意：如果对空文本输入退格字符，文本继续为空。
+
+示例 1：
+输入：S = "ab#c", T = "ad#c"
+输出：true
+解释：S 和 T 都会变成 “ac”。
+
+解法一：重构字符串
+===============
+
+```java
+public boolean backspaceCompare(String S, String T) {
+    return build(S).equals(build(T));}
+
+public String build(String S) {
+    Stack<Character> ans = new Stack();
+    for (char c: S.toCharArray()) {
+        if (c != '#')
+            ans.push(c);
+        else if (!ans.empty())
+            ans.pop();}
+    return String.valueOf(ans);}
+```
+
+解法二：双指针
+============
+
+```java
+public boolean backspaceCompare(String S, String T) {
+    int i = S.length() - 1, j = T.length() - 1;
+    int skipS = 0, skipT = 0;
+    while (i >= 0 || j >= 0) { 
+        while (i >= 0) {
+            if (S.charAt(i) == '#') {skipS++; i--;}
+            else if (skipS > 0) {skipS--; i--;}
+            else break;}
+        while (j >= 0) {
+            if (T.charAt(j) == '#') {skipT++; j--;}
+            else if (skipT > 0) {skipT--; j--;}
+            else break;}
+        if (i >= 0 && j >= 0 && S.charAt(i) != T.charAt(j))
+            return false;
+        if ((i >= 0) != (j >= 0))
+            return false;
+        i--; j--;}
+    return true;}
+```
+
+总结：
+====
+
+最先想到的方法是双指针，与这里思路差不多，不过其实也可以逆序输出，将#的后一个字符删掉，这里我忽略了stack也是可以转化为String。
