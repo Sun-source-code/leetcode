@@ -1,0 +1,96 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
+
+假定 BST 有如下定义：
+
+结点左子树中所含结点的值小于等于当前结点的值
+结点右子树中所含结点的值大于等于当前结点的值
+左子树和右子树都是二叉搜索树
+例如：
+给定 BST [1,null,2,2],
+
+   1
+    \
+     2
+    /
+   2
+返回[2].
+
+解法一：中序遍历，递归实现
+======================
+
+```java
+List<Integer> mList = new ArrayList<>();
+int count = 0;
+int maxCount = 0;
+int current = 0;
+public int[] findMode(TreeNode root) {
+    helper(root);
+    int [] res = new int[mList.size()];
+    for(int i = 0;i < mList.size();i++){
+        res[i] = mList.get(i);}
+    return res;}
+
+public void helper(TreeNode node){
+    if(node == null) return;
+    helper(node.left);
+    int nodeValue = node.val;
+    if(nodeValue == current){
+        count++;}
+    else{
+        current = nodeValue;
+        count = 1;}
+    if(count == maxCount){
+        mList.add(nodeValue);}
+    else{
+        mList.clear();
+        mList.add(nodeValue);
+        maxCount = nodeValue;}
+    helper(node.right);}
+```
+
+解法二：中序遍历，迭代实现
+======================
+
+```java
+List<Integer> mList = new ArrayList<>();
+int count = 0;
+int maxCount = 0;
+int current = 0;
+public int[] findMode(TreeNode root) {
+    helper(root);
+    int [] res = new int[mList.size()];
+    for(int i = 0;i < mList.size();i++){
+        res[i] = mList.get(i);}
+    return res;}
+    
+public void helper(TreeNode node){
+    Stack<TreeNode> stack = new Stack<>();
+    while(node != null || !stack.isEmpty()){
+        while(node != null){
+            stack.push(node);
+            node = node.left;}
+        node = stack.pop();
+        int nodeValue = node.val;
+        if(nodeValue == current){
+            count++;}
+        else{
+            current = nodeValue;
+            count = 1;}
+        if(count == maxCount){
+            mList.add(nodeValue);}
+        else{
+            mList.clear();
+            mList.add(nodeValue);
+            maxCount = count;}
+        node = node.right;}}
+```
+
+总结：
+====
+
+中序遍历还是比较明显的，注意这里需要将节点值最大的所有数加入到数组中，需要一个count == maxCount判断
