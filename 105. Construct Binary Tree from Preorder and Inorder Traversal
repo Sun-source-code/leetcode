@@ -1,0 +1,117 @@
+# leetcode
+
+题目描述（中等）
+============
+
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+
+解法一：递归
+==========
+
+```java
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    HashMap<Integer, Integer> map = new HashMap<>();
+    for (int i = 0; i < inorder.length; i++) {
+        map.put(inorder[i], i);}
+    return buildTreeHelper(preorder, 0, preorder.length, inorder, 0, inorder.length, map);}
+
+private TreeNode buildTreeHelper(int[] preorder, int p_start, int p_end, int[] inorder, 
+        int i_start, int i_end,HashMap<Integer, Integer> map) {
+    if (p_start == p_end) {
+        return null;}
+    int root_val = preorder[p_start];
+    TreeNode root = new TreeNode(root_val);
+    int i_root_index = map.get(root_val);
+    int leftNum = i_root_index - i_start;
+    root.left = buildTreeHelper(preorder, p_start + 1, p_start + leftNum + 1, inorder, i_start, i_root_index, map);
+    root.right = buildTreeHelper(preorder, p_start + leftNum + 1, p_end, inorder, i_root_index + 1, i_end, map);
+    return root;}
+```
+
+解法二：stop
+===========
+
+```java
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    return buildTreeHelper(preorder,  inorder, (long)Integer.MAX_VALUE + 1);
+}
+int pre = 0;
+int in = 0;
+private TreeNode buildTreeHelper(int[] preorder, int[] inorder, long stop) {
+    //到达末尾返回 null
+    if(pre == preorder.length){
+        return null;
+    }
+    //到达停止点返回 null
+    //当前停止点已经用了，in 后移
+    if (inorder[in] == stop) {
+        in++;
+        return null;
+    }
+    int root_val = preorder[pre++];
+    TreeNode root = new TreeNode(root_val);   
+    //左子树的停止点是当前的根节点
+    root.left = buildTreeHelper(preorder,  inorder, root_val);
+    //右子树的停止点是当前树的停止点
+    root.right = buildTreeHelper(preorder, inorder, stop);
+    return root;}
+```
+
+解法三：栈
+=========
+
+```java
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    if (preorder.length == 0) {
+        return null;
+    }
+    Stack<TreeNode> roots = new Stack<TreeNode>();
+    int pre = 0;
+    int in = 0;
+    //先序遍历第一个值作为根节点
+    TreeNode curRoot = new TreeNode(preorder[pre]);
+    TreeNode root = curRoot;
+    roots.push(curRoot);
+    pre++;
+    //遍历前序遍历的数组
+    while (pre < preorder.length) {
+        //出现了当前节点的值和中序遍历数组的值相等，寻找是谁的右子树
+        if (curRoot.val == inorder[in]) {
+            //每次进行出栈，实现倒着遍历
+            while (!roots.isEmpty() && roots.peek().val == inorder[in]) {
+                curRoot = roots.peek();
+                roots.pop();
+                in++;}
+            //设为当前的右孩子
+            curRoot.right = new TreeNode(preorder[pre]);
+            //更新 curRoot
+            curRoot = curRoot.right;
+            roots.push(curRoot);
+            pre++;
+        } else {
+            //否则的话就一直作为左子树
+            curRoot.left = new TreeNode(preorder[pre]);
+            curRoot = curRoot.left;
+            roots.push(curRoot);
+            pre++;}}
+    return root;}
+```
+
+总结：
+====
+
+题目和第106题是一样的，不过是顺序不同，这里是根据前序遍历的顺序在后序遍历数组中区分左子树和右子树。
