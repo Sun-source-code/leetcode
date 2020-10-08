@@ -1,0 +1,56 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个非负整数数组 A， A 中一半整数是奇数，一半整数是偶数。
+
+对数组进行排序，以便当 A[i] 为奇数时，i 也是奇数；当 A[i] 为偶数时， i 也是偶数。
+
+你可以返回任何满足上述条件的数组作为答案。
+
+示例：
+输入：[4,2,5,7]
+输出：[4,5,2,7]
+解释：[4,7,2,5]，[2,5,4,7]，[2,7,4,5] 也会被接受。
+
+解法一：两次遍历
+=============
+
+```java
+public int[] sortArrayByParityII(int[] A) {
+    int [] ans = new int[A.length];
+    int index = 0;
+    for(int i = 0;i < A.length;i++){
+        if(A[i] % 2 == 0){
+            ans[index] = A[i];
+            index+=2;}}
+    index = 1;
+    for(int i = 0;i < A.length;i++){
+        if(A[i] % 2 == 1){
+            ans[index] = A[i];
+            index+=2;}}
+    return ans;}
+```
+
+解法二：双指针
+============
+
+把奇数部分作为数据的暂存区，不断增加指向奇数的指针，直到找到一个偶数，将两个指针的数值交换
+
+```java
+public int[] sortArrayByParityII(int[] A) {
+    int j = 1;
+    for(int i = 0;i < A.length;i+=2){
+        if(A]i] % 2 == 1){
+            while(A[j] % 2 == 1) j+=2;
+            int temp = A[i];
+            A[i] = A[j];
+            A[j] = temp;}}
+    return A;}
+```
+
+总结：
+====
+
+第一种方法还是比较好考虑的，但是如果要求不使用额外数组，那么就必须双指针法，将某一部分作为暂存区的思想很棒
