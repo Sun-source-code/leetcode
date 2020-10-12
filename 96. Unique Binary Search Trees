@@ -36,7 +36,7 @@ public int numTrees(int n){
 解法二：数学
 ==========
 
-上面的式子表示为卡塔兰树，即C[n+1] = C[n] * (4n+4)/(n+2) 
+上面的式子表示为卡塔兰树，即C[n+1] = C[n] * (4n+2)/(n+2) 
 
 ```java
 public int numTrees(int n){
