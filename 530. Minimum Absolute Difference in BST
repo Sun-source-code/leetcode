@@ -50,6 +50,7 @@ public void dfs(TreeNode node){
   dfs(node.left);
   if(cur != null){
     min = Math.min(min,node.val - cur.val);}
+  cur = node;
   dfs(node.right);}
 ```
 
