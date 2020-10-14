@@ -45,7 +45,7 @@ public int helper(int [] nums,int target,boolean flag){
     int right = nums.length;
     while(left < right){
         int mid = (left + right) / 2;
-        if(nums[mid] > target || (left && target == nums[mid])){
+        if(nums[mid] > target || (flag && target == nums[mid])){
             right = mid;}
         else{
             left = mid + 1;}}
@@ -55,4 +55,5 @@ public int helper(int [] nums,int target,boolean flag){
 总结：
 ====
 
-对于二分查找的修改。
+对于二分查找的修改，第一次遍历查找开始位置，flag=true，两个条件满足均可以，第二次遍历查找结束位置，flag=false，必须
+满足第一个条件
