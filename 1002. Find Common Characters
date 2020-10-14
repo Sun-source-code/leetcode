@@ -1,0 +1,41 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。
+例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+
+你可以按任意顺序返回答案。
+
+示例 1：
+
+输入：["bella","label","roller"]
+输出：["e","l","l"]
+
+解法一：数组
+==========
+
+```java
+public List<String> commonChars(String[] A) {
+    int [] ans = new int[26];
+    Arrays.fill(ans,Integer.MAX_VALUE);
+    for(String word : A){
+        int [] temp = new int[26];
+        int len = word.length();
+        for(int i = 0;i < len;i++){
+            char ch = word.charAt(i);
+            temp[ch - 'a']++;}
+        for(int i = 0;i < 26;i++){
+            ans[i] = Math.min(ans[i],temp[i]);}
+    List<String> list = new ArrayList<>();
+    for(int i = 0;i < 26;i++){
+        for(int j = 0;j < ans[i];j++){
+            list.add(String.valueOf((char)(i+'a')));}}
+    return list;}
+```
+
+总结：
+====
+
+我的思路是一样的，但是没有想到对于每个元素怎么将数组的值更换为更下值，这里是在操作一个元素后再遍历一次
