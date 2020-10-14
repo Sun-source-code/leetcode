@@ -1,0 +1,32 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个由若干 0 和 1 组成的数组 nums 以及整数 k。如果所有 1 都至少相隔 k 个元素，则返回 True ；否则，返回 False 。
+
+示例 1：
+
+输入：nums = [1,0,0,0,1,0,0,1], k = 2
+输出：true
+解释：每个 1 都至少相隔 2 个元素。
+
+解法一：扫描
+==========
+
+```java
+public boolean kLengthApart(int[] nums, int k) {
+    int ans = k;
+    for(int num : nums){
+        if(num == 1){
+            if(ans < k) return false;
+            ans = 0;}
+        else{
+            ans++;}}
+    return true;}
+```
+
+总结：
+====
+
+简单的思路，先将ans初始化为k，后面遇到1则判断ans是否大于k，并将ans归0，否则加一
