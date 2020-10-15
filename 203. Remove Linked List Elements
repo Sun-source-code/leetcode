@@ -1,0 +1,33 @@
+# leetcode
+
+题目描述（简单）
+============
+
+删除链表中等于给定值 val 的所有节点。
+
+示例:
+
+输入: 1->2->6->3->4->5->6, val = 6
+输出: 1->2->3->4->5
+
+解法一：哨兵节点
+=============
+
+```java
+public ListNode removeElements(ListNode head, int val) {
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode prev = dummy,curr = head;
+    while(curr != null){
+        if(curr.val == val){
+            prev.next = curr.next;}
+        else{
+            prev = curr;}
+        curr = curr.next;}
+    return dummy.next;}
+```
+
+总结：
+====
+
+这里需要使用一个哑节点，用两个指针表示前后两个节点
