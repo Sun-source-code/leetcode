@@ -29,13 +29,13 @@ public int maxProfit(int k,int [] prices){
   int [] cash = ne int[k];//不持股时的状态
   for(int price : prices){
     for(int i = 0;i < k;i++){
-      stock[i] = Math.max(stock[i],(j == 0) ? 0 : cash[i-1]-price);
-      cash[i] = Math.max(cash[i],stock[j]+price);}}
+      stock[i] = Math.max(stock[i],(i == 0) ? 0 : cash[i-1]-price);
+      cash[i] = Math.max(cash[i],stock[i]+price);}}
   return cash[n-1];}
 private int greedy(int [] prices,int len){
   int maxProfit = 0;
   for(int i = 1;i < len;i++){
-    if(prices[i] > prices[i-1]{
+    if(prices[i] > prices[i-1]){
       maxProfile += prices[i] - prices[i-1];}}
   return maxProfit;}
 ```
