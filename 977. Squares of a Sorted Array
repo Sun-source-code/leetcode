@@ -1,0 +1,56 @@
+# leetcode
+
+给定一个按非递减顺序排序的整数数组 A，返回每个数字的平方组成的新数组，要求也按非递减顺序排序。
+
+示例 1：
+
+输入：[-4,-1,0,3,10]
+输出：[0,1,9,16,100]
+
+解法一：直接排序
+==============
+
+```java
+public int[] sortedSquares(int[] A) {
+    int[] ans = new int[A.length];
+    for (int i = 0; i < A.length; ++i) {
+        ans[i] = A[i] * A[i];}
+    Arrays.sort(ans);
+    return ans;}
+```
+
+解法二：双指针
+============
+
+```java
+public int[] sortedSquares(int[] A) {
+    int n = A.length;
+    int negative = -1;
+    for(int i = 0;i < n;i++){
+        if(A[i] < 0){
+            negative++;}
+        else{
+            break;}}
+    int [] ans = new int[n];
+    int index = 0,i = negative,j = negative+1;
+    while(i >= 0 || j < n){
+        if(i < 0){
+            ans[index] = A[j] * A[j];
+            i++;}
+        else if(j == n){
+            ans[index] = A[i] * A[i];
+            j--;}
+        else if(A[i] * A[i] < A[j] * A[j]){
+            ans[index] = A[i] * A[i];
+            i--;}
+        else{
+            ans[index] = A[j] * A[j];
+            j++;}
+        index++;}
+    return ans;}
+```
+
+总结：
+====
+
+直接排序肯定不是个好办法，这里采用了双指针，因为原来的数组本就是排序的，只需要找到每一个负数应该插入哪个位置
