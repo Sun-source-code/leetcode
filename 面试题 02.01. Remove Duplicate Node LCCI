@@ -1,0 +1,35 @@
+# leetcode
+
+题目描述（简单）
+============
+
+编写代码，移除未排序链表中的重复节点。保留最开始出现的节点。
+
+示例1:
+
+ 输入：[1, 2, 3, 3, 2, 1]
+ 输出：[1, 2, 3]
+ 
+解法一：哈希表
+============
+
+```java
+public ListNode removeDuplicateNodes(ListNode head) {
+    if(head == null) return head;
+    Set<Integer> occur = new HashSet<>();
+    occur.add(head.val);
+    ListNode pos = head;
+    while(pos.next != null){
+        ListNode cur = pos;
+        if(occur.add(cur.val){
+            pos = pos.next;}
+        else{
+            pos.next = pos.next.next;}}
+    pos.next = null;
+    return head;}
+```
+
+总结：
+====
+
+就是使用了如果集合中已经存在该节点，那么添加会返回false，此时跳过该节点
