@@ -1,0 +1,45 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+
+示例：
+s = "leetcode"
+返回 0
+
+解法一：哈希表
+============
+
+```java
+public int firstUniqChar(String s) {
+    HashMap<Character,Integer> map = new HashMap<>();
+    for(int i = 0;i < s.length();i++){
+        char ch = s.charAt(i);
+        map.put(ch,map.getOrDefault(ch,0)+1);}
+    for(int i = 0;i < s.length();i++){
+        if(map.get(s.charAt(i)) == 1){
+            return i;}}
+    return -1;}
+```
+
+解法二：使用数组存储
+=================
+
+```java
+public int firstUniqChar(String s) {
+    int[] nums = new int[26];
+    char[] chars = s.toCharArray();
+    for(char ch : chars) {
+        nums[ch - 'a']++;}
+    for(int i = 0; i < chars.length; i++) {
+        if(nums[chars[i] - 'a'] == 1) {
+            return i;}}
+    return -1;}
+```
+
+总结：
+====
+
+两种方法其实是一样的，只不过方法二使用一个长度为26的数组代替哈希表存储每一个字符，思路很简单
