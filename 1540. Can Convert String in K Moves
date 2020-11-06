@@ -1,0 +1,69 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你两个字符串 s 和 t ，你的目标是在 k 次操作以内把字符串 s 转变成 t 。
+
+在第 i 次操作时（1 <= i <= k），你可以选择进行如下操作：
+
+选择字符串 s 中满足 1 <= j <= s.length 且之前未被选过的任意下标 j （下标从 1 开始），并将此位置的字符切换 i 次。
+不进行任何操作。
+切换 1 次字符的意思是用字母表中该字母的下一个字母替换它（字母表环状接起来，所以 'z' 切换后会变成 'a'）。
+
+请记住任意一个下标 j 最多只能被操作 1 次。
+
+如果在不超过 k 次操作内可以把字符串 s 转变成 t ，那么请你返回 true ，否则请你返回 false 。
+
+示例 1：
+输入：s = "input", t = "ouput", k = 9
+输出：true
+解释：第 6 次操作时，我们将 'i' 切换 6 次得到 'o' 。第 7 次操作时，我们将 'n' 切换 7 次得到 'u' 。
+
+解法一：哈希表
+============
+
+使用哈希表存储需要操作的字符之间的距离以及个数，但是时间复杂度太高
+
+```java
+public boolean canConvertString(String s, String t, int k) {
+    if(s.length() != t.length()) return false;
+    int ans = 0;
+    HashMap<Integer,Integer> map = new HashMap<>();
+    for(int i = 0;i < s.length();i++){
+        int a = s.charAt(i) - 'a';
+        int b = t.charAt(i) - 'a';
+        if(a == b) continue;
+        int cur = ((b+26) - a) % 26;
+        map.put(cur,map.getOrDefault(cur,0)+1);
+        for(Map.Entry<Integer,Integer> m : map.entrySet()){
+            ans = Math.max(ans,m.getKey()+(m.getValue()-1)*26);}}
+    return ans <= k;}
+```
+
+解法二：使用数组统计
+=================
+
+```java
+public boolean canConvertString(String s, String t, int k) {
+    if (s.length() != t.length()) {
+        return false;}
+    int[] counts = new int[26];
+    int length = s.length();
+    for (int i = 0; i < length; i++) {
+        int difference = t.charAt(i) - s.charAt(i);
+        if (difference < 0) {
+            difference += 26;}
+        counts[difference]++;}
+    for (int i = 1; i < 26; i++) {
+        int maxConvert = i + 26 * (counts[i] - 1);
+        if (maxConvert > k) {
+            return false;}}
+    return true;}
+```
+
+总结：
+====
+
+这里需要考虑再循环一轮的情况，也就是说情况一，后面字符在前面字符前面，再循环一轮，情况二，同样字符和字符间距的情况下，也需要再
+循环一轮，需要存储每一次的字符间距
