@@ -1,0 +1,142 @@
+# leetcode
+
+题目描述（困难）
+============
+
+给定一个单词数组和一个长度 maxWidth，重新排版单词，使其成为每行恰好有 maxWidth 个字符，且左右两端对齐的文本。
+
+你应该使用“贪心算法”来放置给定的单词；也就是说，尽可能多地往每行中放置单词。必要时可用空格 ' ' 填充，使得每行恰好有 maxWidth 个字符。
+
+要求尽可能均匀分配单词间的空格数量。如果某一行单词间的空格不能均匀分配，则左侧放置的空格数要多于右侧的空格数。
+
+文本的最后一行应为左对齐，且单词之间不插入额外的空格。
+
+说明:
+
+单词是指由非空格字符组成的字符序列。
+每个单词的长度大于 0，小于等于 maxWidth。
+输入单词数组 words 至少包含一个单词。
+示例:
+
+输入:
+words = ["This", "is", "an", "example", "of", "text", "justification."]
+maxWidth = 16
+输出:
+[
+   "This    is    an",
+   "example  of text",
+   "justification.  "
+]
+
+解法一：逐行计算
+=============
+
+```
+public List<String> fullJustify(String[] words, int maxWidth) {
+    List<String> ans = new ArrayList<>();
+    int currentLen = 0;
+    List<String> row = new ArrayList<>();
+    for (int i = 0; i < words.length;) {
+        if (currentLen == 0 && currentLen + words[i].length() <= maxWidth
+            || currentLen > 0 && currentLen + 1 + words[i].length() <= maxWidth) {
+            row.add(words[i]);
+            if (currentLen == 0) {
+                currentLen = currentLen + words[i].length();
+            } else {
+                currentLen = currentLen + 1 + words[i].length();}
+            i++;
+        } else {
+            int sub = maxWidth - currentLen + row.size() - 1;
+            if (row.size() == 1) {
+                String blank = getStringBlank(sub);
+                ans.add(row.get(0) + blank);
+            } else {
+                StringBuilder temp = new StringBuilder();
+                temp.append(row.get(0));
+                int averageBlank = sub / (row.size() - 1);
+                int missing = sub - averageBlank * (row.size() - 1);
+                String blank = getStringBlank(averageBlank + 1);
+                int k = 1;
+                for (int j = 0; j < missing; j++) {
+                    temp.append(blank + row.get(k));
+                    k++;}
+                blank = getStringBlank(averageBlank);
+                for (; k < row.size(); k++) {
+                    temp.append(blank + row.get(k));
+                }
+                ans.add(temp.toString());}
+            row = new ArrayList<>();
+            currentLen = 0;}}
+    StringBuilder temp = new StringBuilder();
+    temp.append(row.get(0));
+    for (int i = 1; i < row.size(); i++) {
+        temp.append(" " + row.get(i));}
+    temp.append(getStringBlank(maxWidth - currentLen));
+    ans.add(temp.toString());
+    return ans;}
+
+private String getStringBlank(int n) {
+    StringBuilder str = new StringBuilder();
+    for (int i = 0; i < n; i++) {
+        str.append(" ");}
+    return str.toString();}
+```
+
+解法一优化
+========
+
+```java
+public List<String> fullJustify2(String[] words, int maxWidth) {
+    List<String> ans = new ArrayList<>();
+    int currentLen = 0;
+    int start = 0;
+    int end = 0;
+    for (int i = 0; i < words.length;) {
+        if (currentLen == 0 && currentLen + words[i].length() <= maxWidth
+            || currentLen > 0 && currentLen + 1 + words[i].length() <= maxWidth) {
+            end++;
+            if (currentLen == 0) {
+                currentLen = currentLen + words[i].length();
+            } else {
+                currentLen = currentLen + 1 + words[i].length();}
+            i++;
+        } else {
+            int sub = maxWidth - currentLen + (end - start) - 1;
+            if (end - start == 1) {
+                String blank = getStringBlank(sub);
+                ans.add(words[start] + blank);
+            } else {
+                StringBuilder temp = new StringBuilder();
+                temp.append(words[start]);
+                int averageBlank = sub / ((end - start) - 1);
+                int missing = sub - averageBlank * ((end - start) - 1);
+                String blank = getStringBlank(averageBlank + 1);
+                int k = 1;
+                for (int j = 0; j < missing; j++) {
+                    temp.append(blank + words[start+k]);
+                    k++;}
+                blank = getStringBlank(averageBlank);
+                for (; k <(end - start); k++) {
+                    temp.append(blank + words[start+k]);}
+                ans.add(temp.toString());}
+            start = end;
+            currentLen = 0;}}
+    StringBuilder temp = new StringBuilder();
+    temp.append(words[start]);
+    for (int i = 1; i < (end - start); i++) {
+        temp.append(" " + words[start+i]);}
+    temp.append(getStringBlank(maxWidth - currentLen));
+    ans.add(temp.toString());
+    return ans;}
+
+private String getStringBlank(int n) {
+    StringBuilder str = new StringBuilder();
+    for (int i = 0; i < n; i++) {
+        str.append(" ");}
+    return str.toString();}
+```
+
+总结：
+====
+
+刚开始以为很难，实际上也只是分情况考虑， 主要分三种情况，一行一个单词，一行多个单词，最后一行的左对齐，注意细节
