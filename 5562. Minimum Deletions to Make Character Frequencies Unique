@@ -1,0 +1,44 @@
+# leetcode
+
+题目描述（中等）
+============
+
+如果字符串 s 中 不存在 两个不同字符 频次 相同的情况，就称 s 是 优质字符串 。
+
+给你一个字符串 s，返回使 s 成为 优质字符串 需要删除的 最小 字符数。
+
+字符串中字符的 频次 是该字符在字符串中的出现次数。例如，在字符串 "aab" 中，'a' 的频次是 2，而 'b' 的频次是 1 。
+
+示例 1：
+
+输入：s = "aab"
+输出：0
+解释：s 已经是优质字符串。
+
+解法一：使用Set
+=============
+
+```java
+public int minDeletions(String s) {
+    int[] cnt = new int['z' - 'a' + 1];
+    for(char c : s.toCharArray()){
+        cnt[c - 'a']++;}
+    Set<Integer> set = new HashSet();
+    int ans = 0;
+    for(int x : cnt){
+        if(x > 0){
+            while(x > 0 && set.contains(x)){
+                x--;
+                ans++;}
+            set.add(x);}}
+    return ans;}
+```
+
+总结：
+====
+
+刚开始我居然没有想到使用set判断是否存在，只是使用了判断两个字符是否相等
+
+            set.add(x);}}：
+            set.add(x);}}
+            
