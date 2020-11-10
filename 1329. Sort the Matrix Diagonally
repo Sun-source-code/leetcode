@@ -1,0 +1,47 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个 m * n 的整数矩阵 mat ，请你将同一条对角线上的元素（从左上到右下）按升序排序后，返回排好序的矩阵。
+
+示例 1：
+
+输入：mat = [[3,3,1,1],[2,2,1,2],[1,1,1,2]]
+输出：[[1,1,1,1],[1,2,2,2],[1,2,3,3]]
+
+解法一：模拟
+==========
+
+从第一行、第一列的每个元素开始分别向右下角排序即可，每次坐标变化为：横纵坐标均增加1。
+
+```java
+public int[][] diagonalSort(int[][] mat) {
+    int m=mat.length,n=mat[0].length;
+    for(int i=0;i<m;++i){//从第一列各个开始向右下角扫描
+        ArrayList<Integer>temp=new ArrayList<>();//存储该条对角线元素
+        int x=i,y=0;
+        while(x>=0 && x<m && y>=0 && y<n){
+            temp.add(mat[x][y]);
+            x+=1;//更新坐标
+            y+=1;}    
+        Collections.sort(temp);//排序
+    for(int j=0;j<temp.size();++j){
+        mat[i+j][j]=temp.get(j);}}
+    for(int i=1;i<n;++i){
+        ArrayList<Integer>temp=new ArrayList<>();
+        int x=0,y=i;
+        while(x>=0 && x<m && y>=0 && y<n){
+            temp.add(mat[x][y]);
+            x+=1;
+            y+=1;}    
+        Collections.sort(temp);
+        for(int j=0;j<temp.size();++j){
+            mat[j][i+j]=temp.get(j);}}
+    return mat;}
+```
+
+总结：
+====
+
+总结规律的题目，根据中间线向上下两端拓展，每次拓展x+1，y+1
