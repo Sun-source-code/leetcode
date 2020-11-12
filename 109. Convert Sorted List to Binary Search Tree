@@ -34,9 +34,8 @@ public TreeNode buildTree(ListNode left,ListNode right){
 public TreeNode getMedian(ListNode left,ListNode right){
     ListNode fast = left;
     ListNode slow = left;
-    while(fast.next != null){
-        fast = fast.next;
-        fast = fast.next;
+    while(fast.next != null && fast != right){
+        fast = fast.next.next;
         slow = slow.next;}
     return slow;}
 ```
