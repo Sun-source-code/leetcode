@@ -1,0 +1,103 @@
+# leetcode
+
+题目描述（中等）
+============
+
+编写一个程序，找出第 n 个丑数。
+
+丑数就是质因数只包含 2, 3, 5 的正整数。
+
+示例:
+
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+
+解法一：直接使用Set
+================
+
+```java
+public int nthUglyNumber(int n) {
+    HashSet<Integer> set = new HashSet<>();
+    int count = 0;
+    set.add(1);
+    int result = 1;
+    while (count < n) {
+        if (set.contains(result)) {
+            count++;
+            set.add(result * 2);
+            set.add(result * 3);
+            set.add(result * 5);}
+        result++;}
+    return result - 1;}
+```
+
+遗憾的是这种方法超时了，因为n比较大的时候需要的操作太多了
+
+解法二：使用优先队列
+=================
+
+```java
+public int nthUglyNumber(int n) {
+    Queue<Long> queue = new PriorityQueue<Long>();
+    int count = 0;
+    long result = 1;
+    queue.add(result);
+    while (count < n) {
+        result = queue.poll();
+        // 删除重复的
+        while (!queue.isEmpty() && result == queue.peek()) {
+            queue.poll();}
+        count++;
+        queue.offer(result * 2);
+        queue.offer(result * 3);
+        queue.offer(result * 5);}
+    return (int) result;}
+```
+
+解法三：使用TreeSet，不考虑重复元素
+==============================
+
+```java
+public int nthUglyNumber(int n) {
+    TreeSet<Long> set = new TreeSet<Long>();
+    int count = 0;
+    long result = 1;
+    set.add(result);
+    while (count < n) {
+        result = set.pollFirst();
+        count++;
+        set.add(result * 2);
+        set.add(result * 3);
+        set.add(result * 5);}
+    return (int) result;}
+```
+
+解法四：归并排序思想
+=================
+
+```java
+public int nthUglyNumber(int n) {
+    int[] ugly = new int[n];
+    ugly[0] = 1; // 丑数序列
+    int index2 = 0, index3 = 0, index5 = 0; //三个指针
+    for (int i = 1; i < n; i++) {
+        // 三个中选择较小的
+        int factor2 = 2 * ugly[index2];
+        int factor3 = 3 * ugly[index3];
+        int factor5 = 5 * ugly[index5];
+        int min = Math.min(Math.min(factor2, factor3), factor5);
+        ugly[i] = min;//更新丑数序列
+        if (factor2 == min)
+            index2++;
+        if (factor3 == min)
+            index3++;
+        if (factor5 == min)
+            index5++;}
+    return ugly[n - 1];}
+```
+
+总结：
+====
+
+刚开始还觉得没有思路，后来才发现每个丑数都由2，3，5的积组成，所以只要一直遍历，找到最小的一个数，更新序列即可
