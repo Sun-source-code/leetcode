@@ -1,0 +1,46 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个整数数组 nums 和一个整数 x 。每一次操作时，你应当移除数组 nums 最左边或最右边的元素，
+然后从 x 中减去该元素的值。请注意，需要 修改 数组以供接下来的操作使用。
+
+如果可以将 x 恰好 减到 0 ，返回 最小操作数 ；否则，返回 -1 。
+
+示例 1：
+
+输入：nums = [1,1,4,2,3], x = 5
+输出：2
+解释：最佳解决方案是移除后两个元素，将 x 减到 0 。
+
+解法一：哈希表，两数之和
+====================
+
+```java
+public int minOperations(int[] nums, int x) {
+    int n = nums.length;
+    Map<Integer,Integer> map = new HashMap<>();
+    int ps = 0;
+    for(int i = 0;i < n;i++){
+        ps += nums[i];
+        map.putIfAbsent(ps,i);}
+    ps = 0;
+    int inf = (int)1e9;
+    int ans = inf;
+    for(int i = n;i >= 0;i--){
+        if(i < n){
+            ps += nums[i];}
+        int target = x - ps;
+        if(map.containsKey(target)){
+            int left = map.get(target);
+            if(left < i){
+                ans = Math.min(ans,left + 1 + n - i);}}}
+    return ans == inf ? -1 : ans;}
+```
+
+总结：
+====
+
+一直在纠结动态规划，结果发现根本解决不了，然后想到了两数之和，但是也没弄出来，结果是使用两个数，左边遍历求和和右边遍历
+求和得到，实际上不难的。
