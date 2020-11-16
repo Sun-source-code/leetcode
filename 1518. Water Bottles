@@ -1,0 +1,39 @@
+# leetcode
+
+题目描述（简单）
+============
+
+小区便利店正在促销，用 numExchange 个空酒瓶可以兑换一瓶新酒。你购入了 numBottles 瓶酒。
+
+如果喝掉了酒瓶中的酒，那么酒瓶就会变成空的。
+
+请你计算 最多 能喝到多少瓶酒。
+
+解法一：模拟
+==========
+
+```java
+public int numWaterBottles(int numBottles, int numExchange) {
+    int bottles = numBottles,ans = numBottles;
+    while(bottles >= numExchange){
+        bottles -= numExchange;
+        ans++;
+        bottles++;}
+    return ans;}
+```
+
+解法二：数学
+==========
+
+b - n * (e - 1) >= e
+e = ((b-e)/(e-1)) + 1
+
+```java
+public int numWaterBottles(int numBottles, int numExchange) {
+    return numBottles >= numExchange ? (numBottles - numExchange) / (numExchange - 1) + 1 + numBottles : numBottles;}
+```
+
+总结：
+====
+
+差点把自己绕进入了，实际上思路还是很简单。
