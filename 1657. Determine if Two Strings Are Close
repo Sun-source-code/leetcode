@@ -1,0 +1,46 @@
+# leetcode
+
+题目描述（中等）
+============
+
+如果可以使用以下操作从一个字符串得到另一个字符串，则认为两个字符串 接近 ：
+
+操作 1：交换任意两个 现有 字符。
+例如，abcde -> aecdb
+操作 2：将一个 现有 字符的每次出现转换为另一个 现有 字符，并对另一个字符执行相同的操作。
+例如，aacabb -> bbcbaa（所有 a 转化为 b ，而所有的 b 转换为 a ）
+你可以根据需要对任意一个字符串多次使用这两种操作。
+
+给你两个字符串，word1 和 word2 。如果 word1 和 word2 接近 ，就返回 true ；否则，返回 false 。
+
+输入：word1 = "abc", word2 = "bca"
+输出：true
+解释：2 次操作从 word1 获得 word2 。
+执行操作 1："abc" -> "acb"
+执行操作 1："acb" -> "bca"
+
+解法一：位运算
+============
+
+```java
+public boolean closeStrings(String word1, String word2) {
+    return Arrays.equals(count(word1), count(word2)) && state(word1) == state(word2);}
+
+public int state(String s){
+    int ans = 0;
+    for(char c : s.toCharArray()){
+        ans |= 1 << (c - 'a');}
+    return ans;}
+
+public int[] count(String s){
+    int[] ans = new int['z' - 'a' + 1];
+    for(char c : s.toCharArray()){
+        ans[c - 'a']++;}
+    Arrays.sort(ans);
+    return ans;}
+```
+
+总结：
+====
+
+我一直没想到该怎么应对可以转换成当前有的字符的情况，也一直没联系到位运算，看到答案才恍然大悟。
