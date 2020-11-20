@@ -1,0 +1,48 @@
+# leetcode
+
+题目描述（困难）
+============
+
+给定一个字符串 S，计算 S 的不同非空子序列的个数。
+
+因为结果可能很大，所以返回答案模 10^9 + 7.
+
+示例 1：
+
+输入："abc"
+输出：7
+解释：7 个不同的子序列分别是 "a", "b", "c", "ab", "ac", "bc", 以及 "abc"。
+
+解法一：动态规划
+=============
+
+当字符都不同时，dp[i] = dp[i-1] * 2;
+当存在相同字符时，dp[i+1] = 2 * dp[i-1] - dp[last[s[k]]-1]
+
+```java
+public int distinctSubseqII(String S) {
+    int MOD = 1_000_000_007;
+    int N = S.length();
+    int[] dp = new int[N+1];
+    dp[0] = 1;
+
+    int[] last = new int[26];
+    Arrays.fill(last, -1);
+
+    for (int i = 0; i < N; ++i) {
+        int x = S.charAt(i) - 'a';
+        dp[i+1] = dp[i] * 2 % MOD;
+        if (last[x] >= 0)
+            dp[i+1] -= dp[last[x]];
+        dp[i+1] %= MOD;
+        last[x] = i;}
+
+    dp[N]--;
+    if (dp[N] < 0) dp[N] += MOD;
+    return dp[N];}
+```
+
+总结：
+====
+
+怎么也想不到会跟动态规划有关，最难得的是，最先设定了一个空字符串作为后面加字符的临时字符串，然后总结规律，所以后面每个数都要减1。
