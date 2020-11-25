@@ -74,7 +74,7 @@ public List<Integer> inorderTraversal(TreeNode root){
       curr = curr.right;}
     else{
       pre = curr.left;
-      if(pre.right != null){
+      while(pre.right != null && pre.right != curr){
         pre = pre.right;}
       pre.right = curr;
       TreeNode temp = curr;
