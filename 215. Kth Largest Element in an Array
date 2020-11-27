@@ -1,0 +1,98 @@
+# leetcode
+
+题目描述（中等）
+============
+
+在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+
+示例 1:
+
+输入: [3,2,1,5,6,4] 和 k = 2
+输出: 5
+
+解法一：排序
+==========
+
+```java
+public int findKthLargest(int[] nums, int k) {
+    Arrays.sort(nums);
+    return nums[nums.length - k];}
+```
+
+解法二：优先队列
+=============
+
+```
+public int findKthLargest(int[] nums, int k) {
+    PriorityQueue<Integer> queue = new PriorityQueue<>((o1,o2)-> o1 - o2);
+    for(int num : nums){
+        queue.add(num);
+        if(queue.size() > k){
+            queue.poll();}}
+    return queue.poll();}
+```
+
+解法三：选择排序
+=============
+
+```java
+Random random = new Random();
+public int findKthLargest(int[] nums, int k) {
+    return quick(nums,0,nums.length,k);}
+public int quick(int [] nums,int start,int end,int k){
+    int q = randomPartition(nums,l,r);
+    if(q == k){
+        return nums[q];}
+    else{
+        return q < index ? quick(nums,q+1,r,k) : quick(nums,l,q-1,k);}}
+public int randomPartition(int [] nums,int start,int end){
+    int i = random.nextInt(end - start + 1) + 1;
+    swap(nums,i,end);
+    return partition(nums,i,end);}
+public int partition(int [] nums,int start,int end){
+    int x = nums[end],i = start - 1;
+    for(int j = start;j < end;j++){
+        if(nums[j] <= x){
+            swap(nums,++x,j);}}
+    swap(nums,i+1,end);
+    return i+1;}
+public void swap(int [] nums,int i,int j){
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;}
+```
+
+解法四：堆排序
+============
+
+```java
+public int findKthLargest(int[] nums, int k) {
+    int heapSize = nums.length;
+    buildMaxHeap(nums, heapSize);
+    for (int i = nums.length - 1; i >= nums.length - k + 1; --i) {
+        swap(nums, 0, i);
+        --heapSize;
+        maxHeapify(nums, 0, heapSize);}
+    return nums[0];}
+public void buildMaxHeap(int[] a, int heapSize) {
+    for (int i = heapSize / 2; i >= 0; --i) {
+        maxHeapify(a, i, heapSize);} }
+public void maxHeapify(int[] a, int i, int heapSize) {
+    int l = i * 2 + 1, r = i * 2 + 2, largest = i;
+    if (l < heapSize && a[l] > a[largest]) {
+        largest = l;} 
+    if (r < heapSize && a[r] > a[largest]) {
+        largest = r;}
+    if (largest != i) {
+        swap(a, i, largest);
+        maxHeapify(a, largest, heapSize);}}
+public void swap(int[] a, int i, int j) {
+    int temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;}
+```
+
+总结：
+====
+
+还是选择排序比较靠谱，方法一虽然能通过，但是还是觉得不太好。
