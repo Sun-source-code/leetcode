@@ -1,0 +1,86 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个整数数组 nums 和一个整数 k 。
+
+每一步操作中，你需要从数组中选出和为 k 的两个整数，并将它们移出数组。
+
+返回你可以对数组执行的最大操作数。
+
+示例 1：
+
+输入：nums = [1,2,3,4], k = 5
+输出：2
+解释：开始时 nums = [1,2,3,4]：
+- 移出 1 和 4 ，之后 nums = [2,3]
+- 移出 2 和 3 ，之后 nums = []
+不再有和为 5 的数对，因此最多执行 2 次操作。
+
+解法一：排序双指针
+===============
+
+```java
+public int maxOperations(int[] nums, int k) {
+    int result = 0;
+    Arrays.sort(nums);
+    int i = 0, j = nums.length - 1;
+    while (i < j) {
+        int sum = nums[i] + nums[j];
+        if (k == sum) {
+            result++;
+            i++;
+            j--;
+        } else if (k > sum) {
+            i++;
+        } else {
+            j--;}}
+    return result;}
+```
+
+解法二：两次哈希表
+===============
+
+```java
+public int maxOperations(int[] nums, int k) {
+    Map<Integer, Integer> map = new HashMap<>(nums.length);
+    for (int num : nums) {
+        Integer i = map.getOrDefault(num, 0);
+        map.put(num, i + 1);}
+    int result = 0;
+    for (int num : nums) {
+        int x = k - num;
+        int i = map.get(num);
+        if (i <= 0) {
+            continue;}
+        map.put(num, i - 1);
+        if (map.containsKey(x) && map.get(x) > 0) {
+            result++;//结果+1
+             map.put(x, map.get(x) - 1);}}
+    return result;}
+```
+
+解法三：一遍哈希表
+===============
+
+```java
+public int maxOperations(int[] nums, int k) {
+    Map<Integer, Integer> map = new HashMap<>(nums.length);
+    int result = 0;
+    for (int num : nums) {
+        int x = k - num;
+        Integer i = map.get(x);
+        if (i != null && map.containsKey(x) && map.get(x) > 0) {
+            result++;
+            map.put(x, map.get(x) - 1);
+            continue;}
+        Integer count = map.getOrDefault(num, 0);
+        map.put(num, count + 1);}
+    return result;}
+```
+
+总结：
+====
+
+解法基本上和第一题的两数之和一样，不过需要一个数来标记每个数出现的次数，也就是哈希表。
