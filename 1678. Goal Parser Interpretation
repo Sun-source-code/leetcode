@@ -1,0 +1,43 @@
+# leetcode
+
+题目描述（简单）
+============
+
+请你设计一个可以解释字符串 command 的 Goal 解析器 。command 由 "G"、"()" 和/或 "(al)" 按某种顺序组成。
+Goal 解析器会将 "G" 解释为字符串 "G"、"()" 解释为字符串 "o" ，"(al)" 解释为字符串 "al" 。
+然后，按原顺序将经解释得到的字符串连接成一个字符串。
+
+给你字符串 command ，返回 Goal 解析器 对 command 的解释结果。
+
+示例 1：
+
+输入：command = "G()(al)"
+输出："Goal"
+解释：Goal 解析器解释命令的步骤如下所示：
+G -> G
+() -> o
+(al) -> al
+最后连接得到的结果是 "Goal"
+
+解法一：遍历
+==========
+
+```java
+public String interpret(String command) {
+    char [] ch = command.toCharArray();
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0;i < ch.length;i++){
+        if(ch[i] == 'G'){
+            sb.append("G");
+        }else if(i - 1 >= 0){
+            if(ch[i] == ')' && ch[i-1] == '('){
+                sb.append("o");
+            }else if(ch[i] == ')' && ch[i-1] == 'l'){
+                sb.append("al");}}}
+    return sb.toString();}
+```
+
+总结：
+====
+
+题目很简单，直接根据题目翻译即可。
