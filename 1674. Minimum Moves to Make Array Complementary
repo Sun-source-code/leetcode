@@ -1,0 +1,62 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你一个长度为 偶数 n 的整数数组 nums 和一个整数 limit 。
+每一次操作，你可以将 nums 中的任何整数替换为 1 到 limit 之间的另一个整数。
+
+如果对于所有下标 i（下标从 0 开始），nums[i] + nums[n - 1 - i] 都等于同一个数，则数组 nums 是 互补的 。
+例如，数组 [1,2,3,4] 是互补的，因为对于所有下标 i ，nums[i] + nums[n - 1 - i] = 5 。
+
+返回使数组 互补 的 最少 操作次数。
+
+示例 1：
+
+输入：nums = [1,2,4,3], limit = 4
+输出：1
+解释：经过 1 次操作，你可以将数组 nums 变成 [1,2,2,3]（加粗元素是变更的数字）：
+nums[0] + nums[3] = 1 + 3 = 4.
+nums[1] + nums[2] = 2 + 2 = 4.
+nums[2] + nums[1] = 2 + 2 = 4.
+nums[3] + nums[0] = 3 + 1 = 4.
+对于每个 i ，nums[i] + nums[n-1-i] = 4 ，所以 nums 是互补的。
+
+解法一：差分数组
+=============
+
+以1，3，4，2，limit = 5为例，1+2中min=1,max=2
+如果要做到转换之后为min+1 ~ max+limit，转换一次，
+转换之后为2 ~ min，转换两次
+转换之后为min+max，转换0次
+转换之后min+max+1 ~ max+limit,转换1次
+转换之后max+limit+1 ~ limit+limit,转换2次
+
+```java
+public int minMoves(int[] nums, int limit) {
+    int[] diff = new int[limit * 2 + 1];
+    int n = nums.length;
+    for(int i = 0;i < n / 2;i++){
+        int max = Math.max(nums[i],nums[n-i-1]);
+        int min = Math.min(nums[i],nums[n-i-1]);
+        if(min == 1){
+            diff[2] += 1;}
+        else{
+            diff[2] += 2;
+            diff[min+1] += 1;}
+        diff[min+max] -= 1;
+        if(min + max + 1 < n){
+            diff[min+max+1] += 1;}
+        if(max + limit + 1 < n){
+            diff[max+limit+1] += 1;}}
+    int now = 0,res = n / 2;
+    for(int i = 2;i < diff.length;i++){
+        now += diff[i];
+        res = Math.min(res,now);}
+    return res;}
+```
+
+总结：
+====
+
+最终需要求一个最小操作数，所以一定会有对比，刚开始都没想到每个范围的操作数是可以固定的，这是个很好的突破点。
