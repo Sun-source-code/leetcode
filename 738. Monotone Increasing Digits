@@ -1,0 +1,35 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。
+
+（当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。）
+
+示例：
+输入: N = 332
+输出: 299
+
+解法一：贪心
+==========
+
+```java
+public int monotoneIncreasingDigits(int N) {
+    char [] strN = Integer.toString(N).toCharArray();
+    int i = 1;
+    while(i < strN.length && strN[i-1] <= strN[i]){
+        i++;}
+    if(i < strN.length){
+        while(i > 0 && strN[i-1] > strN[i]){
+            strN[i-1]--;
+            i--;}
+        for(i += 1;i < strN.length;i++){
+            strN[i] = '9';}}
+    return Integer.parseInt(new String(strN));}
+```
+
+总结：
+====
+
+这题的关键在于如果存在9该怎么转换，这里采用的是，如果存在，则表示有后一位比前一位小的情况，需要找到这个临界点，然后分别操作。
