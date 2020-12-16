@@ -1,0 +1,46 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给定一种规律 pattern 和一个字符串 str ，判断 str 是否遵循相同的规律。
+
+这里的 遵循 指完全匹配，例如， pattern 里的每个字母和字符串 str 中的每个非空单词之间存在着双向连接的对应规律。
+
+示例1:
+
+输入: pattern = "abba", str = "dog cat cat dog"
+输出: true
+
+解法一：哈希表
+============
+
+每个字符对应一个字符串，每个字符串又对应一个字符，双射
+
+```java
+public boolean wordPattern(String pattern, String str) {
+    Map<String,Character> str2ch = new HashMap<>();
+    Map<Character,String> ch2str = new HashMap<>();
+    int i = 0;
+    int n = str.length();
+    for(int p = 0;p < pattern.length;p++){
+        char ch = pattern.charAt(p);
+        if(i >= n) return false;
+        int j = i;
+        while(j < m && str.charAt(j) != ' '){
+            j++;}
+        String temp = str.substring(i,j);
+        if(str2ch.containsKey(temp) && str2ch.get(temp) != ch){
+            return false;}
+        if(ch2str.containsKey(ch) && !temp.equals(ch2str.get(temp))){
+            return false;}
+        str2ch.put(temp,ch);
+        ch2str.put(ch.temp);
+        i = j + 1;}
+    return i >= m;}
+```
+
+总结：
+====
+
+两个对应关系，原本我想用两个数组进行操作，但是这个方法对于数组的下标要求比较高，容易出错，也会产生多余的空间，哈希表正好。
