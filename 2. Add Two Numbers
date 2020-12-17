@@ -85,6 +85,3 @@ public ListNode reserve(ListNode head){
 
 这道题本身是不难的，只是需要注意进位以及两个链表长度不一样的情况，但是这个拓展思考有点难度，将单链表逆序输出的方法有两种，
 其中递归的方法思路比较好理解，迭代方法短短四步，很巧妙。
-
-# leetcode
-# leetcode
