@@ -76,9 +76,3 @@ public void qsort(List<int[]> values, int start, int end, int[] ret, int retInde
 ====
 
 比较容易想到的还是第一种方法，注意根据特定的比较器进行排序。
-
-z
-===
-===
-==
-z
