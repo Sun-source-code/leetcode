@@ -1,0 +1,95 @@
+# leetcode
+
+题目描述（简单）
+============
+
+爱丽丝和鲍勃有不同大小的糖果棒：A[i] 是爱丽丝拥有的第 i 根糖果棒的大小，B[j] 是鲍勃拥有的第 j 根糖果棒的大小。
+
+因为他们是朋友，所以他们想交换一根糖果棒，这样交换后，他们都有相同的糖果总量。（一个人拥有的糖果总量是他们拥有的糖果棒大小的总和。）
+
+返回一个整数数组 ans，其中 ans[0] 是爱丽丝必须交换的糖果棒的大小，ans[1] 是 Bob 必须交换的糖果棒的大小。
+
+如果有多个答案，你可以返回其中任何一个。保证答案存在。
+
+示例 1：
+
+输入：A = [1,1], B = [2,2]
+输出：[1,2]
+
+解法一：哈希表
+============
+
+假设Alice交换糖果的大小为x，Bob交换糖果的大小为y，那么sumA - x + y = sumB + x - y
+化简得x = y + (sumA - sumB) / 2，使用哈希表存储x
+
+```java
+public int[] fairCandySwap(int[] A, int[] B) {
+    int sumA = Arrays.stream(A).sum;
+    int sumB = Arrays.stream(B).sum;
+    int [] ans = new int[2];
+    Set<Integer> set = new HashSet<>();
+    for(int num : A){
+        set.add(num);}
+    for(int num : B){
+        int temp = num + (sumA - sumB) / 2;
+        if(set.contains(temp){
+            ans[0] = temp;
+            ans[1] = num;
+            break;}}
+    return ans;}
+```
+
+解法二：两个哈希表
+===============
+
+```java
+public int[] fairCandySwap(int[] A, int[] B) {
+    int sumA = Arrays.stream(A).sum;
+    int sumB = Arrays.stream(B).sum;
+    Set<Integer> setA = new HashSet<>();
+    Set<Integer> setB = new HashSet<>();
+    for(int num : A){
+        setA.add(num);}
+    for(int num : B){
+        setB.add(num);}
+    int [] ans = new int[2];
+    int diff = sumA - sumB;
+    for(int numA : A){
+        if(setB.contains(numA + diff){
+            ans[0] = numA;
+            ans[1] = numA + diff;
+            break;}}
+    return ans;
+```
+
+与方法一是相同的，只是使用了两个Set来封装。
+
+解法三：解法二优化
+===============
+
+```java
+public int[] fairCandySwap(int[] A, int[] B) {
+    int diff = 0;
+    boolean [] flag = new boolean[100001];
+    int [] ans = new int[2];
+    for(int num : A){
+        diff -= num;}
+    for(int num : B){
+        diff += num;
+        flag[num] = true;}
+    diff /= 2;
+    for(int num : A){
+        int temp = num + diff;
+        if(temp > 0 && temp < 100001 && flag[temp]){
+            ans[0] = num;
+            ans[1] = temp;
+            break;}}
+    return ans;}
+```
+
+这里对两个Set进行改进，使用数组对某个元素是否存在进行存储，删掉了对两个哈希表的维护。
+
+总结：
+====
+
+看起来简单的题，优化之后居然这么巧妙，时间复杂度一下提升了，这里使用数组替换哈希表的思路值得学习。
