@@ -1,0 +1,152 @@
+# leetcode
+
+题目描述（困难）
+=============
+
+中位数是有序序列最中间的那个数。如果序列的大小是偶数，则没有最中间的数；此时中位数是最中间的两个数的平均数。
+
+例如：
+
+[2,3,4]，中位数是 3
+[2,3]，中位数是 (2 + 3) / 2 = 2.5
+给你一个数组 nums，有一个大小为 k 的窗口从最左端滑动到最右端。
+窗口中有 k 个数，每次窗口向右移动 1 位。你的任务是找出每次窗口移动后得到的新窗口中元素的中位数，并输出由它们组成的数组。
+
+示例：
+
+给出 nums = [1,3,-1,-3,5,3,6,7]，以及 k = 3。
+
+窗口位置                      中位数
+---------------               -----
+[1  3  -1] -3  5  3  6  7       1
+ 1 [3  -1  -3] 5  3  6  7      -1
+ 1  3 [-1  -3  5] 3  6  7      -1
+ 1  3  -1 [-3  5  3] 6  7       3
+ 1  3  -1  -3 [5  3  6] 7       5
+ 1  3  -1  -3  5 [3  6  7]      6
+ 因此，返回该滑动窗口的中位数数组 [1,-1,-1,3,5,6]。
+
+解法一：双优先队列+延迟删除
+=======================
+
+设计的数据结构，需要有三个功能，插入，删除，找中位数
+使用两个优先队列维护所有元素，small为大根堆，存储数据小的一半，large为小根堆，存储数据大的一半，那么，
+small的元素个数和large的元素个数，要么相同，要么比large的元素个数多1，这样就能保证，当两个队列数据个数
+相同时，直接取堆顶元素取平均即可，如果small包含的元素多一个，那么直接取small中的堆顶。
+
+删除：如果当前两个队列数据为空，那么将这个元素加入small中，如果small非空，那么需要让num和small的堆顶元素比较，
+如果num <= top，将其加入small中，num > top，将其加入large中。
+num加入之后，会出现两种情况，1.small的元素比large多2个，2.small的元素比large少一个
+对于第一种情况，将small的堆顶元素放入large，第二种情况，large的堆顶元素放入small。
+
+优先队列不支持移出非栈顶元素，所以可以使用延迟删除的技巧
+当我们需要移出队列中某个元素时，我们只需要将这个操作记录下来，不需要真的删除元素，当这个元素出现在堆顶时，再移出。
+
+延迟删除使用到辅助数据结构一般为哈希表，键值对(num,freq)，表示num还要背删除freq次
+我们保证在插入，删除，找中位数的操作之后，small和large的堆顶元素是不需要被删除的，
+这样做的目的是，无需修改找中位数的代码，只需要修改插入操作的代码。
+
+设计一个辅助函数prune(heap)，对heap这个优先队列，不断弹出需要被删除的堆顶元素，并且减少delayed中对应项的值。
+辅助函数makeBalance()，调整small和large中元素个数
+
+```java
+class DualHeap{
+    //大顶堆，维护较小元素
+    private PriorityQueue<Integer> small;
+    //小顶堆，维护较大元素
+    private PriorityQueue<Integer> large;
+    //哈希表，记录延迟元素
+    Map<Integer,Integer> map = new HashMap<>();
+    
+    //输入数组元素的个数 
+    private int k;
+    //small和large元素个数
+    private int smallSize,largeSize;
+    
+    //堆的初始化
+    public DualHeap(int k){
+        this.small = new PriorityQueue<Integer>(new Comparator<Integer>(){
+            public int compare(Integer o1,Integer o2){
+                return o2.compareTo(o1);}
+        });
+        this.large = new PriorityQueue<Integer>(new Comparator<Integer>(){
+            public int compare(Integer o1,Integer o2){
+                return o1.compareTo(o2);}
+        });
+        this.delayed = new HashMap<Integer,Integer>();
+        this.k = k;
+        this.smallSize = 0;
+        this.largeSize = 0;}
+        
+    //获取中位数的方法
+    public int getMedian(){
+        //k&1 = 1代表数组元素个数为奇数，反之为偶数
+        return (k & 1) == 1 ? small.peek() : (small.peek() + large.peek()) / 2;}
+        
+    //数据的插入
+    public void insert(int num){
+        if(small.isEmpty() || num <= small.peek()){
+            small.offer(num);
+            smallSize++;}
+        else{
+            large.offer(num);
+            largeSize++;}
+        makeBalance();}
+        
+    //数据插入时可能遇到的情况
+    public void erase(int num){
+        delayed.put(num,delay.getOrDefault(num,0) + 1);
+        if(num < small.peek()){
+            smallSize--;
+            if(num == small.peek()){
+                prune(small);}}
+        else{
+            largeSize--;
+            if(num == large.peek()){
+                prune(large);}}
+        makeBalance();}
+    
+    //不断地弹出heap的堆顶元素，并且更新哈希表
+    public void prune(PriorityQueue<Integer> heap){
+        while(!heap.isEmpty()){
+            int num = heap.peek();
+            if(delayed.contains(num)){
+                delayed.put(num,delayed.getOrDefault(num,0) - 1);
+                if(delayed.get(num) == 0){
+                    delayed.remove(num);}}
+                heap.poll();}
+        else{
+            break;}}
+    
+    //调整small和large中的元素个数，使得二者元素个数符合要求
+    private void makeBalance(){
+        if(smallSize > largeSize + 1){
+            large.offer(small.poll());
+            smallSize--;
+            largeSize++;
+            prune(small);}
+        else if(smallSize < largeSize){
+            small.offer(large.poll());
+            smallSize++;
+            largeSize--;
+            prune(large);}}}
+
+class Solution{
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        DualHeap dh = new DualHeap(k);
+        for(int i = 0;i < nums.length;i++){
+            dh.insert(nums[i]);}
+        double [] ans = new double[nums.length - k + 1];
+        ans[0] = dh.getMedian();
+        for(int i = k;i < nums.length;i++){
+            dh.insert(nums[i]);
+            dh.erase(nums[i-k]);
+            ans[i-k+1] = getMedian();}
+        return ans;}}
+```
+
+总结：
+====
+
+打开新世界的大门，双优先队列对于寻找中位数提供很大帮助，在数据插入中遇到的各种情况，以及如何平衡队列元素，延迟删除
+都是需要认真考虑的。
