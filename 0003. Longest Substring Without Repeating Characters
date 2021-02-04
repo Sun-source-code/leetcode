@@ -14,10 +14,12 @@
 我们使用左右两个指针表示子串的首尾位置，每操作一次，左指针向右移动一格，表示我们枚举下一个字符为起始位置，
 然后我们不断右移右指针的位置，但要保证两个指针对应的字符串中没有重复的字符，移动结束后，这个子串就对应从
 左指针开始，不包含长度字符的最长子串。
+
 ```java
 public int lengthOfLongestSubstring(String s){
   Set<Character> set = new HashSet<>();
   int n = s.length();
+  //i表示左指针，j表示右指针
   int ans = 0,i = 0,j = 0;
   while(i < n && j < n){
     if(!set.contains(s.charAt(j))){
