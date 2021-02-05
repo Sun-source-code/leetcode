@@ -1,0 +1,78 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给你两个长度相同的字符串，s 和 t。
+
+将 s 中的第 i 个字符变到 t 中的第 i 个字符需要 |s[i] - t[i]| 的开销（开销可能为 0），也就是两个字符的 ASCII 码值的差的绝对值。
+
+用于变更字符串的最大预算是 maxCost。在转化字符串时，总开销应当小于等于该预算，这也意味着字符串的转化可能是不完全的。
+
+如果你可以将 s 的子字符串转化为它在 t 中对应的子字符串，则返回可以转化的最大长度。
+
+如果 s 中没有子字符串可以转化成 t 中对应的子字符串，则返回 0。
+
+示例 1：
+
+输入：s = "abcd", t = "bcdf", cost = 3
+输出：3
+解释：s 中的 "abc" 可以变为 "bcd"。开销为 3，所以最大长度为 3。
+
+解法一：双指针
+============
+
+先将每个字符对应需要转化的次数保存到一个数组中，然后使用双指针对每一个字符的开销进行判断
+
+```java
+class Solution{
+    public int equalSubstring(String s, String t, int maxCost) {
+        int [] index = new int[s.length()];
+        for(int i = 0;i < s.length();i++){
+            index[i] = Math.abs(s.charAt(i)-t.charAt(i));}
+        int maxLength = 0;
+        int sum = 0;
+        int start = 0,end = 0;
+        while(end < s.length()){
+            sum += index[end];
+            while(sum > maxCost){
+                sum -= index[start];
+                start++;}
+            maxLength = Math.max(maxLength,end - start + 1);
+            end++;}
+        return maxLength;}
+```
+
+解法二：前缀和+二分查找
+===================
+
+定义一个新的数组accDiff，每个元素arrDiff[i]对应前i个字符转化所需要的次数总和，要计算可以转化的最大长度，就是
+计算arrDiff数组在哪一段符合开销小于K且长度最大。
+
+```java
+class Solution{
+    public int equalSubstring(String s, String t, int maxCost) {
+        int [] accDiff = new int[s.length() + 1];
+        for(int i = 0;i < s.length();i++){
+            accDiff[i+1] = accDiff[i] + Math.abs(s.charAt(i) - t.charAt(i));}
+        int maxLength = 0;
+        for(int i = 0;i <= s.length();i++){
+            int start = binararySearch(accDiff,i,accDiff[i] - maxCost);
+            maxLength = Math.max(maxLength,i - start);}
+        return maxLength;}
+    public int binararySearch(int [] arrDiff,int endIndex,int target){
+        int low = 0,high = endIndex;
+        while(low < high){
+            int mid = (high - low) / 2 + low;
+            if(arrDiff[mid] < target){
+                low = mid + 1;}
+            else{
+                high = mid;}}
+        return low;}
+```
+
+总结：
+====
+
+刚开始我的思路是双指针法，但是中间求sum的步骤我使用的是排序后求和，保证小的数在前面，不过这样的话排序会造成时间复杂度
+过高，还是使用双指针优化比较好，方法二是真的厉害，我怎么也想不到会跟前缀和有关，非常巧妙，当然最终最优解还是解法一。
