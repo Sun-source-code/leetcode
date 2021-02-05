@@ -1,0 +1,61 @@
+# leetcode
+
+题目描述（困难）
+============
+
+给定一个正整数数组 A，如果 A 的某个子数组中不同整数的个数恰好为 K，则称 A 的这个连续、不一定独立的子数组为好子数组。
+
+（例如，[1,2,3,1,2] 中有 3 个不同的整数：1，2，以及 3。）
+
+返回 A 中好子数组的数目。
+
+示例 1：
+
+输入：A = [1,2,1,2,3], K = 2
+输出：7
+解释：恰好由 2 个不同整数组成的子数组：[1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2].
+
+解法一：滑动窗口
+=============
+
+维护两个滑动窗口来维护left1和left2的值，每一个滑动窗口计算窗口内有多少个不同的数字。
+
+```java
+class Window{
+    Map<Integer,Integer> map;
+    int nonzero;
+    Window(){
+        map = new HashMap<>();
+        nonzero = 0;}
+    void add(int x){
+        map.put(x,map.getOrDefault(x,0)+1);
+        if(map.get(x) == 1){
+            nonzero++;}}
+    void remove(int x){
+        map.put(x,map.get(x)-1);
+        if(map.get(x) == 0){
+            nonzero--;}}
+    int different(){
+        return nonzero;}}
+class Solution{
+    public int subarraysWithKDistinct(int[] A, int K) {
+        Window window1 = new Window();
+        Window window2 = new Window();
+        int ans = 0,left1 = 0,left2 = 0;
+        for(int right = 0;right < A.length;right++){
+            int x = A[right];
+            window1.add(x);
+            window2.add(x);
+            while(windwo1.different() > K){
+                window1.remove(A[left1++]);}
+            while(window2.different() >= K){
+                window2.remove(A[left2++]);}
+            ans += left2 - left1;}
+        return ans;}
+```
+
+总结：
+====
+
+滑动窗口和哈希表的思路是没有问题的，但是我一直没有想到维护两个窗口来记录大于等于K和大于K的子数组，它们的差值就是对应
+x开头的子数组个数，对应遇到这种对应一个对象，需要计算对象某个特性的范围，可以使用这种方法。
