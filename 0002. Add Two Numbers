@@ -27,22 +27,23 @@
 3、求和运算最后出现额外的进位
 
 ```java
-public ListNode addTwoNumbers(ListNode l1,ListNode l2){
-  ListNode dummyNode = new ListNode(0);
-  ListNode p = l1,q = l2,curr = dummyNode;
-  int carry = 0;
-  while(p != null || q != null){
-    int x = (p != null)?p.val:0;
-    int y = (q != null)?q.val:0;
-    int sum = x+y+carry;
-    carry = sum / 10;
-    curr.next = new ListNode(sum % 10);
-    curr = curr.next;
-    if(p != null) p = p.next;
-    if(q != null) q = q.next;}
-  if(carry > 0){
-    curr.next = new ListNode(carry);}
-  return dummyNode.next;}
+class Solution{
+    public ListNode addTwoNumbers(ListNode l1,ListNode l2){
+        ListNode dummyNode = new ListNode(0);
+        ListNode p = l1,q = l2,curr = dummyNode;
+        int carry = 0;
+        while(p != null || q != null){
+            int x = (p != null)?p.val:0;
+            int y = (q != null)?q.val:0;
+            int sum = x+y+carry;
+            carry = sum / 10;
+            curr.next = new ListNode(sum % 10);
+            curr = curr.next;
+            if(p != null) p = p.next;
+            if(q != null) q = q.next;}
+        if(carry > 0){
+            curr.next = new ListNode(carry);}
+        return dummyNode.next;}}
 ```
 
 拓展
@@ -57,27 +58,29 @@ public ListNode addTwoNumbers(ListNode l1,ListNode l2){
 4、head = next; // head 右移
 
 ```java
-public ListNode reserveList(ListNode head){
-  if(head == null) return null;
-  ListNode pre = null;
-  ListNode next;
-  while(head.next != null){
-    next = head.next;
-    head.next = pre;
-    pre = head;
-    head = next;}
-  return pre;}
+class Solution{
+    public ListNode reserveList(ListNode head){
+        if(head == null) return null;
+        ListNode pre = null;
+        ListNode next;
+        while(head.next != null){
+            next = head.next;
+            head.next = pre;
+            pre = head;
+            head = next;}
+        return pre;}}}
 ```
 
 单链表逆序的思路2、递归
 ```java
-public ListNode reserve(ListNode head){
-  ListNode newhead;
-  if(head == null || head.next == null) return head;
-  newhead = reserve(head.next);
-  head.next.next = head;
-  head.next = null;
-  return newhead;}
+class Solution{
+    public ListNode reserve(ListNode head){
+        ListNode newhead;
+        if(head == null || head.next == null) return head;
+        newhead = reserve(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newhead;}}
 ```
 
 总结：
