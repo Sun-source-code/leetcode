@@ -1,0 +1,66 @@
+# leetcode
+
+题目描述（简单）
+============
+
+给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
+
+我们是这样定义一个非递减数列的： 对于数组中所有的 i (0 <= i <= n-2)，总满足 nums[i] <= nums[i + 1]。
+
+示例 1:
+
+输入: nums = [4,2,3]
+输出: true
+解释: 你可以通过把第一个4变成1来使得它成为一个非递减数列。
+
+解法一：数组
+==========
+
+如果找到一个满足nums[i] > nums[i+1]的i，在修改nums[i]和nums[i+1]之后，还要检查nums是否满足递减序列。
+我们将nums[i]修改成小于等于nums[i+1]的值，且nums[i]小于它之前的数，所以将nums[i]改成nums[i+1]。
+
+```java
+class Solution{
+    public boolean checkPossibility(int[] nums) {
+        int n = nums.length;
+        for(int i = 0;i < n - 1;i++){
+            int x = nums[i],y = nums[i+1];
+            if(x > y){
+                nums[i] = y;
+                if(isSorted(nums){
+                    return true;}
+                nums[i] = x;
+                nums[i + 1] = x;
+                return isSorted(nums);}}
+        return true;}
+    public boolean isSorted(int [] nums){
+        int n = nums.length;
+        for(int i = 1;i < n;i++){
+            if(nums[i-1] > nums[i]){
+                return false;}}
+        return true;}}
+```
+
+解法一优化：
+=========
+
+```java
+class Solution{
+    public boolean checkPossibility(int[] nums) {
+        int n = nums.length;
+        for(int i = 0;i < n - 1;i++){
+            int x = nums[i],y = nums[i+1];
+            if(x > y){
+                cnt++;
+                if(cnt > 1){
+                    return false;}
+                if(i > 0 && y < nums[i-1]){
+                    nums[i+1] = x;}}}
+        return true;}}
+```
+
+总结：
+====
+
+这个问题不能简单的看单调性，而是需要判断修改之后是否满足条件，比如说3，4，1，2无法变成非递减序列，方法二的优化西路
+非常好，需要判断的就是nums[i-1],nums[i],nums[i+1]之间的大小关系。
