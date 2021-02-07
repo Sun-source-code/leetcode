@@ -12,9 +12,10 @@
 所以返回 [0, 1]
 
 解法一：暴力法
-===========
+============
 
-直接双重遍历，得到两个整数的下标，如果没有解答，则抛出异常，直接上代码
+直接双重遍历，得到两个整数的下标，如果没有解答，则抛出异常，直接上代码。
+
 ```java
 public int [] twoSum(int [] nums,int target){
   for(int i = 0;i < nums.length;i++){
@@ -27,8 +28,10 @@ public int [] twoSum(int [] nums,int target){
 时间复杂度：O(n^2)
 
 解法二：两遍哈希表
-==============
-两次迭代，第一次将数组的下标和对应的下标存储到哈希表中，第二次检查每个元素对应的目标元素是否存在于哈希表中，注意对应的目标不能是本身
+===============
+
+两次迭代，第一次将数组的下标和对应的下标存储到哈希表中，第二次检查每个元素对应的目标元素是否存在于哈希表中，注意对应的目标不能是本身。
+
 ```java
 public int [] twoSum(int [] nums,int target){
   Map<Integer,Integer> map = new HashMap<>();
@@ -43,8 +46,10 @@ public int [] twoSum(int [] nums,int target){
 时间复杂度：O(n)
 
 解法三：一遍哈希表
-==============
-在插入数据的同时，检查这个元素对应的目标是否已经插入到哈希表中
+===============
+
+在插入数据的同时，检查这个元素对应的目标是否已经插入到哈希表中。
+
 ```java
 public int [] twoSum(int [] nums,int target){
   Map<Integer,Integer> map = new HashMap<>();
@@ -55,11 +60,11 @@ public int [] twoSum(int [] nums,int target){
     map.put(nums[i],i);}
   throw new IllegalArgumentException("No two sum solution");}
 ```
+
 时间复杂度：O(n)
-注意：输出时i和map.get(ans)的位置不能更换，i是后面的元素，map.get(ans)是前面的元素
+注意：输出时i和map.get(ans)的位置不能更换，i是后面的元素，map.get(ans)是前面的元素。
 
 总结：
 ====
 
 这道题思路还是比较清晰的，需要注意的是两遍哈希表和一遍哈希表获取的i位置不同，输出时也有所变化。
-
