@@ -1,0 +1,59 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+找出数组中重复的数字。
+
+
+在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，
+但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
+
+示例 1：
+
+输入：
+[2, 3, 1, 0, 2, 5, 3]
+输出：2 或 3 
+
+解法一：哈希表
+============
+
+直接使用哈希表统计。
+
+```java
+class Solution{
+    public int findRepeatNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        int repeat = -1;
+        for(int num : nums){
+            if(!set.add(num)){
+                repeat = num;
+                break;}}
+        return repeat;}}
+```
+
+解法二：原地置换
+==============
+
+如果没有重复字段，那么正常排序后，数字i会出现在下标为i的位置，所以重头扫描数组，遇到下标为i的数字不是i的话，（假设为m），
+那么就拿下标为m的数字交换，交换过程中，如果有重复数字产生，就终止返回true。
+
+```java
+class Solution{
+    public int findRepeatNumber(int[] nums) {
+        int temp;
+        for(int i = 0;i < nums.length;i++){
+            //对应每个位置寻找符合nums[i] = i的情况，如果无法满足，必定存在重复元素
+            while(nums[i] != i){
+                if(nums[i] == nums[nums[i]]){
+                    return nums[i];}
+                temp = nums[i];
+                nums[i] = nums[temp];
+                nums[temp] = temp;}}
+        return -1;}}
+```
+
+总结：
+====
+
+我只能想到方法一，方法二也太巧妙了，大大减低了时间复杂度，对应数组中固定多少个元素时，可以考虑数字与下标的关系。
