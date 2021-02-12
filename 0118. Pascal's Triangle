@@ -24,19 +24,22 @@
 
 ```java
 public List<List<Integer>> generate(int numRows) {
-    List<List<Integer>> ret = new ArrayList<List<Integer>>();
+    //所有行的集合
+    List<List<Integer>> ans = new ArrayList<List<Integer>>();
     for (int i = 0; i < numRows; ++i) {
+        //第i行的数字
         List<Integer> row = new ArrayList<Integer>();
         for (int j = 0; j <= i; ++j) {
             if (j == 0 || j == i) {
                 row.add(1);
             } else {
-                row.add(ret.get(i - 1).get(j - 1) + ret.get(i - 1).get(j));}}
-        ret.add(row);}
-    return ret;}
+                row.add(ans.get(i - 1).get(j - 1) + ans.get(i - 1).get(j));}}
+        ans.add(row);}
+    return ans;}
 ```
 
 总结：
 ====
 
 简单题，类似动态规划的处理步骤。
+
