@@ -1,0 +1,87 @@
+# leetcode
+
+题目描述（中等）
+============
+
+给定一个非负索引 k，其中 k ≤ 33，返回杨辉三角的第 k 行。
+
+在杨辉三角中，每个数是它左上方和右上方的数的和。
+
+示例：输入: 3
+输出: [1,3,3,1]
+
+解法一：递推
+==========
+
+直接根据上一题的结果，取其中第k行即可。
+
+```java
+class Solution {
+    public List<Integer> getRow(int rowIndex) {
+        List<List<Integer>> C = new ArrayList<List<Integer>>();
+        for (int i = 0; i <= rowIndex; ++i) {
+            List<Integer> row = new ArrayList<Integer>();
+            for (int j = 0; j <= i; ++j) {
+                if (j == 0 || j == i) {
+                    row.add(1);
+                } else {
+                    row.add(C.get(i - 1).get(j - 1) + C.get(i - 1).get(j));}}
+            C.add(row);}
+        return C.get(rowIndex);}}
+```
+
+解法二：滚动数组
+==============
+
+可以发现，获取第k行只使用到了第k-1行数据，所以我们可以使用一个数组来存储第k-1行数据。
+
+```java
+class Solution{
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> pre = new ArrayList<>();
+        for(int i = 0;i <= rowIndex;i++){
+            List<Integer> cur = new ArrayList<>();
+            for(int j = 0;j <= i;j++){
+                if(j == 0 || j == i){
+                    cur.add(1);}
+                else{
+                    cur.add(pre.get(i-1) + pre.get(i));}}
+            pre = cur;}
+        return pre;}}
+```
+
+解法三：逆序计算
+=============
+
+使用一个数组，倒着计算当前行。
+
+```java
+class Solution{
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> row = new ArrayList<>();
+        row.add(1);
+        for(int i = 1;i <= rowIndex;i++){
+            row.add(0);
+            for(int j = i;j > 0;j--){
+                row.set(j,row.get(j-1) + row.get(j));}}
+        return row;}}
+```
+
+解法四：线性计算，数学
+==================
+
+```java
+class Solution{
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> row = new ArrayList<Integer>();
+        row.add(1);
+        for (int i = 1; i <= rowIndex; ++i) {
+            row.add((int) ((long) row.get(i - 1) * (rowIndex - i + 1) / i));
+        }
+        return row;}}
+```
+
+总结：
+====
+
+一步一步优化，最终得到非常简单的方法，不过数学公式不好写，还是方法三比较巧妙。
