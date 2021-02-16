@@ -1,0 +1,82 @@
+# leetcode
+
+题目描述（中等）
+============
+
+输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+解法一：递归
+==========
+
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i = 0;i < inorder.length;i++){
+            map.put(inorder[i],i);}
+        return buildTreeHelper(preorder,0,preorder.length,inorder,0,inorder.length,map);}
+    public TreeNode buildTreeHelper(int [] preorder,int p_start,int p_end,int [] inorder,
+            int i_start,int i_end,Map<Integer,Integer> map){
+        if(p_start == p_end){
+            return null;}
+        int root_val = preorder[p_start];
+        TreeNode root = new TreeNode(root_val);
+        int root_index = map.get(root.val);
+        int leftNum = root_index - i_start;
+        root.left = buildTreeHelper(preorder,p_start+1,p_start+leftNum+1,inorder,i_start,root_index,map);
+        root.right = buildTreeHelper(preorder,p_start+leftNum+1,p_end,inorder,root_index,i_end,map);}}
+```
+
+解法二：迭代
+==========
+
+对于前序遍历中连续的两个节点u和v，有两种可能的关系：
+1、v是u的左儿子，因为在遍历到u之后，下一个遍历的就是u的左儿子v
+2、u没有左儿子，v是u某个祖先的右儿子。如果u没有左儿子，那么下一个遍历的就是u的右儿子，如果u没有右儿子，那么向上回溯，
+直到遇到第一个有右儿子的节点ua，那么v就是ua的右儿子。
+
+算法：
+1、用一个栈和一个指针辅助构造二叉树，初始时栈中只存储根节点，指针指向中序遍历的第一个节点
+2、枚举前序遍历中除第一个以外的所有节点，如果index刚好指向栈顶节点，那么不断弹出栈顶元素并移动index，并将当前节点作为最后
+一个弹出的节点的右儿子，如果index和栈顶元素不同，将当前节点作为栈顶元素的左儿子
+3、无论哪种情况，将当前节点入栈
+
+```java
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder.length == 0 || preorder == null){
+            return null;}
+        TreeNode root = new TreeNode(preorder[0]);
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.push(root);
+        int inorderIndex = 0;
+        for(int i = 1;i < preorder.length;i++){
+            int preorderVal = preorder[i];
+            TreeNode node = stack.peek();
+            if(node.val != inorder[inorderIndex]){
+                node.left = new TreeNode(preorderVal);
+                stack.push(node.left);}
+            else{
+                while(!stack.isEmpty() && stack.peek().val == inorder[inorderIndex]){
+                    node = stack.pop();
+                    inorderIndex++;}
+                node.right = new TreeNode(preorderVal);
+                stack.push(node.right);}}
+        return root;}}
+```
+
+总结：
+====
+
+很经典的题目了，方法也很经典，但是过程有点复杂，容易出错，与第105题相同，这个题目需要多练习。
