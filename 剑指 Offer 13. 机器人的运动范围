@@ -1,0 +1,79 @@
+# leetcode
+
+题目描述（中等）
+============
+
+地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。
+一个机器人从坐标 [0, 0] 的格子开始移动，它每次可以向左、右、上、下移动一格（不能移动到方格外），
+也不能进入行坐标和列坐标的数位之和大于k的格子。例如，当k为18时，机器人能够进入方格 [35, 37] ，
+因为3+5+3+7=18。但它不能进入方格 [35, 38]，因为3+5+3+8=19。请问该机器人能够到达多少个格子？
+
+示例 1：
+输入：m = 2, n = 3, k = 1
+输出：3
+
+解法一：广度优先遍历
+=================
+
+```java
+class Solution {
+    public int movingCount(int m, int n, int k) {
+        if(k == 0) return 0;
+        Queue<int []> queue = new LinkedList<>();
+        int [] dx = {0,1};
+        int [] dy = {1,0};
+        boolean [][] visited = new boolean[m][n];
+        visited[0][0] = true;
+        int ans = 1;
+        while(!queue.isEmpty()){
+            int [] cell = queue.poll();
+            int x = cell[0],y = cell[0];
+            for(int i = 0;i < 2;i++){
+                int tx = dx[i] + x;
+                int ty = dy[i] + y;
+                if(tx < 0 || ty >= m || ty < 0 || ty >= n || visited[tx][ty] || get(tx) + get(ty) > k)){
+                    continue;}
+                queue.offer(new int[]{tx,ty});
+                visited[tx][ty] = true;
+                ans++;}}}
+    public int get(int x){
+        int res = 0;
+        while(x != 0){
+            res += x % 10;
+            x /= 10;}
+        return res;}}
+```
+
+解法二：递推
+==========
+
+```java
+class Solution {
+    public int movingCount(int m, int n, int k) {
+        if (k == 0) { return 1;}
+        boolean [][] visited = new boolean[m][n];
+        int ans = 1;
+        visited[0][0] = true;
+        for(int i = 0;i < m;i++){
+            for(int j = 0;j < n;j++){
+                if( (i == 0 && j == 0) || get(i) + get(j) > k){
+                    continue;}
+                if(i - 1 >= 0){
+                    visited[i][j] |= visited[i-1][j];}
+                if(j - 1 >= 0){
+                    visited[i][j] |= visited[i][j-1];}
+                ans += visited[i][j] ? 1 : 0;}}
+        return ans;}
+    public int get(int x){
+        int res = 0;
+        while(x != 0){
+            res += x % 10;
+            x /= 10;}
+        return res;}}
+```
+
+总结：
+====
+
+注意数位之和，需要另外一个方法计算数位，另外需要一个数组记录每个位置是否被调用，我最初的思路应该是方法二，但是
+我没有想到每个位置之间的关系，也就是visited[i][j] = visited[i-1][j] or visited[i][j-1]
