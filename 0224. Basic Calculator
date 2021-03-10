@@ -1,0 +1,50 @@
+# leetcode
+
+题目描述（困难）
+============
+
+实现一个基本的计算器来计算一个简单的字符串表达式 s 的值。
+
+示例：输入：s = "(1+(4+5+2)-3)+(6+8)"
+输出：23
+
+解法一：栈
+=========
+
+```java
+class Solution {
+    public int calculate(String s) {
+        Deque<Integer> ops = new LinkedList<>();
+        ops.push(1);
+        int sign = 1;
+        int ret = 0;
+        int n = s.length();
+        int i = 0;
+        while(i < n){
+            if(s.charAt(i) == ' '){
+                i++;}
+            else if(s.charAt(i) == '+'){
+                sign = ops.peek();
+                i++;}
+            else if(s.charAt(i) == '-'){
+                sign = ops.peek();
+                i++;}
+            else if(s.charAt(i) == '('){
+                ops.push(sign);
+                i++;}
+            else if(s.charAt(i) == ')'){
+                ops.pop();
+                i++;}
+            else{
+                long num = 0;
+                while(i < n && Character.isDigit(s.charAt(i))){
+                    num = num * 10 + s.charAt(i) - '0';
+                    i++;}
+                ret += sign * num;}}
+        return ret;}}
+```
+
+总结：
+====
+
+栈的作用是存储符号，其中正负号用sign保存，括号则存入栈中，注意入栈和出栈。
