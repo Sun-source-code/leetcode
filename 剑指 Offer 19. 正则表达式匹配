@@ -1,0 +1,53 @@
+# leetcode
+
+题目描述（困难）
+============
+
+请实现一个函数用来匹配包含'. '和'*'的正则表达式。模式中的字符'.'表示任意一个字符，
+而'*'表示它前面的字符可以出现任意次（含0次）。在本题中，匹配是指字符串的所有字符匹配整个模式。
+例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但与"aa.a"和"ab*a"均不匹配。
+
+示例 1:
+输入:
+s = "aa"
+p = "a"
+输出: false
+解释: "a" 无法匹配 "aa" 整个字符串。
+
+解法一：动态规划
+=============
+
+flag[i][j]表示s的第i个字符与p的第j个字符匹配，正常情况下，flag[i][j] = flag[i-1][j-1]
+如果p的第j个字符是*，那么可以匹配0或无数个前面的字符：
+1、匹配0个前面的字符，f[i][j] = f[i][j-2]
+2、匹配无数个前面的字符，可以让s忽略中间的大段字符，只取最后一个字符与p[j]前面的字符比较，f[i][j] = f[i-1][j]
+如果p的第j个字符是.，直接符合条件
+
+```java
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        boolean [][] flag = new boolean[m+1][n+1];
+        flag[0][0] = true;
+        for(int i = 0;i <= m;i++){
+            for(int j = 1;j <= n;j++){
+                if(p.charAt(j-1) == '*'){
+                    flag[i][j] = flag[i][j-2];
+                    if(matched(s,p,i,j-1){
+                        flag[i][j] = flag[i][j] || flag[i-1][j];}}
+                else{
+                    if(matched(s,p,i,j){
+                        flag[i][j] = flag[i-1][j-1];}}}}
+        return flag[m][n];}
+    public boolean matched(String s,String p,int i,int j){
+        if(i == 0) return false;
+        if(p.charAt(j-1) == '.') return true;
+        return s.charAt(i-1) == p.charAt(j-1);}}
+```
+
+总结：
+====
+
+其他条件还容易思考，对于*匹配多个字符这一个条件还是不太好考虑的。
+ 
