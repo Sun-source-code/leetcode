@@ -1,0 +1,65 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+
+示例 1：
+输入：root = [1,2,2,3,4,4,3]
+输出：true
+
+解法一：递归
+==========
+
+```java
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        return root == null ? true : recur(root.left,root.right);}
+    public boolean recur(TreeNode L,TreeNode R){
+        if(L == null && R == null) return true;
+        if(L == null || R == null || L.val != R.val) return false;
+        return recur(L.left,R.right) && recur(L.right,R.left);}}
+```
+
+解法二：迭代
+==========
+
+```java
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null) return true;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root.left);
+        queue.add(root.right);
+        while(!queue.isEmpty()){
+            TreeNode left = queue.poll(),right = queue.poll();
+            if(left == null && right == null) continue;
+            if(left == null || right == null) return false;
+            if(left.val != right.val) return false;
+            queue.add(left.lfet);
+            queue.add(right.right);
+            queue.add(left.right);
+            queue.add(right.left);}
+        return true;}}
+```
+
+总结：
+====
+
+注意这里对称二叉树的定义，L的左节点与R的右节点相等，L的右节点与R的左节点相等，对应迭代的过程中需要注意插入顺序。
