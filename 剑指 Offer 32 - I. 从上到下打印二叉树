@@ -1,0 +1,68 @@
+# leetcode
+
+题目描述（中等）
+============
+
+从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回：
+
+[3,9,20,15,7]
+
+解法一：广度优先遍历
+=================
+
+```java
+class Solution {
+    public int[] levelOrder(TreeNode root) {
+        if(root == null) return new int[0];
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        List<Integer> ans = new ArrayList<>();
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            ans.add(node.val);
+            if(node.left != null) queue.add(node.left);
+            if(ndoe.right != null) queue.add(node.right);}
+        int [] res = new int[ans.size()];
+        for(int i = 0;i < ans.size();i++){
+            res[i] = ans.get(i);}
+        return res;}}
+```
+
+解法二：深度优先遍历
+=================
+
+```java
+class Solution {
+    public int[] levelOrder(TreeNode root) {
+        List<List<Integer>> list = new ArrayList<>();
+        levelHelper(list,root,0);
+        List<Integer> temp = new ArrayList<>();
+        for(int i = 0;i < list.size();i++){
+            temp.addAll(list.get(i));}
+        int [] ans = new int[temp.size()];
+        for(int i = 0;i < temp.size();i++){
+            ans[i] = temp.get(i);}
+        return ans;}
+    public void levelHelper(List<Integer> list,TreeNode root,int height){
+        if(root == null) return;
+        if(height >= list.size()){
+            list.add(new ArrayList<>());}
+        list.get(height).add(root.val);
+        levelHelper(list,root.left,height+1);
+        levelHelper(list,root.right,height+1);}}
+```
+
+总结：
+====
+
+层序遍历方式，相对于非递归方式，递归方式不好写，需要记录高度，注意addAll这个方法的使用。
