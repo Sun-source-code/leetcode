@@ -1,0 +1,64 @@
+# leetcode
+
+题目描述（中等）
+============
+
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。
+如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
+
+参考以下这颗二叉搜索树：
+
+     5
+    / \
+   2   6
+  / \
+ 1   3
+示例 1：
+
+输入: [1,6,3,2,5]
+输出: false
+
+解法一：递归
+==========
+
+注意这里是二叉搜索树，所以后序遍历中，以最后一个节点为分界，小于它的为左子树，大于它的为右子树。
+
+```java
+class Solution {
+    public boolean verifyPostorder(int[] postorder) {
+        return recur(postorder,0,postorder.length-1);}
+    public boolean recur(int [] postorder,int i,int j){
+        if(i >= j) return true;
+        int p = i;
+        while(postorder[p] < postorder[j]) p++;
+        int m = p;
+        while(postorder[p] > postorder[j]) p++;
+        return j == p && recur(postorder,i,m-1) && recur(postorder,m,j-1);}}
+```
+
+解法二：辅助单调栈
+===============
+
+后序遍历的倒序，是根节点，右子树，左子树
+1、借助一个单调栈来存储值递增的节点
+2、每当遇到值递减的节点，则通过出栈来更新根节点
+3、ri > root，表示不满足二叉树的定义，返回false
+ri < root，表示满足二叉树定义，继续遍历
+
+```java
+class Solution {
+    public boolean verifyPostorder(int[] postorder) {
+        Stack<Integer> stack = new Stack<>();
+        int root = Math.MAX_VALUE;
+        for(int i = postorder.length - 1;i >= 0;i--){
+            if(postorder[i] > root) return false;
+            while(!stak.isEmpty() && stack.peek() > postorder[i]){
+                root = stack.pop();}
+            stack.push(postorder[i]);}
+        return true;}}
+```
+
+总结：
+====
+
+解法一还是比较容易的，递归实现根节点的查找，解法二实在巧妙，使用单调栈更新根节点的值。
