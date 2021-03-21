@@ -1,0 +1,30 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+
+你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+示例:
+输入: [1, 2, 3, 2, 2, 2, 5, 4, 2]
+输出: 2
+
+解法一：投票算法
+==============
+
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        int count = 0,candidate = 0;
+        for(int num : nums){
+            if(count == 0) candidate = num;
+            count += (num == candidate) ? 1 : -1;}
+        return candidate;}}
+```
+
+总结：
+====
+
+计数的方法就不写出来了，和169题一样，面试原题，上次没有写出来，这次记的牢牢的。
