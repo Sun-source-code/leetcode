@@ -1,0 +1,62 @@
+# leetcode
+
+题目描述（困难）
+============
+
+请实现两个函数，分别用来序列化和反序列化二叉树。
+
+示例: 
+
+你可以将以下二叉树：
+
+    1
+   / \
+  2   3
+     / \
+    4   5
+
+序列化为 "[1,2,3,null,null,4,5]"
+
+解法一：广度优先遍历
+=================
+
+```java
+public class Codec {
+    public String serialize(TreeNode root) {
+        if(root == null) return "[]";
+        StringBuilder sb = new StringBuilder();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            if(node != null){
+                sb.append(node.val+",");
+                queue.add(node.left);
+                queue.add(node.right);}}
+            else sb.append("null");
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append("]");
+        return sb.toString();}
+    public TreeNode deserialize(String data) {
+        if(data == "[]") return null;
+        String [] vals = data.substring(1,data.length() - 1).split(",");
+        TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
+        Queue<TreeNode) queue = new LinkedList<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            if(!vals[i].equals("null")){
+                node.left = new TreeNode(Integer.parseInt(vals[i]));
+                queue.add(node.left);}
+            i++;
+            if(!vals[i].equals("null")){
+                node.right = new TreeNode(Integer.parseInt(vals[i]));
+                queue.add(node.right);}
+            i++;}
+        return root;}}
+```
+
+总结：
+====
+
+与前面的直接二叉树遍历不同的是，返回一个String类型变量，需要调整格式，反序列化也需要对字符串进行分割。
