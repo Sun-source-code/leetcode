@@ -1,0 +1,67 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+
+示例 1:
+
+输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+解法一：动态规划+哈希表
+====================
+
+两个指针ij，分别表示遇到相同字符时两个字符的下标，如果一直没有遇到相同的字符，结果加一。
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character,Integer> map = new HashMap<>();
+        int ans = 0,tmp = 0;
+        for(int j = 0;j < s.length();j++){
+            int i = map.getOrDefault(s.charAt(j),-1);
+            map.put(s.charAt(j),j);
+            tmp = tmp < j - i ? tmp + 1 : j - i;
+            ans = Math.max(ans,tmp);}
+        return ans;}}
+```
+
+解法二：动态规划+线性遍历
+=====================
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character,Integer> map = new HashMap<>();
+        int ans = 0,tmp = 0;
+        for(int j = 0;j < s.length();j++){
+            int i = j - 1;
+            while(i >= 0 && s.charAt(i) != s.charAt(j)) i--;
+            tmp = tmp < j - i ? tmp + 1 : j - i;
+            ans = Math.max(ans,tmp);}
+        return ans;}}
+```
+
+解法三：双指针+动态规划
+===================
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character,Integer> map = new HashMap<>();
+        int ans = 0,i = -1;
+        for(int j = 0;j < s.length();j++){
+            if(map.containsKey(s.charAt(j)){
+                i = Math.max(i,map.get(s.charAt(i)));}
+            map.put(s.charAt(j),j);
+            ans = Math.max(ans,j-i);}
+        return ans;}}
+```
+
+总结：
+====
+
+这题还是比较经典的，虽说思路简单，但是直接写出三种方法也不容易，记住思路。
