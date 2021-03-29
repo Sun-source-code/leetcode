@@ -1,0 +1,48 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。
+为简单起见，标点符号和普通字母一样处理。例如输入字符串"I am a student. "，则输出"student. a am I"。
+
+示例：
+输入: "  hello world!  "
+输出: "world! hello"
+解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+
+解法一：双指针
+============
+
+```java
+class Solution {
+    public String reverseWords(String s) {
+        s = s.trim();
+        int j = s.length(),i = j;
+        StringBuilder sb = new StringBuilder();
+        while(i > 0){
+            while(i >= 0 && s.charAt(i) != ' ') i++;
+            sb.append(s.substring(i+1,j+1)+' ');
+            while(i >= 0 && s.charAt(i) == ' ') i++;
+            j = i;}
+        return sb.toString().trim();}}
+```
+
+解法二：分割+倒序
+===============
+
+```java
+class Solution {
+    public String reverseWords(String s) {
+        String [] strs = s.trim().split(" ");
+        StringBuilder sb = new StringBuilder();
+        for(int i = strs.length - 1; i >= 0; i--){
+            if(strs[i].equals("")) continue;
+            sb.append(strs[i])).append(" ");}
+        return res.toString().trim();}}
+```
+
+总结：
+====
+
+题目意思还是很简单的，注意除去左右两边空格。
