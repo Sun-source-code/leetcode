@@ -1,0 +1,71 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+请定义一个队列并实现函数 max_value 得到队列里的最大值，要求函数max_value、push_back 和 pop_front 的均摊时间复杂度都是O(1)。
+
+若队列为空，pop_front 和 max_value 需要返回 -1
+
+示例 1：
+
+输入: 
+["MaxQueue","push_back","push_back","max_value","pop_front","max_value"]
+[[],[1],[2],[],[],[]]
+输出: [null,null,null,2,1,2]
+
+解法一：暴力
+==========
+
+```java
+class MaxQueue {
+    int[] q = new int[20000];
+    int begin = 0, end = 0;
+    public MaxQueue(){
+    }
+    public int max_value() {
+        int ans = -1;
+        for(int i = begin;i != end;i++){
+            ans = Math.max(ans,q[i]);}
+        return ans;}
+    public void push_back(int value) {
+        q[end++] = value;}
+    public int pop_front() {
+        if(begin == end){
+            return -1;}
+        return q[begin++];}}
+```
+
+解法二：单调队列
+==============
+
+```java
+class MaxQueue {
+    Queue<Integer> q;
+    Deque<Integer> d;
+    public MaxQueue() {
+        q = new LinkedList<>();
+        d = new LinkedList<>();}
+    public int max_value() {
+        if(d.isEmpty()){
+            return -1;}
+        return d.peekFirst();}
+    public void push_back(int value) {
+        while(!d.isEmpty() && d.peekLast() < value){
+            d.pollLast();}
+        d.offerLast(value);
+        q.offer(value);}
+    public int pop_front() {
+        if (q.isEmpty()) {
+            return -1;
+        }
+        int ans = q.poll();
+        if(ans == d.peekFirst()){
+            d.pollFirst();}
+        return ans;}}
+```
+
+总结：
+====
+
+与上一题相同，都是单调队列的应用，这里用到了两个队列，一个正常队列存储顺序，另一个单调队列存储最大值。
