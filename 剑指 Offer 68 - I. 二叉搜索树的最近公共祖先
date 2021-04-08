@@ -1,0 +1,72 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+
+百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，
+满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+
+例如，给定如下二叉搜索树:  root = [6,2,8,0,4,7,9,null,null,3,5]
+
+        6
+    2       8
+ 0    4   7   9
+    3   5
+
+示例 :
+输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+输出: 6 
+解释: 节点 2 和节点 8 的最近公共祖先是 6。
+
+解法一：两次遍历
+==============
+
+第一次遍历获取从根节点到两个节点经过的路径，然后看路径什么时候相交。
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        List<TreeNode> path_p = getPath(root,p);
+        List<TreeNode> path_q = getPath(root,q);
+        TreeNode ancestor = null;
+        for(int i = 0;i < path_p.size() && i < path_q.size();i++){
+            if(path_p.get(i) == path_q.get(i)){
+                ancestor = path_p.get(i);}
+            else{
+                break;}}
+        return ancestor;}
+    public List<TreeNode> getPath(TreeNode root,TreeNode target){
+        List<TreeNode> path = new ArrayList<>();
+        TreeNode node = root;
+        while(node != target){
+            path.add(node);
+            if(target.val < node.val){
+                node = node.left;}
+            else{
+                node = node.right;}}
+        path.add(node);
+        return path;}}
+```
+
+解法二：一次遍历
+==============
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode ancestor = root;
+        while(true){
+            if (p.val < ancestor.val && q.val < ancestor.val) {
+                ancestor = ancestor.left;}
+            else if (p.val > ancestor.val && q.val > ancestor.val) {
+                ancestor = ancestor.right;}
+            else break;}
+        return ancestor;}}
+```
+
+总结：
+====
+
+根据二叉搜索树的性质，向左右子数找到目标节点，当然还是一次遍历会方便很多。
