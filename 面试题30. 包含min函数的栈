@@ -1,0 +1,44 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+示例:
+
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.min();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.min();   --> 返回 -2.
+
+解法一：栈
+=========
+
+```java
+class MinStack{
+    Stack<Integer> A, B;
+    public MinStack(){
+        A = new Stack<>();
+        B = new Stack<>();}
+    public void push(int x){
+        A.add(x);
+        if(B.isEmpty() || B.peek() >= x){
+            B.add(x);}}
+    public void pop() {
+        if(A.pop().equals(B.peek()){
+            B.pop();}}
+    public int top() {
+        return A.peek();}
+    public int min() {
+        return B.peek();}}
+```
+
+总结：
+====
+
+最根本的问题是，如何在不改变入栈顺序的情况下，找到所有元素中的最小值，此时需要一个辅助栈存储最小值。
