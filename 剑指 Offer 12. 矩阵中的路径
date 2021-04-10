@@ -32,9 +32,10 @@ class Solution {
     public boolean dfs(char [][] board,char [] words,int i,int j,int k){
         if(i >= board.length || i < 0 || j >= board[0].length || j < 0 || words[k] != board[i][j]){
             return false;}
-        if(k == word.length - 1) return true;
+        if(k == words.length - 1) return true;
+        board[i][j] = '\0';
         boolean res = dfs(board,words,i+1,j,k+1) || dfs(board,words,i-1,j,k+1) ||
-            dfs(board,words,i,j+1,k+1) || def(board,words,i,j-1,k+1);
+            dfs(board,words,i,j+1,k+1) || dfs(board,words,i,j-1,k+1);
         board[i][j] = words[k];
         return res;}}
 ```
@@ -43,3 +44,4 @@ class Solution {
 ====
 
 对于每一个节点，进行一个深度优先遍历，判断以这个节点为起点是否可行，这里需要注意k的使用，也就是最终符合word长度的长度。
+还应该注意，一个位置上的字符使用后不能再次使用，可以将其转为不可能存在的字符，如'\0'，之后再转化回去。
