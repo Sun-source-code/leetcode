@@ -1,0 +1,52 @@
+# leetcode
+
+题目描述（简单）
+=============
+
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+示例:
+
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.min();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.min();   --> 返回 -2.
+
+解法一：数组
+===========
+
+```java
+class MinStack {
+    private int[] stack;
+    private int min;
+    private int topP;
+    public MinStack() {
+        stack = new int[40000];
+        min = Integer.MAX_VALUE;
+        topP = -1;}  
+    public void push(int x) {
+        if (x <= min) {
+            stack[++topP] = min;
+            min = x;}
+        stack[++topP] = x;}
+    public void pop() {
+        if (min == stack[topP]) {
+            min = stack[--topP];}
+        topP--;}   
+    public int top() {
+        return stack[topP];}
+    public int min() {
+        if (topP >= 0) {
+            return min;
+        } else {
+            return -1;}}}
+```
+
+总结：
+====
+
+因为元素比较少，所以可以直接使用数组来存储，也有使用双栈，存储单调递减序列，min函数直接出栈。
