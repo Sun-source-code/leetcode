@@ -33,7 +33,7 @@ class Solution {
         if(root == null) return null;
         TreeNode tmp = root.left;
         root.left = mirrorTree(root.right);
-        root.right = mirrorTree(root.left);
+        root.right = mirrorTree(tmp);
         return root;}}
 ```
 
