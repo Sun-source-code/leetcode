@@ -22,7 +22,7 @@ string convert(string s, int numRows);
 public String convert(String s,int numRows){
   if(numRows == 1) return s;
   List<StringBuilder> ans = new ArrayList<>();
-  for(int i = 0;i < Math.min(s.length(),numRows){
+  for(int i = 0;i < Math.min(s.length(),numRows);i++){
     ans.add(new StringBuilder());}
   int curRow = 0;
   boolean flag = false;
@@ -62,6 +62,3 @@ public String convert(String s, int numRows) {
 ====
 
 解法一最关键的地方就是flag的变化，解法二最关键的是j+cycleLen-i<n，都是不太好想到的一点。
-
-
-
