@@ -26,6 +26,14 @@ class Solution {
         for(int i = 0;i < size;i++){
             ans[i] = stack.pop().val;}
         return ans;}}
+```python
+class Solution:
+    def reversePrint(self,head: ListNode) -> List[int]:
+        stack = []
+        while head :
+            stack.append(head.val)
+            head = head.next
+        return stack[::-1]
 ```
 
 解法二：倒叙填充数组
