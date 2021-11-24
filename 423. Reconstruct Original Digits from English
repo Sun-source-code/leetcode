@@ -1,0 +1,66 @@
+# leetcode
+
+题目描述（中等）
+=============
+
+给你一个字符串 s ，其中包含字母顺序打乱的用英文单词表示的若干数字（0-9）。按 升序 返回原始的数字。
+
+示例 1：
+
+输入：s = "owoztneoer"
+输出："012"
+示例 2：
+
+输入：s = "fviefuro"
+输出："45"
+
+解法一：依次确定每个数字的个数
+==========================
+
+列出每个字符可能出现的数字，可以发现，z,w,u,x,g分别只出现在0,2,4,6,8中，也就是说，z,w,u,x,g出现的次数即代表0,2,4,6,8的次数，
+同理，3的次数=h的次数-g的次数，5的次数=f的次数-u的次数，7的次数=s的次数-x的次数，1的次数=o的次数-z,w,u的次数，9的次数=i的次数-5,6,8的次数
+
+```Java
+class Solution{
+    public String originalDigits(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for(Character ch : s.toCharArray()){
+            map.put(ch,map.getOrDefault(ch,0)+1);}
+        int [] cnt = new int[10];
+        cnt[0] = map.getOrDefault('z',0);
+        cnt[2] = map.getOrDefault('w',0);
+        cnt[4] = map.getOrDefault('u',0);
+        cnt[6] = map.getOrDefault('x',0);
+        cnt[8] = map.getOrDefault('g',0);
+        cnt[3] = map.getOrDefault('h',0) - cnt[8];
+        cnt[5] = map.getOrDefault('f',0) - cnt[4];
+        cnt[7] = map.getOrDefault('s',0) - cnt[6];
+        cnt[9] = map.getOrDefault('i',0) - cnt[5] - cnt[6] - cnt[8];
+        StringBuffer sb = new StringBUffer();
+        for(int i = 0;i < 10;i++){
+            for(int j = 0;j < cnt[i];j++){
+                sb.append((char) i + '0');}}
+        return sb.toString();}}
+```
+
+```Python
+class Soluton:
+    def originalDigits(self,s:str) -> str:
+        c = Counter(s)
+        cnt = [0] * 10
+        cnt[0] = c["z"]
+        cnt[2] = c["w"]
+        cnt[4] = c["u"]
+        cnt[6] = c["x"]
+        cnt[8] = c["g"]
+        cnt[3] = c["h"] - cnt[8]
+        cnt[5] = c["f"] - cnt[4]
+        cnt[7] = c["s"] - cnt[6]
+        cnt[9] = c["i"] - cnt[5] - cnt[6] - cnt[8]
+        return "".join(str(x) * cnt[x] for x in range(10))
+```
+
+总结：
+====
+
+将所有的单词写下来找规律，就可以获取每个数字出现的次数，思路很巧，注意Python的Counter。
