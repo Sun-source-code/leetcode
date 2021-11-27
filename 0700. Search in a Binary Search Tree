@@ -21,23 +21,43 @@
 解法一：递归
 ==========
 
-```java
+```Java
 public TreeNode searchBST(TreeNode root, int val) {
   if(root == null || root.val == val) return root;
   return val < root.val ? searchBST(root.left,val) : searchBST(root.right,val);}
 ```
 
+```Python
+class Solution:
+    def searchBST(self, root: TreeNode, val: int) -> TreeNode:
+        if root is None:
+            return None
+        if val == root.val:
+            return root
+        return self.searchBST(root.left if val < root.val else root.right,val)
+```
+
 解法二：迭代
 ==========
 
-```java
+```Java
 public TreeNode searchBST(TreeNode root,int val){
   while(root != null || val != root.val){
     root = val < root.val ? root.left : root.right;}
   return root;}
 ```
 
+```Python
+class Solution:
+    def searchBST(self, root: TreeNode, val: int) -> TreeNode:
+        while root:
+            if val == root.val:
+                return root
+            root == root.left if val < root.val else root.right
+        return None
+```
+
 总结：
 ====
 
-最常规方法，递归和迭代。
+最常规方法，递归和迭代，Python解法迭代比递归快很多。
