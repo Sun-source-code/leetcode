@@ -24,7 +24,7 @@ class Solution {
         int i = 0;
         for(int num : pushed){
             stack.push(num);
-            if(!stack.isEmpty() && stack.pop = poped[i]){
+            while(!stack.isEmpty() && stack.peek() = poped[i]){
                 stack.pop();
                 i++;}}
         return stack.isEmpty();}}
